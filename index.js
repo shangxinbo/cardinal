@@ -2,8 +2,12 @@
 const request = require('request');
 var cheerio = require("cheerio");
 const fs = require('fs');
-
+update();
 setInterval(function(){
+    update();
+},10*60*1000);
+
+function update(){
     request({
         uri: 'http://www.ishadowsocks.org/',
         method: 'GET'
@@ -50,4 +54,4 @@ setInterval(function(){
             console.log('request success');
         });
     });
-},10*60*1000);
+}
