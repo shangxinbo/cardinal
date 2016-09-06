@@ -1,43 +1,50 @@
 
+"use strict";
+
 const request = require('request');
-var cheerio = require("cheerio");
+const cheerio = require("cheerio");
 const fs = require('fs');
-update();
+const cdr = require("child_process");
+const configs = require('./config.js');
+
+let runingProcess = '';
+
+console.log('init at ' + Date());
+
+update(1);
 setInterval(function(){
     update();
 },10*60*1000);
 
-function update(){
+function update(init){
     request({
         uri: 'http://www.ishadowsocks.org/',
         method: 'GET'
     },function(error, response, body){
-        var $ = cheerio.load(body);
-        var list = $('#free .col-lg-4');
-        var configs = {
-            "configs": [],
-            "strategy": null,
-            "index": 0,
-            "global": false,
-            "enabled": true,
-            "shareOverLan": true,
-            "isDefault": false,
-            "localPort": 1080,
-            "pacUrl": null,
-            "useOnlinePac": false,
-            "availabilityStatistics": false,
-            "autoCheckUpdate": true,
-            "isVerboseLogging": false,
-            "logViewer": null,
-            "useProxy": false,
-            "proxyServer": null,
-            "proxyPort": 0
-        };
-        for(var i=0;i<list.length;i++){
-            var name = $(list[i]).find('h4').eq('0').html().split(':')[1];
-            var port = $(list[i]).find('h4').eq('1').html().split(':')[1];
-            var passw = $(list[i]).find('h4').eq('2').html().split(':')[1];
-            var method = $(list[i]).find('h4').eq('3').html().split(':')[1];
+
+        if(error){
+            return console.log('request error:' + error.errno);
+        }else{
+            console.log('request success');
+        }
+
+        let $ = cheerio.load(body);
+        let list = $('#free .col-lg-4');
+        let o_config = JSON.parse(fs.readFileSync('gui-config.json'));
+
+        if(!init){
+            if(o_config.configs[0].password == $(list[0]).find('h4').eq('2').html().split(':')[1]) {
+                return console.log('merge');
+            }else{
+                console.log('update config at:' + Date());
+            }
+        }
+
+        for(let i=0;i<list.length;i++){
+            let name = $(list[i]).find('h4').eq('0').html().split(':')[1];
+            let port = $(list[i]).find('h4').eq('1').html().split(':')[1];
+            let passw = $(list[i]).find('h4').eq('2').html().split(':')[1];
+            let method = $(list[i]).find('h4').eq('3').html().split(':')[1];
             configs.configs.push({
                 "server": name,
                 "server_port": port,
@@ -49,9 +56,15 @@ function update(){
         }
         fs.writeFile('gui-config.json', JSON.stringify(configs), function (err) {
             if (err) {
-                return console.log(err);
+                return console.log('write file error' + err.error);
             }
-            console.log('request success');
+            if(runingProcess){
+                runingProcess.kill();
+                console.log('stop success');
+            }
+            runingProcess = cdr.execFile('./Shadowsocks.exe',function(){
+                console.log('start success');
+            });
         });
     });
 }
