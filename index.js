@@ -1,32 +1,33 @@
-
 "use strict";
 
 const request = require('request');
 const cheerio = require("cheerio");
 const fs = require('fs');
 const cdr = require("child_process");
-const configs = require('./config.js');
 const winston = require('winston');
-const MESSAGE = require('./i18n/cn');
+const config = require('./package.json').config;
 
+const SHADOWSOCS_BASE_CONFIG = require('./baseConfig.js');
+const MESSAGE = require(config.language);
 
-winston.add(winston.transports.File, { filename: 'work.log' });
+winston.add(winston.transports.File, {filename: config.log_file});
 winston.remove(winston.transports.Console);
 
 
-let guiConf = 'gui-config.json';
+let guiConf = config.shadowsocks_path + 'gui-config.json';
 let runingProcess = '';
 
 update(true);
+setInterval(function () {
+    update();
+}, 60 * 1000 * config.interval);
 
-setInterval(function(){ update(); },10*60*1000);
-
-function update(init){
+function update(init) {
     request({
-        uri: 'http://www.ishadowsocks.org/',
+        uri: config.ishadowsocks_url,
         method: 'GET'
-    },function(error, response, body){
-        if(error){
+    }, function (error, response, body) {
+        if (error) {
             winston.error(MESSAGE.REQUEST_ERROR);
             return false;
         }
@@ -34,16 +35,16 @@ function update(init){
         let list = $('#free .col-lg-4');
         let o_config = JSON.parse(fs.readFileSync(guiConf));
 
-        if(!init){
-            if(o_config.configs[0].password == $(list[0]).find('h4').eq('2').html().split(':')[1]) {
+        if (!init) {
+            if (o_config.configs[0].password == $(list[0]).find('h4').eq('2').html().split(':')[1]) {
                 winston.info(MESSAGE.KEEP_CONFIG);
                 return false;
             }
-        }else{
+        } else {
             winston.info(MESSAGE.START_SS);
         }
 
-        for(let i=0;i<list.length;i++){
+        for (let i = 0; i < list.length; i++) {
             let name = $(list[i]).find('h4').eq('0').html().split(':')[1];
             let port = $(list[i]).find('h4').eq('1').html().split(':')[1];
             let passw = $(list[i]).find('h4').eq('2').html().split(':')[1];
@@ -61,12 +62,12 @@ function update(init){
     });
 }
 
-function save(configs){
+function save(configs) {
     fs.writeFile(guiConf, JSON.stringify(configs), function (err) {
-        if(err){
+        if (err) {
             winston.error(MESSAGE.SAVE_CONFIG_ERROR);
         }
-        if(runingProcess){
+        if (runingProcess) {
             runingProcess.kill();
             winston.error(MESSAGE.STOP_SS);
         }
