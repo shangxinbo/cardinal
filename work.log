@@ -11,3 +11,19 @@
 {"level":"info","message":"server config is not change","timestamp":"2016-09-19T08:33:13.065Z"}
 {"level":"info","message":"server config is not change","timestamp":"2016-09-19T08:43:12.473Z"}
 {"level":"info","message":"server config is not change","timestamp":"2016-09-19T08:53:13.097Z"}
+{"level":"info","message":"启动shadowsocks","timestamp":"2016-09-19T09:46:52.770Z"}
+{"level":"info","message":"启动shadowsocks","timestamp":"2016-09-19T09:48:38.151Z"}
+{"level":"info","message":"启动shadowsocks","timestamp":"2016-09-19T09:49:17.215Z"}
+{"level":"info","message":"本地配置同步但未更新","timestamp":"2016-09-19T09:59:17.138Z"}
+{"level":"error","message":"关闭shadowsocks","timestamp":"2016-09-19T10:09:17.165Z"}
+{"level":"error","message":"关闭shadowsocks","timestamp":"2016-09-19T10:19:17.172Z"}
+{"level":"error","message":"关闭shadowsocks","timestamp":"2016-09-19T10:30:20.424Z"}
+{"level":"info","message":"启动shadowsocks","timestamp":"2016-09-19T10:31:41.396Z"}
+{"level":"info","message":"启动shadowsocks","timestamp":"2016-09-19T10:36:22.383Z"}
+{"level":"info","message":"本地配置同步但未更新","timestamp":"2016-09-19T10:46:21.878Z"}
+{"level":"info","message":"本地配置同步但未更新","timestamp":"2016-09-19T10:56:22.337Z"}
+{"level":"info","message":"本地配置同步但未更新","timestamp":"2016-09-19T11:06:23.558Z"}
+{"level":"info","message":"本地配置同步但未更新","timestamp":"2016-09-19T11:16:22.131Z"}
+{"level":"info","message":"启动shadowsocks","timestamp":"2016-09-19T11:19:57.365Z"}
+{"level":"info","message":"启动shadowsocks","timestamp":"2016-09-19T11:20:52.327Z"}
+{"level":"info","message":"启动shadowsocks","timestamp":"2016-09-19T11:21:16.236Z"}

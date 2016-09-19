@@ -49,7 +49,7 @@ function update(init) {
             let port = $(list[i]).find('h4').eq('1').html().split(':')[1];
             let passw = $(list[i]).find('h4').eq('2').html().split(':')[1];
             let method = $(list[i]).find('h4').eq('3').html().split(':')[1];
-            configs.configs.push({
+            SHADOWSOCS_BASE_CONFIG.configs.push({
                 "server": name,
                 "server_port": port,
                 "password": passw,
@@ -58,7 +58,7 @@ function update(init) {
                 "auth": false
             });
         }
-        save(configs);
+        save(SHADOWSOCS_BASE_CONFIG);
     });
 }
 
@@ -69,9 +69,16 @@ function save(configs) {
         }
         if (runingProcess) {
             runingProcess.kill();
-            winston.error(MESSAGE.STOP_SS);
+            winston.error(MESSAGE.STOP_PROCESS);
         }
-        runingProcess = cdr.execFile('./Shadowsocks.exe');
+        cdr.exec('taskkill /f /FI "IMAGENAME eq shadowsocks.exe',function(error,stdout,stderr){
+            if(error){
+                winston.error(MESSAGE.STOP_SS_ERROR);
+            }
+            runingProcess = cdr.execFile(config.shadowsocks_path + 'Shadowsocks.exe',[],{},function(){
+                winston.info(MESSAGE.START_PROCESS);
+            });
+        });
     });
 }
 
