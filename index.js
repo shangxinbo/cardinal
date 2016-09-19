@@ -43,7 +43,7 @@ function update(init) {
         } else {
             winston.info(MESSAGE.START_SS);
         }
-
+        SHADOWSOCS_BASE_CONFIG.configs = [];
         for (let i = 0; i < list.length; i++) {
             let name = $(list[i]).find('h4').eq('0').html().split(':')[1];
             let port = $(list[i]).find('h4').eq('1').html().split(':')[1];
