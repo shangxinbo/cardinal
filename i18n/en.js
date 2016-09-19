@@ -9,5 +9,7 @@ module.exports = {
     REQUEST_ERROR:'request ishadowsocks error',
     KEEP_CONFIG:'local config need not change',
     SAVE_CONFIG_ERROR:'save config error',
-    STOP_SS:'STOP SHADOWSOCKS'
-}
+    STOP_SS_ERROR:'error during stoping shadowsocks',
+    STOP_PROCESS:'stop child_process',
+    START_PROCESS:'start child_process'
+};

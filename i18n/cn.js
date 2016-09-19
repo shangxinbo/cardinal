@@ -12,4 +12,4 @@ module.exports = {
     STOP_SS_ERROR:'关闭shadowsocks出现错误',
     STOP_PROCESS:'关闭子进程',
     START_PROCESS:'开启子进程'
-}
+};
