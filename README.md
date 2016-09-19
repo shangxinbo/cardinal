@@ -6,7 +6,7 @@
 * node.js version 4+
 * shadowsocks-windows client version 3.2
 ## 实现原理
-借助ishadowsocks[http://www.ishadowsocks.com]提供的服务器，使用开源shadowsocks的windows版客户端，使用node定时抓取ishadowsocks页面上服务器配置，然后更新本地shadowsocks配置文件并重启客户端。
+借助[ishadowsocks](http://www.ishadowsocks.com)提供的服务器，使用开源shadowsocks的windows版客户端，使用node定时抓取ishadowsocks页面上服务器配置，然后更新本地shadowsocks配置文件并重启客户端。
 ## 使用方式
 * 下载程序包，进入文件目录执行node index
 * 如果想在后台运行程序，可以编辑bin/start.bat,将程序所在目录配置成自己的文件目录，以后双击该脚本即可在后台执行。
