@@ -32,9 +32,8 @@ function update(init) {
             return false;
         }
         let $ = cheerio.load(body);
-        let list = $('#free .col-lg-4');
+        let list = $('#free .col-sm-4');
         let o_config = JSON.parse(fs.readFileSync(guiConf));
-
         if (!init) {
             if (o_config.configs[0].password == $(list[0]).find('h4').eq('2').html().split(':')[1]) {
                 winston.info(MESSAGE.KEEP_CONFIG);
