@@ -28,24 +28,10 @@ function update(init) {
     let tss = new crawler.tss();
     let frss = new crawler.frss();
     config.shadowsocks.configs = [];
-    grab({
-        url:iss.url,
-        success:function(){
-            config.shadowsocks.configs = iss.deXml();
-
-            grab({
-                url:fvss.url,
-                success:function(){
-                    config.shadowsocks.configs = fvss.deXml();
-                },
-                error:function(){
-                    winston.error(MESSAGE.REQUEST_ERROR);
-                }
-            });
-        },
-        error:function(){
-            winston.error(MESSAGE.REQUEST_ERROR);
-        }
+    grab(iss.url).then(function(body){
+        body.on('response',function(response){
+            console.log(response.body);
+        });
     });
     save(config.shadowsocks);
 }
@@ -57,16 +43,13 @@ function update(init) {
  * @param options.error
  * @return null
  */
-function grab(options){
-    request({
-        uri: options.url,
-        method: 'GET'
-    }, function (error, response, body) {
-        if (error) {
-            options.error(error);
-        }else{
-            options.success(body);
-        }
+function grab(url){
+
+    return new Promise(function(resolve, reject) {
+        resolve(request({
+            uri: url,
+            method: 'GET'
+        }));
     });
 }
 
