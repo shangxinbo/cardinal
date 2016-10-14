@@ -1,12 +1,13 @@
+
 "use strict";
 
 const request = require('request');
 const cheerio = require("cheerio");
 const fs = require('fs');
 const cdr = require("child_process");
-const winston = require('winston');
-const config = require('./package.json').config;
+const winston = require('winston');         //日志插件
 
+const config = require('./package.json').config;
 const SHADOWSOCS_BASE_CONFIG = require('./baseConfig.js');
 const MESSAGE = require(config.language);
 
@@ -70,11 +71,11 @@ function save(configs) {
             runingProcess.kill();
             winston.error(MESSAGE.STOP_PROCESS);
         }
-        cdr.exec('taskkill /f /FI "IMAGENAME eq shadowsocks.exe',function(error,stdout,stderr){
-            if(error){
+        cdr.exec('taskkill /f /FI "IMAGENAME eq shadowsocks.exe', function (error, stdout, stderr) {
+            if (error) {
                 winston.error(MESSAGE.STOP_SS_ERROR);
             }
-            runingProcess = cdr.execFile(config.shadowsocks_path + 'Shadowsocks.exe',[],{},function(){
+            runingProcess = cdr.execFile(config.shadowsocks_path + 'Shadowsocks.exe', [], {}, function () {
                 winston.info(MESSAGE.START_PROCESS);
             });
         });

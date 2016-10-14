@@ -6,8 +6,8 @@
 
 module.exports = {
     "configs": [],
-    "strategy": "com.shadowsocks.strategy.ha", //默认配置成高可用
-    "index": -1,  //默认配置成高可用
+    "strategy": "com.shadowsocks.strategy.ha",   //默认配置成高可用
+    "index": -1,                                 //默认配置成高可用
     "global": false,
     "enabled": true,
     "shareOverLan": true,

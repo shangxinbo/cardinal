@@ -259,3 +259,7 @@
 {"level":"info","message":"启动shadowsocks","timestamp":"2016-10-12T07:24:21.553Z"}
 {"level":"info","message":"开启子进程","timestamp":"2016-10-12T07:24:54.664Z"}
 {"level":"info","message":"启动shadowsocks","timestamp":"2016-10-12T07:28:03.271Z"}
+{"level":"info","message":"启动shadowsocks","timestamp":"2016-10-14T05:18:14.470Z"}
+{"level":"info","message":"本地配置同步但未更新","timestamp":"2016-10-14T05:28:14.495Z"}
+{"level":"info","message":"本地配置同步但未更新","timestamp":"2016-10-14T05:38:14.431Z"}
+{"level":"info","message":"本地配置同步但未更新","timestamp":"2016-10-14T05:48:14.396Z"}
