@@ -7,11 +7,7 @@
     "test": "node index.js"
   },
   "config":{
-    "language":"./i18n/cn",
-    "shadowsocks_path":"./shadowsocks/",
-    "log_file":"work.log",
-    "ishadowsocks_url":"http://www.ishadowsocks.org/",
-    "interval":10
+    "exe_path":"./shadowsocks/"
   },
   "keywords": [
     "shadowsocks",

@@ -2,68 +2,76 @@
 "use strict";
 
 const request = require('request');
-const cheerio = require("cheerio");
 const fs = require('fs');
 const cdr = require("child_process");
-const winston = require('winston');         //日志插件
+const winston = require('winston');                         //日志插件
 
-const config = require('./package.json').config;
-const SHADOWSOCS_BASE_CONFIG = require('./baseConfig.js');
-const MESSAGE = require(config.language);
-
-winston.add(winston.transports.File, {filename: config.log_file});
+const exePath = require('./package.json').config.exe_path;  //windows-shadowsocks.exe 路径配置
+const config = require('./config.js');                      //项目配置文件
+const MESSAGE = require(config.app.language);               //日志文字映射
+const SSCONGIF_PATH = exePath + 'gui-config.json';          //shadowsocks 配置文件路径
+const crawler = require('./crawler');
+//日志文件配置
+winston.add(winston.transports.File, {filename: config.app.log_file});
 winston.remove(winston.transports.Console);
 
-
-let guiConf = config.shadowsocks_path + 'gui-config.json';
 let runingProcess = '';
 
 update(true);
 setInterval(function () {
     update();
-}, 60 * 1000 * config.interval);
+}, 60 * 1000 * config.app.interval);
 
 function update(init) {
+    let iss = new crawler.iss();
+    let fvss = new crawler.fvss();
+    let tss = new crawler.tss();
+    let frss = new crawler.frss();
+    config.shadowsocks.configs = [];
+    grab({
+        url:iss.url,
+        success:function(){
+            config.shadowsocks.configs = iss.deXml();
+
+            grab({
+                url:fvss.url,
+                success:function(){
+                    config.shadowsocks.configs = fvss.deXml();
+                },
+                error:function(){
+                    winston.error(MESSAGE.REQUEST_ERROR);
+                }
+            });
+        },
+        error:function(){
+            winston.error(MESSAGE.REQUEST_ERROR);
+        }
+    });
+    save(config.shadowsocks);
+}
+
+/**
+ * 抓取信息
+ * @param options.url
+ * @param options.success
+ * @param options.error
+ * @return null
+ */
+function grab(options){
     request({
-        uri: config.ishadowsocks_url,
+        uri: options.url,
         method: 'GET'
     }, function (error, response, body) {
         if (error) {
-            winston.error(MESSAGE.REQUEST_ERROR);
-            return false;
+            options.error(error);
+        }else{
+            options.success(body);
         }
-        let $ = cheerio.load(body);
-        let list = $('#free .col-sm-4');
-        let o_config = JSON.parse(fs.readFileSync(guiConf));
-        if (!init) {
-            if (o_config.configs[0].password == $(list[0]).find('h4').eq('2').html().split(':')[1]) {
-                winston.info(MESSAGE.KEEP_CONFIG);
-                return false;
-            }
-        } else {
-            winston.info(MESSAGE.START_SS);
-        }
-        SHADOWSOCS_BASE_CONFIG.configs = [];
-        for (let i = 0; i < list.length; i++) {
-            let name = $(list[i]).find('h4').eq('0').html().split(':')[1];
-            let port = $(list[i]).find('h4').eq('1').html().split(':')[1];
-            let passw = $(list[i]).find('h4').eq('2').html().split(':')[1];
-            let method = $(list[i]).find('h4').eq('3').html().split(':')[1];
-            SHADOWSOCS_BASE_CONFIG.configs.push({
-                "server": name,
-                "server_port": port,
-                "password": passw,
-                "method": method,
-                "remarks": "",
-                "auth": false
-            });
-        }
-        save(SHADOWSOCS_BASE_CONFIG);
     });
 }
 
 function save(configs) {
-    fs.writeFile(guiConf, JSON.stringify(configs), function (err) {
+    fs.writeFile(SSCONGIF_PATH, JSON.stringify(configs), function (err) {
         if (err) {
             winston.error(MESSAGE.SAVE_CONFIG_ERROR);
         }
@@ -75,7 +83,7 @@ function save(configs) {
             if (error) {
                 winston.error(MESSAGE.STOP_SS_ERROR);
             }
-            runingProcess = cdr.execFile(config.shadowsocks_path + 'Shadowsocks.exe', [], {}, function () {
+            runingProcess = cdr.execFile(exePath + 'Shadowsocks.exe', [], {}, function () {
                 winston.info(MESSAGE.START_PROCESS);
             });
         });
