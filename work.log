@@ -353,3 +353,4 @@
 {"level":"info","message":"本地配置同步但未更新","timestamp":"2016-11-01T08:48:08.670Z"}
 {"level":"info","message":"本地配置同步但未更新","timestamp":"2016-11-01T08:58:08.684Z"}
 {"level":"info","message":"本地配置同步但未更新","timestamp":"2016-11-01T09:08:08.667Z"}
+{"level":"info","message":"启动shadowsocks","timestamp":"2016-11-01T09:37:13.016Z"}
