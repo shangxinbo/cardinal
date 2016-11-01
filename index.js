@@ -43,14 +43,18 @@ function update(init) {
  * @param options.error
  * @return null
  */
-function grab(url){
+function grab(url,success,error){
 
-    return new Promise(function(resolve, reject) {
-        resolve(request({
-            uri: url,
-            method: 'GET'
-        }));
-    });
+    request({
+        uri: config.ishadowsocks_url,
+        method: 'GET'
+    },function(err,response,body){
+        if (err) {
+            error(err);
+        }else{
+            success(body);
+        }
+    })
 }
 
 function save(configs) {
