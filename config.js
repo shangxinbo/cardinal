@@ -9,7 +9,8 @@ module.exports = {
         "language":"./i18n/cn",
         "log_file":"work.log",
         "ishadowsocks_url":"http://www.ishadowsocks.org/",
-        "interval":10
+        "interval":10,
+        "exe_path":"./shadowsocks/"
     },
     shadowsocks:{    //shadowsocks 基础配置 default
         "configs": [],

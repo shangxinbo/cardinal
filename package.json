@@ -6,9 +6,6 @@
   "scripts": {
     "test": "node index.js"
   },
-  "config":{
-    "exe_path":"./shadowsocks/"
-  },
   "keywords": [
     "shadowsocks",
     "firewall",
@@ -19,6 +16,8 @@
   "dependencies": {
     "cheerio": "^0.22.0",
     "request": "^2.74.0",
+    "sync-request": "^3.0.1",
+    "urllib-sync": "^1.1.3",
     "winston": "^2.2.0"
   }
 }
