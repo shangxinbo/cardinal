@@ -20,7 +20,6 @@
 > 2. 高可用度提高，防止某个提供商被和谐后程序无法使用
 > 3. 更新配置频率可降低
 > 4. 程序配置集中，复杂变简单
-
 > version 2.0 默认服务提供商如下
 >* http://www.ishadowsocks.org/
 >* http://freevpnss.cc/
