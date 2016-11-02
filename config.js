@@ -9,7 +9,7 @@ module.exports = {
         "language":"./i18n/cn",
         "log_file":"work.log",
         "ishadowsocks_url":"http://www.ishadowsocks.org/",
-        "interval":60,                               //60分钟刷新服务
+        "interval":30,                               //30分钟刷新服务
         "exe_path":"./shadowsocks/"
     },
     shadowsocks:{   //shadowsocks 基础配置 default
