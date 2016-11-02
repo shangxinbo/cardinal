@@ -8,6 +8,12 @@
 
 const cheerio = require("cheerio");
 
+/**
+ * 每个item 需要遵循以下格式，添加或修改时最好复制原有样例进行修改
+ * 需要有url和deXml属性
+ * @attr url String  抓取路径
+ * @function deXml   解析抓取结果转换成shadowsocks的配置项, param body return array or null
+ */
 const items = [
     {
         url: 'http://www.ishadowsocks.org/',
