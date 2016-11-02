@@ -30,7 +30,7 @@
 ## 使用方式
 * 下载程序包，执行<code>npm install</code>
 * 进入文件目录执行<code>node index</code>
-* 如果想在后台运行程序，可以编辑bin/start.bat,将程序所在目录配置成自己的文件目录，以后双击该脚本即可在后台执行
+* 如果想在后台运行程序，可以编辑bin/start.bat,将程序所在目录配置成自己的文件目录，以后双击该脚本即可在后台执行,__这里要注意，程序运行会关闭调当前所有正在执行的node程序__
 
 ## 配置说明
 * shadowsocks目录存放最新的shadowsocks-windows客户端程序
