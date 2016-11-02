@@ -4,5 +4,5 @@ mshta vbscript:createobject("wscript.shell").run("%~nx0 h",0)(window.close)&&exi
 :begin
 d:
 cd d:\xShadowsocks\
-taskkill /f /FI "IMAGENAME eq node.exe
+taskkill /f /FI "IMAGENAME eq node.exe"
 node index.js
