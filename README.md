@@ -68,7 +68,7 @@
 }
 ```
 ## 已知问题
-使用谷歌会出现500 Internal Privoxy Error，如下，暂时未找到解决方案
+使用谷歌特殊会出现500 Internal Privoxy Error，如下，暂时未找到解决方案
 ```
 500 Internal Privoxy Error
 
