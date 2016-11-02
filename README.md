@@ -1,7 +1,7 @@
 # xShadowsocks
 
 ## 简述
-由于伟大的GFW，国内不能访问全球意义上的互联网，于是有了科学上网这个概念。我的科学上网史是从GAE开始的，后来用自由门，后来发现lantern，一直以为lantern就是最完美的科学上网姿势，然而收费后的lantern似乎偏离了正确的轨道，让我不得不放弃而选择shadowsocks。shadowsocks使用需要部署服务端，也就是需要一个服务器来转发数据，于是你需要有一个免费提供服务的第三方，所以我找到了[ishadowsocks](http://www.ishadowsocks.com) 。而在中国，免费的就代表最贵的，你不得不抽出最宝贵的时间来频繁的更新帐号等配置，然而一切人类重复的工作都可以用程序来提高效率，于是我写了这个脚本程序xShadowsocks。
+由于伟大的GFW，国内不能访问全球意义上的互联网，于是有了科学上网这个概念。我的科学上网史是从GAE开始的，后来用自由门，后来发现lantern，一直以为lantern就是最完美的科学上网姿势，然而收费后的lantern似乎偏离了正确的轨道，让我不得不放弃而选择shadowsocks。shadowsocks使用需要部署服务端，也就是需要一个服务器来转发数据，于是你需要有一个免费提供服务的第三方，所以我找到了[ishadowsocks](http://www.ishadowsocks.com) 后来依次找到其他的服务提供商。而在中国，免费的就代表最贵的，你不得不抽出最宝贵的时间来频繁的更新帐号等配置，然而一切人类重复的工作都可以用程序来提高效率，于是我写了这个脚本程序xShadowsocks。
 
 ## 运行依赖
 * <code>windows(win7,win8,win10)</code>
@@ -41,7 +41,7 @@
 * i18n是日志的输出语言包，可以自己配置，并通过更改package.json里的配置项进行配置
 
 ## 抓取地址编辑
-2.0版本可自定义抓取地址，crawler.js 是抓取地址配置模块，每个项的配置格式必须要遵守规则：每个item需要有url和deXml属性，其中url是抓取地址，deXml是解析函数，deXml参数是抓取的buffer，返回值是一个配置的数组或null，例子如下
+2.0版本可自定义抓取地址，crawler.js 是抓取地址配置模块，每个项的配置格式必须要遵守规则：每个item需要有url和deXml属性，其中url是抓取地址，deXml是解析函数，deXml参数是抓取的buffer，返回值是一个配置的数组或null，示例如下
 ```
 {
     url: 'http://tempss.com/',
