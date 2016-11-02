@@ -68,7 +68,7 @@
 }
 ```
 ## 已知问题
-使用谷歌特殊会出现500 Internal Privoxy Error，如下，暂时未找到解决方案
+使用谷歌特殊情况下会出现500 Internal Privoxy Error，如下，可通过切换负载均衡和高可用选项解决
 ```
 500 Internal Privoxy Error
 

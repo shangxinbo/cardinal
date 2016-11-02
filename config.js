@@ -14,8 +14,8 @@ module.exports = {
     },
     shadowsocks:{   //shadowsocks 基础配置 default
         "configs": [],
-        "strategy": "com.shadowsocks.strategy.ha",   //默认配置成高可用
-        "index": -1,                                 //默认配置成高可用
+        "strategy": "com.shadowsocks.strategy.balancing",  //默认配置成负载均衡，高可用配置 com.shadowsocks.strategy.ha
+        "index": -1,
         "global": false,
         "enabled": true,
         "shareOverLan": true,
