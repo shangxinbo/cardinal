@@ -8,8 +8,6 @@ module.exports = {
     CRAWLER_NULL:'爬虫路径为空,需要补充爬虫地址',
     REQUEST_ERROR:'请求失败',
     START_SS:'启动shadowsocks',
-    REQUEST_ERROR:'请求ishdowsocks失败',
-    KEEP_CONFIG:'本地配置同步但未更新',
     SAVE_CONFIG_ERROR:'保存配置文件失败',
     STOP_SS_ERROR:'关闭shadowsocks出现错误',
     STOP_PROCESS:'关闭子进程',

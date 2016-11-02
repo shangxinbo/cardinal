@@ -55,6 +55,10 @@ function grab(url) {
     }
 }
 
+/**
+ * 保存shadowsocks配置
+ * @param configs
+ */
 function save(configs) {
     fs.writeFile(CONF.app.exe_path + 'gui-config.json', JSON.stringify(configs), function (err) {
         if (err) {

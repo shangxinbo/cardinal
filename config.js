@@ -9,10 +9,10 @@ module.exports = {
         "language":"./i18n/cn",
         "log_file":"work.log",
         "ishadowsocks_url":"http://www.ishadowsocks.org/",
-        "interval":10,
+        "interval":60,                               //60分钟刷新服务
         "exe_path":"./shadowsocks/"
     },
-    shadowsocks:{    //shadowsocks 基础配置 default
+    shadowsocks:{   //shadowsocks 基础配置 default
         "configs": [],
         "strategy": "com.shadowsocks.strategy.ha",   //默认配置成高可用
         "index": -1,                                 //默认配置成高可用
