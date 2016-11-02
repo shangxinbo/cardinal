@@ -41,31 +41,31 @@
 * i18n是日志的输出语言包，可以自己配置，并通过更改package.json里的配置项进行配置
 
 ## 抓取地址编辑
-crawler.js 是抓取地址配置模块，每个项的配置格式必须要遵守规则：每个item需要有url和deXml属性，其中url是抓取地址，deXml是解析函数，deXml参数是抓取的buffer，返回值是一个配置的数组或null，例子如下
+2.0版本可自定义抓取地址，crawler.js 是抓取地址配置模块，每个项的配置格式必须要遵守规则：每个item需要有url和deXml属性，其中url是抓取地址，deXml是解析函数，deXml参数是抓取的buffer，返回值是一个配置的数组或null，例子如下
 ```
 {
-        url: 'http://tempss.com/',
-        deXml: function (body) {
-            try {
-                let $ = cheerio.load(body);
-                let list = $('table.table-responsive tbody tr');
-                let arr = [];
-                for (let i = 0; i < list.length; i++) {
-                    arr.push({
-                        "server": $(list[i]).find('td').eq('0').html(),
-                        "server_port": $(list[i]).find('td').eq('1').html(),
-                        "password": $(list[i]).find('td').eq('2').html(),
-                        "method": $(list[i]).find('td').eq('3').html(),
-                        "remarks": "tss",
-                        "auth": false
-                    });
-                }
-                return arr;
-            } catch (e) {
-                return null;
+    url: 'http://tempss.com/',
+    deXml: function (body) {
+        try {
+            let $ = cheerio.load(body);
+            let list = $('table.table-responsive tbody tr');
+            let arr = [];
+            for (let i = 0; i < list.length; i++) {
+                arr.push({
+                    "server": $(list[i]).find('td').eq('0').html(),
+                    "server_port": $(list[i]).find('td').eq('1').html(),
+                    "password": $(list[i]).find('td').eq('2').html(),
+                    "method": $(list[i]).find('td').eq('3').html(),
+                    "remarks": "tss",
+                    "auth": false
+                });
             }
+            return arr;
+        } catch (e) {
+            return null;
         }
     }
+}
 ```
 
 ## 备注
