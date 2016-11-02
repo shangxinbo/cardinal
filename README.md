@@ -30,13 +30,45 @@
 ## 使用方式
 * 下载程序包，执行<code>npm install</code>
 * 进入文件目录执行<code>node index</code>
-* 或者你如果想在后台运行程序，可以编辑bin/start.bat,将程序所在目录配置成自己的文件目录，以后双击该脚本即可在后台执行
+* 如果想在后台运行程序，可以编辑bin/start.bat,将程序所在目录配置成自己的文件目录，以后双击该脚本即可在后台执行
 
 ## 配置说明
 * shadowsocks目录存放最新的shadowsocks-windows客户端程序
-* baseConfig.js是shadowsocks的基础配置文件，如果shadowsocks的配置文件随着版本更新不再向下兼容，需要相应的更新该文件
+* 模块config.js
+* * app 项目配置文件
+* * shadowsocks 是shadowsocks的基础配置文件，如果shadowsocks的配置文件随着版本更新不再向下兼容，需要相应的更新该文件
 * work.log 是运行的日志文件，当执行程序后发现不能上网可以查看日志查找原因
 * i18n是日志的输出语言包，可以自己配置，并通过更改package.json里的配置项进行配置
+
+## 抓取地址编辑
+> crawler.js 是抓取地址配置模块，每个项的配置格式必须遵守如下规则
+>* 每个item需要有url和deXml属性，其中url是抓取地址，deXml是解析函数，deXml参数是抓取的buffer，返回值是一个配置的数组，例子如下
+>
+```
+{
+        url: 'http://tempss.com/',
+        deXml: function (body) {
+            try {
+                let $ = cheerio.load(body);
+                let list = $('table.table-responsive tbody tr');
+                let arr = [];
+                for (let i = 0; i < list.length; i++) {
+                    arr.push({
+                        "server": $(list[i]).find('td').eq('0').html(),
+                        "server_port": $(list[i]).find('td').eq('1').html(),
+                        "password": $(list[i]).find('td').eq('2').html(),
+                        "method": $(list[i]).find('td').eq('3').html(),
+                        "remarks": "tss",
+                        "auth": false
+                    });
+                }
+                return arr;
+            } catch (e) {
+                return null;
+            }
+        }
+    }
+```
 
 ## 备注
 * 所有免费的科学上网手段都是不可靠的，使用时需要使用者谨记安全问题
