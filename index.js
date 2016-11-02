@@ -1,69 +1,66 @@
-
 "use strict";
 
-const request = require('request');
-const cheerio = require("cheerio");
+const request = require('sync-request');             //version2.0 使用同步抓取
 const fs = require('fs');
 const cdr = require("child_process");
-const winston = require('winston');         //日志插件
+const winston = require('winston');                  //日志插件
 
-const config = require('./package.json').config;
-const SHADOWSOCS_BASE_CONFIG = require('./baseConfig.js');
-const MESSAGE = require(config.language);
+const CONF = require('./config.js');                 //项目配置文件
+const MESSAGE = require(CONF.app.language);          //日志文字映射
+const crawler = require('./crawler');
 
-winston.add(winston.transports.File, {filename: config.log_file});
+
+winston.add(winston.transports.File, {filename: CONF.app.log_file});  //日志文件配置
 winston.remove(winston.transports.Console);
 
-
-let guiConf = config.shadowsocks_path + 'gui-config.json';
 let runingProcess = '';
 
 update(true);
 setInterval(function () {
     update();
-}, 60 * 1000 * config.interval);
+}, 60 * 1000 * CONF.app.interval);
 
 function update(init) {
-    request({
-        uri: config.ishadowsocks_url,
-        method: 'GET'
-    }, function (error, response, body) {
-        if (error) {
-            winston.error(MESSAGE.REQUEST_ERROR);
-            return false;
-        }
-        let $ = cheerio.load(body);
-        let list = $('#free .col-sm-4');
-        let o_config = JSON.parse(fs.readFileSync(guiConf));
-        if (!init) {
-            if (o_config.configs[0].password == $(list[0]).find('h4').eq('2').html().split(':')[1]) {
-                winston.info(MESSAGE.KEEP_CONFIG);
-                return false;
+    let dymicArr = [];
+    if (crawler.length > 0) {
+        for (let i = 0; i < crawler.length; i++) {
+            let data = grab(crawler[i].url);
+            if (data) {
+                let arr = crawler[i].deXml(data);
+                if (arr) {
+                    dymicArr = dymicArr.concat(arr);
+                }
             }
-        } else {
-            winston.info(MESSAGE.START_SS);
         }
-        SHADOWSOCS_BASE_CONFIG.configs = [];
-        for (let i = 0; i < list.length; i++) {
-            let name = $(list[i]).find('h4').eq('0').html().split(':')[1];
-            let port = $(list[i]).find('h4').eq('1').html().split(':')[1];
-            let passw = $(list[i]).find('h4').eq('2').html().split(':')[1];
-            let method = $(list[i]).find('h4').eq('3').html().split(':')[1];
-            SHADOWSOCS_BASE_CONFIG.configs.push({
-                "server": name,
-                "server_port": port,
-                "password": passw,
-                "method": method,
-                "remarks": "",
-                "auth": false
-            });
-        }
-        save(SHADOWSOCS_BASE_CONFIG);
-    });
+    } else {
+        winston.error(MESSAGE.CRAWLER_NULL);
+    }
+
+    CONF.shadowsocks.configs = dymicArr;
+    save(CONF.shadowsocks);
 }
 
+/**
+ * 抓取信息
+ * @param url
+ * @return buffer response body
+ */
+function grab(url) {
+    var res = request('GET', url);
+    if (res.statusCode == 200) {
+        return res.getBody();
+    } else {
+        winston.error(url + MESSAGE.REQUEST_ERROR);
+        return null;
+    }
+}
+
+/**
+ * 保存shadowsocks配置
+ * @param configs
+ */
 function save(configs) {
-    fs.writeFile(guiConf, JSON.stringify(configs), function (err) {
+    fs.writeFile(CONF.app.exe_path + 'gui-config.json', JSON.stringify(configs), function (err) {
         if (err) {
             winston.error(MESSAGE.SAVE_CONFIG_ERROR);
         }
@@ -75,7 +72,7 @@ function save(configs) {
             if (error) {
                 winston.error(MESSAGE.STOP_SS_ERROR);
             }
-            runingProcess = cdr.execFile(config.shadowsocks_path + 'Shadowsocks.exe', [], {}, function () {
+            runingProcess = cdr.execFile(CONF.app.exe_path + 'Shadowsocks.exe', [], {}, function () {
                 winston.info(MESSAGE.START_PROCESS);
             });
         });

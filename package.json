@@ -1,17 +1,10 @@
 {
   "name": "xinternet",
-  "version": "1.0.0",
+  "version": "2.0.1",
   "description": "a simple tool for overing the Great Firewall of China with shadowsocks",
   "main": "index.js",
   "scripts": {
     "test": "node index.js"
-  },
-  "config":{
-    "language":"./i18n/cn",
-    "shadowsocks_path":"./shadowsocks/",
-    "log_file":"work.log",
-    "ishadowsocks_url":"http://www.ishadowsocks.org/",
-    "interval":10
   },
   "keywords": [
     "shadowsocks",
@@ -23,6 +16,7 @@
   "dependencies": {
     "cheerio": "^0.22.0",
     "request": "^2.74.0",
+    "sync-request": "^3.0.1",
     "winston": "^2.2.0"
   }
 }
