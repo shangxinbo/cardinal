@@ -61,7 +61,7 @@ const items = [
             }
         }
     },
-    {
+    /*{
         url: 'http://tempss.com/',
         deXml: function (body) {
             try {
@@ -83,7 +83,7 @@ const items = [
                 return null;
             }
         }
-    },
+    },*/
     {
         url: 'http://freessr.top/',
         deXml: function (body) {
