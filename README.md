@@ -6,10 +6,26 @@
 ## 运行依赖
 * <code>windows(win7,win8,win10)</code>
 * <code>node.js version 4+</code>
-* <code>shadowsocks-windows client version 3.2</code>
+* <code>shadowsocks-windows client version 3.x+</code>
 
 ## 实现原理
-借助[ishadowsocks](http://www.ishadowsocks.com)提供的服务器，使用开源shadowsocks的windows版客户端，使用node定时抓取ishadowsocks页面上服务器配置，然后更新本地shadowsocks配置文件并重启客户端。
+借助开源项目shadowsocks的windows版客户端，使用网络搜集的免费的shadowsocks服务器节点,定时抓取页面上服务器配置,自动获取账号密码更新本地shadowsocks配置，并重启shadowsocks客户端。
+* version 1.0
+> 使用ishadowsocks服务节点，自动更新，实现按需最小化操作，更新频率越快服务越稳定但越耗费系统资源。优点：
+> 1. 系统资源消耗小
+
+* version 2.0
+> 将服务节点写入crawler.js配置模块，用户可以自定义服务提供商。优点：
+> 1. 抓取服务器节点可配置化，可配置多个被爬取地址
+> 2. 高可用度提高，防止某个提供商被和谐后程序无法使用
+> 3. 更新配置频率可降低
+> 4. 程序配置集中，复杂变简单
+
+> version 2.0 默认服务提供商如下
+>* http://www.ishadowsocks.org/
+>* http://freevpnss.cc/
+>* http://tempss.com/
+>* http://freessr.top/
 
 ## 使用方式
 * 下载程序包，执行<code>npm install</code>
