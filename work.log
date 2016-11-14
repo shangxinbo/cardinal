@@ -234,3 +234,5 @@
 {"level":"info","message":"开启子进程","timestamp":"2016-11-14T02:49:31.353Z"}
 {"level":"error","message":"关闭子进程","timestamp":"2016-11-14T03:19:34.632Z"}
 {"level":"info","message":"开启子进程","timestamp":"2016-11-14T03:19:34.652Z"}
+{"level":"error","message":"关闭子进程","timestamp":"2016-11-14T03:49:40.352Z"}
+{"level":"info","message":"开启子进程","timestamp":"2016-11-14T03:49:40.383Z"}

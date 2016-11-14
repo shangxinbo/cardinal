@@ -13,7 +13,7 @@ const crawler = require('./crawler');
 winston.add(winston.transports.File, {filename: CONF.app.log_file});  //日志文件配置
 winston.remove(winston.transports.Console);
 
-let runingProcess = '';
+let runingProcess = '';                               //监测是否已经运行
 
 update(true);
 setInterval(function () {
@@ -78,4 +78,3 @@ function save(configs) {
         });
     });
 }
-

@@ -5,14 +5,13 @@
  */
 
 module.exports = {
-    app:{
-        "language":"./i18n/cn",
-        "log_file":"work.log",
-        "ishadowsocks_url":"http://www.ishadowsocks.org/",
-        "interval":30,                               //30分钟刷新服务
-        "exe_path":"./shadowsocks/"
+    app: {
+        "language": "./i18n/cn",
+        "log_file": "work.log",
+        "interval": 30,                               //30分钟刷新服务
+        "exe_path": "./shadowsocks/"
     },
-    shadowsocks:{   //shadowsocks 基础配置 default
+    shadowsocks: {        //shadowsocks 基础配置 default
         "configs": [],
         "strategy": "com.shadowsocks.strategy.balancing",  //默认配置成负载均衡，高可用配置 com.shadowsocks.strategy.ha
         "index": -1,
