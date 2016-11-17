@@ -15,7 +15,7 @@ const cheerio = require("cheerio");
  * @function deXml   解析抓取结果转换成shadowsocks的配置项, param body return array or null
  */
 const items = [
-    {
+    /*{
         url: 'http://www.ishadowsocks.org/',
         deXml: function (body) {
             try {
@@ -37,7 +37,7 @@ const items = [
                 return null;
             }
         }
-    },
+    },*/
     {
         url: 'http://freevpnss.cc/',
         deXml: function (body) {
