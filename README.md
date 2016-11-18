@@ -85,3 +85,6 @@ If you are the proxy administrator, please put the required file(s)in the (confd
 * 所有免费的科学上网手段都是不可靠的，使用时需要使用者谨记安全问题
 * 所有科学上网方式都不能保证永久有效，而保证这种方式尽量长久的方法就是多找些备用的免费服务提供商
 * 开源协议 [GPL](LICENSE)
+
+## 事件记录
+* 2016-11-17 下午某刻 ishadowsocks服务不明原因停止，感谢ishadowsocks为免费科学上网做出的贡献
