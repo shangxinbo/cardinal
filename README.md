@@ -87,4 +87,4 @@ If you are the proxy administrator, please put the required file(s)in the (confd
 * 开源协议 [GPL](LICENSE)
 
 ## 事件记录
-* 2016-11-17 下午某刻 ishadowsocks服务不明原因停止，感谢ishadowsocks为免费科学上网做出的贡献
+* 2016-11-17 下午某刻 ishadowsocks.org域名地址停止服务，改为ishadowsocks.net，感谢ishadowsocks为免费科学上网做出的不懈的努力
