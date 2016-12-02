@@ -27,6 +27,9 @@
 >* http://tempss.com/ (2016-11 end service)
 >* http://freessr.top/
 
+> 备用服务器
+>* http://www.shadowsocks8.net/ pc端需要解析二维码
+
 ## 使用方式
 * 下载程序包，执行<code>npm install</code>
 * 进入文件目录执行<code>node index</code>
