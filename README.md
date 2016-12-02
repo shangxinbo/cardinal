@@ -31,6 +31,7 @@
 ## 使用方式
 * 下载程序包，执行<code>npm install</code>
 * 进入文件目录执行<code>node index</code>
+>
 >* windows平台批处理 reset.bat,start.bat,stop.bat,可发送桌面快捷方式使用
 >* __小白用户__，双击 bin/reset_x86.exe, 建议发送桌面快捷方式
 >* __注意:批处理程序和exe可执行文件运行会关闭调当前所有正在执行的node程序__
