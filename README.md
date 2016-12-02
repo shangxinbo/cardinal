@@ -24,7 +24,7 @@
 > version 2.0 默认服务提供商如下
 >* http://www.ishadowsocks.net/ (2016-11-17 由ishadowsocks.com改迁)
 >* http://freevpnss.cc/
->* http://tempss.com/（2016-11 end service）
+>* http://tempss.com/ (2016-11 end service)
 >* http://freessr.top/
 
 ## 使用方式
