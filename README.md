@@ -5,7 +5,7 @@
 
 ## 运行依赖
 * <code>windows(win7,win8,win10)</code>
-* <code>[node.js version 4+](https://github.com/nodejs/node)</code>
+* <code>[node.js version 4+](https://nodejs.org/en/)</code>
 * <code>[shadowsocks-windows client version 3.x+](https://github.com/shadowsocks/shadowsocks-windows)</code>
 
 ## 实现原理
