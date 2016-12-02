@@ -16,6 +16,29 @@ const cheerio = require("cheerio");
  */
 const items = [
     {
+        url: 'http://freessr.top/',
+        deXml: function (body) {
+            try {
+                let $ = cheerio.load(body);
+                let list = $('.col-md-6.text-center');
+                let arr = [];
+                for (let i = 0; i < list.length - 1; i++) {
+                    arr.push({
+                        "server": $(list[i]).find('h4').eq('0').html().split(':')[1],
+                        "server_port": $(list[i]).find('h4').eq('1').html().split(':')[1],
+                        "password": $(list[i]).find('h4').eq('2').html().split(':')[1],
+                        "method": $(list[i]).find('h4').eq('3').html().split(':')[1],
+                        "remarks": "frss",
+                        "auth": false
+                    });
+                }
+                return arr;
+            } catch (e) {
+                return null;
+            }
+        }
+    },
+    {
         url: 'http://www.ishadowsocks.net/',
         deXml: function (body) {
             try {
@@ -52,29 +75,6 @@ const items = [
                         "password": $(list[i]).find('p').eq('2').html().replace(/&#x(.*);/g, ''),
                         "method": $(list[i]).find('p').eq('3').html().replace(/&#x(.*);/g, ''),
                         "remarks": "fvss",
-                        "auth": false
-                    });
-                }
-                return arr;
-            } catch (e) {
-                return null;
-            }
-        }
-    },
-    {
-        url: 'http://freessr.top/',
-        deXml: function (body) {
-            try {
-                let $ = cheerio.load(body);
-                let list = $('.col-md-6.text-center');
-                let arr = [];
-                for (let i = 0; i < list.length - 1; i++) {
-                    arr.push({
-                        "server": $(list[i]).find('h4').eq('0').html().split(':')[1],
-                        "server_port": $(list[i]).find('h4').eq('1').html().split(':')[1],
-                        "password": $(list[i]).find('h4').eq('2').html().split(':')[1],
-                        "method": $(list[i]).find('h4').eq('3').html().split(':')[1],
-                        "remarks": "frss",
                         "auth": false
                     });
                 }

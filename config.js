@@ -13,8 +13,8 @@ module.exports = {
     },
     shadowsocks: {        //shadowsocks 基础配置 default
         "configs": [],
-        "strategy": "com.shadowsocks.strategy.scbs",   //负载均衡"com.shadowsocks.strategy.balancing"，高可用"com.shadowsocks.strategy.ha"
-        "index": -1,
+        "strategy": false,   //当index:-1时起作用，负载均衡"com.shadowsocks.strategy.balancing",高可用"com.shadowsocks.strategy.ha",根据统计"com.shadowsocks.strategy.scbs"
+        "index": 0,          //现在的负载均衡和高可用算法等算法有待考究，会影响资源方ip的切换，最好不用
         "global": false,
         "enabled": true,
         "shareOverLan": true,

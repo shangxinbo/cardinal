@@ -1,6 +1,6 @@
 {
   "name": "xShadowsocks",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A simple tool for overing the Great Firewall of China with shadowsocks",
   "main": "index.js",
   "scripts": {
