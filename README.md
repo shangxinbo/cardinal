@@ -22,9 +22,9 @@
 >* 程序配置集中，复杂变简单
 >
 > version 2.0 默认服务提供商如下
->* http://www.ishadowsocks.org/
+>* http://www.ishadowsocks.net/ (2016-11-17 由ishadowsocks.com改迁)
 >* http://freevpnss.cc/
->* http://tempss.com/
+>* http://tempss.com/（2016-11 end service）
 >* http://freessr.top/
 
 ## 使用方式
