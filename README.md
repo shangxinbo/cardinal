@@ -22,9 +22,9 @@
 >* 程序配置集中，复杂变简单
 >
 > version 2.0 默认服务提供商如下
->* http://www.ishadowsocks.org/
+>* http://www.ishadowsocks.net/ (2016-11-17 由ishadowsocks.com改迁)
 >* http://freevpnss.cc/
->* http://tempss.com/
+>* http://tempss.com/ (2016-11 end service)
 >* http://freessr.top/
 
 ## 使用方式
@@ -88,3 +88,4 @@ If you are the proxy administrator, please put the required file(s)in the (confd
 
 ## 事件记录
 * 2016-11-17 下午某刻 ishadowsocks.org域名地址停止服务，改为ishadowsocks.net，感谢ishadowsocks为免费科学上网做出的不懈的努力
+* 2016-11-?? 11月某许 tempss.com 服务停止，不明原因，感谢tempss为免费科学上网做出的努力
