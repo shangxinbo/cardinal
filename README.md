@@ -5,8 +5,8 @@
 
 ## 运行依赖
 * <code>windows(win7,win8,win10)</code>
-* <code>node.js version 4+</code>
-* <code>shadowsocks-windows client version 3.x+</code>
+* <code>[node.js version 4+](https://github.com/nodejs/node)</code>
+* <code>[shadowsocks-windows client version 3.x+](https://github.com/shadowsocks/shadowsocks-windows)</code>
 
 ## 实现原理
 借助开源项目shadowsocks的windows版客户端，使用网络搜集的免费的shadowsocks服务器节点,定时抓取页面上服务器配置,自动获取账号密码更新本地shadowsocks配置，并重启shadowsocks客户端。
@@ -36,8 +36,8 @@
 ## 配置说明
 * shadowsocks目录存放最新的shadowsocks-windows客户端程序
 * 模块config.js
-* * app 项目配置文件
-* * shadowsocks 是shadowsocks的基础配置文件，如果shadowsocks的配置文件随着版本更新不再向下兼容，需要相应的更新该文件
+*   * app 项目配置文件
+*   * shadowsocks 是shadowsocks的基础配置文件，如果shadowsocks的配置文件随着版本更新不再向下兼容，需要相应的更新该文件
 * work.log 是运行的日志文件，当执行程序后发现不能上网可以查看日志查找原因
 * i18n是日志的输出语言包，可以自己配置，并通过更改package.json里的配置项进行配置
 
