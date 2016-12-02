@@ -13,7 +13,7 @@ module.exports = {
     },
     shadowsocks: {        //shadowsocks 基础配置 default
         "configs": [],
-        "strategy": "com.shadowsocks.strategy.balancing",  //默认配置成负载均衡，高可用配置 com.shadowsocks.strategy.ha
+        "strategy": "com.shadowsocks.strategy.scbs",   //负载均衡"com.shadowsocks.strategy.balancing"，高可用"com.shadowsocks.strategy.ha"
         "index": -1,
         "global": false,
         "enabled": true,
