@@ -1,1 +1,145 @@
-{"configs":[{"server":"s1.l3l.site","server_port":"31178","password":"kingss.pw","method":"aes-256-cfb","remarks":"frss","auth":false},{"server":"s2.l3l.site","server_port":"31252","password":"kingss.pw","method":"aes-256-cfb","remarks":"frss","auth":false},{"server":"s3.freessr.top","server_port":"19801","password":"2870686","method":"aes-256-cfb","remarks":"frss","auth":false},{"server":"s4.freessr.top","server_port":"138","password":"2598596","method":"aes-256-cfb","remarks":"frss","auth":false},{"server":"s5.l3l.site","server_port":"31874","password":"kingss.pw","method":"aes-256-cfb","remarks":"frss","auth":false},{"server":"a.iss.tf","server_port":"1024","password":"28636123","method":"aes-256-cfb","remarks":"iss","auth":false},{"server":"b.iss.tf","server_port":"20000","password":"07162956","method":"aes-256-cfb","remarks":"iss","auth":false},{"server":"c.iss.tf","server_port":"10008","password":"29198313","method":"aes-256-cfb","remarks":"iss","auth":false},{"server":"us.ioss.pw","server_port":"443","password":"73039133","method":"AES-256-CFB","remarks":"fvss","auth":false},{"server":"jp.ioss.pw","server_port":"23333","password":"74419061","method":"RC4-MD5","remarks":"fvss","auth":false},{"server":"usa.ioss.pw","server_port":"443","password":"18671849","method":"AES-256-CFB","remarks":"fvss","auth":false}],"strategy":false,"index":0,"global":false,"enabled":true,"shareOverLan":true,"isDefault":false,"localPort":1080,"pacUrl":null,"useOnlinePac":false,"availabilityStatistics":false,"autoCheckUpdate":true,"isVerboseLogging":false,"logViewer":null,"useProxy":false,"proxyServer":null,"proxyPort":0}
+{
+  "configs": [
+    {
+      "server": "s1.l3l.site",
+      "server_port": 31178,
+      "password": "kingss.pw",
+      "method": "aes-256-cfb",
+      "remarks": "frss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "s2.l3l.site",
+      "server_port": 31252,
+      "password": "kingss.pw",
+      "method": "aes-256-cfb",
+      "remarks": "frss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "s3.freessr.top",
+      "server_port": 19801,
+      "password": "2870686",
+      "method": "aes-256-cfb",
+      "remarks": "frss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "s4.freessr.top",
+      "server_port": 138,
+      "password": "2598596",
+      "method": "aes-256-cfb",
+      "remarks": "frss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "s5.l3l.site",
+      "server_port": 31874,
+      "password": "kingss.pw",
+      "method": "aes-256-cfb",
+      "remarks": "frss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "a.iss.tf",
+      "server_port": 1024,
+      "password": "28636123",
+      "method": "aes-256-cfb",
+      "remarks": "iss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "b.iss.tf",
+      "server_port": 20000,
+      "password": "07162956",
+      "method": "aes-256-cfb",
+      "remarks": "iss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "c.iss.tf",
+      "server_port": 10008,
+      "password": "29198313",
+      "method": "aes-256-cfb",
+      "remarks": "iss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "us.ioss.pw",
+      "server_port": 443,
+      "password": "73039133",
+      "method": "AES-256-CFB",
+      "remarks": "fvss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "jp.ioss.pw",
+      "server_port": 23333,
+      "password": "74419061",
+      "method": "RC4-MD5",
+      "remarks": "fvss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "usa.ioss.pw",
+      "server_port": 443,
+      "password": "18671849",
+      "method": "AES-256-CFB",
+      "remarks": "fvss",
+      "auth": false,
+      "timeout": 5
+    }
+  ],
+  "strategy": null,
+  "index": 4,
+  "global": false,
+  "enabled": true,
+  "shareOverLan": true,
+  "isDefault": false,
+  "localPort": 1080,
+  "pacUrl": null,
+  "useOnlinePac": false,
+  "availabilityStatistics": false,
+  "autoCheckUpdate": true,
+  "isVerboseLogging": false,
+  "logViewer": {
+    "fontName": "Consolas",
+    "fontSize": 8.0,
+    "bgColor": "black",
+    "textColor": "white",
+    "topMost": false,
+    "wrapText": false,
+    "toolbarShown": false,
+    "width": 600,
+    "height": 400,
+    "top": 640,
+    "left": 1320,
+    "maximized": true
+  },
+  "proxy": {
+    "useProxy": false,
+    "proxyType": 0,
+    "proxyServer": "",
+    "proxyPort": 0,
+    "proxyTimeout": 3
+  },
+  "hotkey": {
+    "SwitchSystemProxy": "",
+    "ChangeToPac": "",
+    "ChangeToGlobal": "",
+    "SwitchAllowLan": "",
+    "ShowLogs": "",
+    "ServerMoveUp": "",
+    "ServerMoveDown": ""
+  }
+}

@@ -81,7 +81,7 @@ Could not load template file no-server-data or one of its included components.
 Please contact your proxy administrator.
 If you are the proxy administrator, please put the required file(s)in the (confdir)/templates directory. The location of the (confdir) directory is specified in the main Privoxy config file. (It's typically the Privoxy install directory).
 ```
-考虑到这点，其实这个问题是shadowsocks客户端选择节点算法的问题，关于这个方案所产生的副作用我觉得会影响我们使用，所以建议尽量少用负载均衡和高可用，这是我们的新版本采用默认第一个服务节点的原因，如依然遇到问题请尝试手动切换服务节点解决问题。
+考虑到这点，其实这个问题是shadowsocks客户端选择节点规则的问题，关于这个方案所产生的副作用我觉得会影响我们使用，所以建议尽量少用负载均衡和高可用，这是我们的新版本采用默认第一个服务节点的原因，如依然遇到问题请尝试手动切换服务节点解决问题。
 
 ## 备注
 * 所有免费的科学上网手段都是不可靠的，使用时需要使用者谨记安全问题
@@ -91,3 +91,4 @@ If you are the proxy administrator, please put the required file(s)in the (confd
 ## 事件记录
 * 2016-11-17 下午某刻 ishadowsocks.org域名地址停止服务，改为ishadowsocks.net，感谢ishadowsocks为免费科学上网做出的不懈的努力
 * 2016-11-?? 11月某许 tempss.com 服务停止，不明原因，感谢tempss为免费科学上网做出的努力
+* 2016-12-02 ishadowsock.net 和 freevpnss.cc 平台提供服务节点全部挂掉
