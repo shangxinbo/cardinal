@@ -6,7 +6,6 @@
 ## 运行依赖
 * <code>windows(win7,win8,win10)</code>
 * <code>[node.js version 4+](https://nodejs.org/en/)</code>
-* <code>[shadowsocks-windows client version 3.x+](https://github.com/shadowsocks/shadowsocks-windows)</code>
 
 ## 实现原理
 借助开源项目shadowsocks的windows版客户端，使用网络搜集的免费的shadowsocks服务器节点,定时抓取页面上服务器配置,自动获取账号密码更新本地shadowsocks配置，并重启shadowsocks客户端。
@@ -89,6 +88,7 @@ If you are the proxy administrator, please put the required file(s)in the (confd
 ## 备注
 * 所有免费的科学上网手段都是不可靠的，使用时需要使用者谨记安全问题
 * 所有科学上网方式都不能保证永久有效，而保证这种方式尽量长久的方法就是多找些备用的免费服务提供商
+* 感谢开源项目<code>[shadowsocks-windows](https://github.com/shadowsocks/shadowsocks-windows)</code>
 * 开源协议 [GPL](LICENSE)
 
 ## 事件记录
