@@ -94,4 +94,3 @@ If you are the proxy administrator, please put the required file(s)in the (confd
 ## 事件记录
 * 2016-11-17 下午某刻 ishadowsocks.org域名地址停止服务，改为ishadowsocks.net，感谢ishadowsocks为免费科学上网做出的不懈的努力
 * 2016-11-?? 11月某许 tempss.com 服务停止，不明原因，感谢tempss为免费科学上网做出的努力
-* 2016-12-02 ishadowsock.net 和 freevpnss.cc 平台提供服务节点全部挂掉
