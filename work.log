@@ -764,3 +764,9 @@
 {"level":"error","message":"关闭子进程","timestamp":"2016-12-02T06:36:19.701Z"}
 {"level":"info","message":"开启子进程","timestamp":"2016-12-02T06:36:19.727Z"}
 {"level":"info","message":"开启子进程","timestamp":"2016-12-02T07:02:11.187Z"}
+{"level":"error","message":"关闭子进程","timestamp":"2016-12-02T07:33:56.952Z"}
+{"level":"info","message":"开启子进程","timestamp":"2016-12-02T07:33:56.982Z"}
+{"level":"error","message":"关闭子进程","timestamp":"2016-12-02T08:04:01.621Z"}
+{"level":"info","message":"开启子进程","timestamp":"2016-12-02T08:04:01.657Z"}
+{"level":"error","message":"关闭子进程","timestamp":"2016-12-02T08:34:08.460Z"}
+{"level":"info","message":"开启子进程","timestamp":"2016-12-02T08:34:08.490Z"}

@@ -27,8 +27,6 @@
 >* http://tempss.com/ (2016-11 end service)
 >* http://freessr.top/
 
-> 备用服务器
->* http://www.shadowsocks8.net/ pc端需要解析二维码
 
 ## 使用方式
 * 下载程序包，执行<code>npm install</code>
@@ -70,6 +68,10 @@
     }
 }
 ```
+
+## 备用方案
+http://www.shadowsocks8.net/ pc端需要解析二维码
+
 ## 已知问题
 使用谷歌特殊情况下会出现500 Internal Privoxy Error，如下，可通过切换负载均衡和高可用选项解决
 ```
