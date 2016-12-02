@@ -73,16 +73,12 @@
 http://www.shadowsocks8.net/ pc端需要解析二维码
 
 ## 已知问题
-使用谷歌特殊情况下会出现500 Internal Privoxy Error，如下，可通过切换负载均衡和高可用选项解决
+因为shadowsocks-windows 可以配置多个服务器节点，频繁的切换节点可能会导致对请求的资源方来说，ip经常变化产生问题，常见的问题是访问google时会出现500代理错误，如下：
 ```
 500 Internal Privoxy Error
-
 Privoxy encountered an error while processing your request:
-
 Could not load template file no-server-data or one of its included components.
-
 Please contact your proxy administrator.
-
 If you are the proxy administrator, please put the required file(s)in the (confdir)/templates directory. The location of the (confdir) directory is specified in the main Privoxy config file. (It's typically the Privoxy install directory).
 ```
 
