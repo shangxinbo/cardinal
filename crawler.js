@@ -43,14 +43,14 @@ const items = [
         deXml: function (body) {
             try {
                 let $ = cheerio.load(body);
-                let list = $('table.table-responsive tr');
+                let list = $('#tbody tr');
                 let arr = [];
                 for (let i = 0; i < list.length; i++) {
                     arr.push({
                         "server": $(list[i]).find('td').eq('0').html(),
                         "server_port": $(list[i]).find('td').eq('1').html(),
-                        "password": $(list[i]).find('td').eq('2').html(),
-                        "method": $(list[i]).find('td').eq('3').html(),
+                        "password": $(list[i]).find('td').eq('3').html(),
+                        "method": $(list[i]).find('td').eq('2').html(),
                         "remarks": "tss",
                         "auth": false
                     });
