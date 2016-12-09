@@ -1,0 +1,8 @@
+{
+  "server": "a.ssx.host",
+  "server_port": "1024",
+  "password": "66209605",
+  "method": "aes-256-cfb",
+  "remarks": "iss",
+  "auth": false
+}
