@@ -39,6 +39,29 @@ const items = [
         }
     },*/
     {
+        url: 'http://tempss.com/',
+        deXml: function (body) {
+            try {
+                let $ = cheerio.load(body);
+                let list = $('table.table-responsive tr');
+                let arr = [];
+                for (let i = 0; i < list.length; i++) {
+                    arr.push({
+                        "server": $(list[i]).find('td').eq('0').html(),
+                        "server_port": $(list[i]).find('td').eq('1').html(),
+                        "password": $(list[i]).find('td').eq('2').html(),
+                        "method": $(list[i]).find('td').eq('3').html(),
+                        "remarks": "tss",
+                        "auth": false
+                    });
+                }
+                return arr;
+            } catch (e) {
+                return null;
+            }
+        }
+    },
+    {
         url: 'https://www.ishadowsocks.biz/',
         deXml: function (body) {
             try {
