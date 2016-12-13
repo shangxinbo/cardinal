@@ -106,7 +106,9 @@ function handleRequest(connection, data, config, dstInfo) {
     tmp = encryptor.createCipher(config.password, config.method,data.slice(3));
     let cipher = tmp.cipher;
     let cipheredData = tmp.data;
-    let clientToRemote = net.connect(clientOptions);
+    var client = new net.Socket();
+    console.log(clientOptions);
+    let clientToRemote = client.connect(clientOptions);
     clientToRemote.on('data', function(remoteData){
         console.log(123);
         if (!decipher) {
@@ -140,6 +142,7 @@ function handleRequest(connection, data, config, dstInfo) {
             connection.end();
         }
     });
+    writeOrPause(connection, clientToRemote, cipheredData);
     connection.write(repBuf);
     return {
         stage: 2,
