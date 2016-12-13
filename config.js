@@ -8,7 +8,7 @@ module.exports = {
     app: {
         "language": "./i18n/cn",
         "log_file": "work.log",
-        "interval": 30,                               //30分钟刷新服务
+        "interval": 60,                               //30分钟刷新服务
         "exe_path": "./shadowsocks/"
     },
     shadowsocks: {        //shadowsocks 基础配置 default
