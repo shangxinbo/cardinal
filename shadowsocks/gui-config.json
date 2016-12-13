@@ -3,7 +3,7 @@
     {
       "server": "a.ssx.host",
       "server_port": 1024,
-      "password": "21620303",
+      "password": "38685961",
       "method": "aes-256-cfb",
       "remarks": "iss",
       "auth": false,
@@ -12,7 +12,7 @@
     {
       "server": "b.ssx.host",
       "server_port": 20000,
-      "password": "94074545",
+      "password": "95913076",
       "method": "aes-256-cfb",
       "remarks": "iss",
       "auth": false,
@@ -21,7 +21,7 @@
     {
       "server": "c.ssx.host",
       "server_port": 10008,
-      "password": "67994158",
+      "password": "40945773",
       "method": "aes-256-cfb",
       "remarks": "iss",
       "auth": false,
