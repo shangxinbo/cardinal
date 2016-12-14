@@ -1,8 +1,14 @@
 {
-  "server": "a.ssx.host",
-  "server_port": "1024",
-  "password": "66209605",
+  "serverAddr": "a.ssx.host",
+  "serverPort": 1024,
+  "localAddr": "127.0.0.1",
+  "localPort": 1090,
+  "pacServerPort": 8090,
+  "password": "19584847",
+  "timeout": 600,
   "method": "aes-256-cfb",
-  "remarks": "iss",
-  "auth": false
+
+  "level": "warn",
+  "localAddrIPv6": "::1",
+  "serverAddrIPv6": "::1"
 }

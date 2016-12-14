@@ -16,7 +16,10 @@
   "license": "GPL",
   "dependencies": {
     "cheerio": "^0.22.0",
+    "ip": "^1.1.4",
+    "lru-cache": "^4.0.2",
     "sync-request": "^3.0.1",
+    "uglify-js": "^2.7.5",
     "winston": "^2.2.0"
   }
 }

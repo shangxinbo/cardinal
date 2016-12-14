@@ -43,6 +43,8 @@ function handleMethod(connection, data, authInfo) {
 }
 const server = net.createServer(function(connect){
     let stage = 0,tmp;
+    let cipher;
+    let clientToRemote;
     connect.on('end', function(){
         console.log('client disconnected');
     });
@@ -62,10 +64,23 @@ const server = net.createServer(function(connect){
             }
             connect.write(buf);
         }else if(stage==1){
+            console.log(1);
             dstInfo = getDstInfo(data,3);
             tmp = handleRequest(connect, data, config, dstInfo);
+            stage = tmp.stage;
+            if (stage === 2) {
+                clientToRemote = tmp.clientToRemote;
+                cipher = tmp.cipher;
+            } else {
+                // udp relay
+                clientConnected = false;
+                connection.end();
+            }
         }else if(stage==2){
             console.log(2);
+            tmp = cipher.update(data);
+            writeOrPause(connect, clientToRemote, tmp);
+
         }else{
             console.log(3);
         }
@@ -87,10 +102,20 @@ function handleRequest(connection, data, config, dstInfo) {
         port: config.server_port,
         host: config.server,
     };
+    const isUDPRelay = false;
 
     let repBuf;
     let tmp = null;
     let decipher = null;
+    let decipheredData = null;
+    let cipher = null;
+    let cipheredData = null;
+
+    if (cmd !== 0x01 && !isUDPRelay) {
+        return {
+            stage: -1,
+        };
+    }
 
     repBuf = new Buffer(10);
     repBuf.writeUInt32BE(0x05000001);
@@ -104,13 +129,13 @@ function handleRequest(connection, data, config, dstInfo) {
     // +----+-----+-------+------+----------+----------+
 
     tmp = encryptor.createCipher(config.password, config.method,data.slice(3));
-    let cipher = tmp.cipher;
-    let cipheredData = tmp.data;
-    var client = new net.Socket();
-    console.log(clientOptions);
-    let clientToRemote = client.connect(clientOptions);
+    cipher = tmp.cipher;
+    cipheredData = tmp.data;
+    let clientToRemote = net.connect(clientOptions,function(){
+        console.log('server connect');
+    });
     clientToRemote.on('data', function(remoteData){
-        console.log(123);
+        console.log(remoteData);
         if (!decipher) {
             tmp = encryptor.createDecipher(config.password, config.method, remoteData);
             if (!tmp) return;
@@ -119,9 +144,7 @@ function handleRequest(connection, data, config, dstInfo) {
         } else {
             decipheredData = decipher.update(remoteData);
         }
-    });
-    clientToRemote.on('connect',function(){
-       console.log('remote open');
+        writeOrPause(clientToRemote, connection, decipheredData);
     });
     clientToRemote.on('drain', function(){
         connection.resume();
@@ -142,8 +165,8 @@ function handleRequest(connection, data, config, dstInfo) {
             connection.end();
         }
     });
-    writeOrPause(connection, clientToRemote, cipheredData);
     connection.write(repBuf);
+    writeOrPause(connection, clientToRemote, cipheredData);
     return {
         stage: 2,
         cipher,
@@ -151,6 +174,15 @@ function handleRequest(connection, data, config, dstInfo) {
     };
 }
 
+function writeOrPause(fromCon, toCon, data) {
+    const res = toCon.write(data);
+
+    if (!res) {
+        fromCon.pause();
+    }
+
+    return res;
+}
 
 
 function getDstInfo(data) {
