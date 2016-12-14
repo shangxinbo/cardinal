@@ -134,7 +134,6 @@ function createUDPRelaySocket(udpType, config, isServer, logger) {
     });
 
     socket.on('error', (err) => {
-        logger.error(`${NAME} socket err: ${err.message}`);
         socket.close();
     });
 
@@ -143,7 +142,7 @@ function createUDPRelaySocket(udpType, config, isServer, logger) {
     });
 
     socket.bind(listenPort, () => {
-        logger.verbose(`${NAME} is listening on: ${listenPort}`);
+        console.log();
     });
 
     return socket;

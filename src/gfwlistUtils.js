@@ -90,12 +90,12 @@ function createListArrayString(text) {
 function createPACFileContent(text, { localAddr, localPort }) {
   const HOST = `${localAddr}:${localPort}`;
   const readFileOptions = { encoding: 'utf8' };
-  //const userRulesString = readFileSync(join(__dirname, '../pac/user.txt'), readFileOptions);
-  //const rulesString = createListArrayString(`${userRulesString}\n${text}`);
+  const userRulesString = readFileSync(join(__dirname, '../pac/user.txt'), readFileOptions);
+  const rulesString = createListArrayString(`${userRulesString}\n${text}`);
   const SOCKS_STR = `var proxy = "SOCKS5 ${HOST}; SOCKS ${HOST}; DIRECT;";`;
-  //const matcherString = readFileSync(join(__dirname, '../vendor/ADPMatcher.js'), readFileOptions);
+  const matcherString = readFileSync(join(__dirname, '../vendor/ADPMatcher.js'), readFileOptions);
 
-  return `${SOCKS_STR}`;
+  return `${SOCKS_STR}\n${rulesString}\n${matcherString}`;
 }
 
 function requestGFWList(targetURL, next) {

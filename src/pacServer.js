@@ -8,21 +8,17 @@ const NAME = 'pac_server';
 exports.createPACServer = function(config, logger) {
   const pacFileContent = getPACFileContent(config);
   const HOST = `${config.localAddr}:${config.pacServerPort}`;
-
   const server = createServer((req, res) => {
     res.write(pacFileContent);
     res.end();
   });
 
   server.on('error', (err) => {
-    logger.error(`${NAME} got error: ${err.stack}`);
+    console.log(123);
+    console.log(err);
   });
 
   server.listen(config.pacServerPort);
-
-  if (logger) {
-    logger.verbose(`${NAME} is listening on ${HOST}`);
-  }
 
   return server;
 }
