@@ -22,7 +22,6 @@ function resolveServerAddr(config, next) {
     }
 }
 
-const argv = process.argv.slice(2);
 const config = Object.assign({}, DEFAULT_CONFIG);
 resolveServerAddr(config, (err, config) => {
     if (err) {

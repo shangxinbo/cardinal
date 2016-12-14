@@ -3,7 +3,7 @@ module.exports = {
   serverAddr: 'a.ssx.host',
   serverPort: 1024,
   localAddr: '127.0.0.1',
-  localPort: 1090,
+  localPort: 1080,
   password: '19584847',
   pacServerPort: 8090,
   timeout: 600,

@@ -61,7 +61,7 @@ const items = [
             }
         }
     },*/
-    {
+    /*{
         url: 'https://www.ishadowsocks.biz/',
         deXml: function (body) {
             try {
@@ -83,7 +83,7 @@ const items = [
                 return null;
             }
         }
-    },
+    },*/
     {
         url: 'http://freevpnss.cc/',
         deXml: function (body) {
