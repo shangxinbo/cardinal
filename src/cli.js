@@ -1,31 +1,19 @@
-const isV4Format = require('ip').isV4Format;
+
+const isIpv4 = require('ip').isV4Format;
 const lookup = require('dns').lookup;
-const DEFAULT_CONFIG = require('./defaultConfig');
-const ssLocal = require('./ssLocal');
+const config = require('./config');
+const local = require('./local');
 
-// export for test
-function resolveServerAddr(config, next) {
-    const {serverAddr} = config;
-
-    if (isV4Format(serverAddr)) {
-        next(null, config);
-    } else {
-        lookup(serverAddr, (err, addresses) => {
-            if (err) {
-                next(new Error(`failed to resolve 'serverAddr': ${serverAddr}`), config);
-            } else {
-                // NOTE: mutate data
-                config.serverAddr = addresses;
-                next(null, config);
-            }
-        });
-    }
+const {serverAddr} = config;
+if (isIpv4(serverAddr)) {
+    return local.createServer(config);
+} else {
+    lookup(serverAddr, function(err, addresses){
+        if (err) {
+            throw new Error(`failed to resolve 'serverAddr': ${serverAddr}`);
+        } else {
+            config.serverAddr = addresses;
+            return local.createServer(config);
+        }
+    });
 }
-
-const config = Object.assign({}, DEFAULT_CONFIG);
-resolveServerAddr(config, (err, config) => {
-    if (err) {
-        throw err;
-    }
-    return ssLocal.startServer(config, true);
-});

@@ -1,44 +1,44 @@
-exports.createAuthInfo = function(config) {
-  const { auth } = config;
-  const info = {
-    forceAuth: false,
-  };
-
-  if (auth && auth.forceAuth) {
-    info.forceAuth = true;
-  }
-
-  if (!info.forceAuth) {
-    return {
-      info,
+exports.createAuthInfo = function (config) {
+    const {auth} = config;
+    const info = {
+        forceAuth: false,
     };
-  }
 
-  const { usernamePassword } = auth;
+    if (auth && auth.forceAuth) {
+        info.forceAuth = true;
+    }
 
-  if (!usernamePassword || typeof usernamePassword !== 'object') {
+    if (!info.forceAuth) {
+        return {
+            info,
+        };
+    }
+
+    const {usernamePassword} = auth;
+
+    if (!usernamePassword || typeof usernamePassword !== 'object') {
+        return {
+            info,
+            error: 'expect "usernamePassword" in your config file to be an object',
+        };
+    }
+
+    const keys = Object.keys(usernamePassword);
+
+    if (keys.length === 0) {
+        return {
+            info,
+            warn: 'no valid username/password found in your config file',
+        };
+    }
+
+    info.usernamePassword = usernamePassword;
+
     return {
-      info,
-      error: 'expect "usernamePassword" in your config file to be an object',
+        info,
     };
-  }
-
-  const keys = Object.keys(usernamePassword);
-
-  if (keys.length === 0) {
-    return {
-      info,
-      warn: 'no valid username/password found in your config file',
-    };
-  }
-
-  info.usernamePassword = usernamePassword;
-
-  return {
-    info,
-  };
 }
 
-exports.validate = function(info, username, password) {
-  return info.usernamePassword[username] === password;
+exports.validate = function (info, username, password) {
+    return info.usernamePassword[username] === password;
 }

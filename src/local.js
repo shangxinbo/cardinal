@@ -349,7 +349,7 @@ function closeAll() {
     }
 }
 
-function createServer(config) {
+exports.createServer = function (config) {
     const server = _createServer(handleConnection.bind(null, config));
     const udpRelay = createUDPRelay(config, false, logger);
     const pacServer = createPACServer(config, logger);
@@ -370,24 +370,4 @@ function createServer(config) {
         pacServer,
         closeAll,
     };
-}
-
-// eslint-disable-next-line
-exports.startServer = function (config, willLogToConsole = false) {
-
-    const {info, warn, error} = createAuthInfo(config);
-
-    if (error) {
-        return null;
-    }
-
-    return createServer(Object.assign({}, config, {
-        authInfo: info,
-    }));
-}
-
-if (module === require.main) {
-    process.on('message', (config) => {
-        startServer(config, false);
-    });
 }
