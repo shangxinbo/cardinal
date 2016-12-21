@@ -6,14 +6,14 @@ const local = require('./local');
 
 const {serverAddr} = config;
 if (isIpv4(serverAddr)) {
-    return local.createServer(config);
+    local.createServer(config);
 } else {
     lookup(serverAddr, function(err, addresses){
         if (err) {
             throw new Error(`failed to resolve 'serverAddr': ${serverAddr}`);
         } else {
             config.serverAddr = addresses;
-            return local.createServer(config);
+            local.createServer(config);
         }
     });
 }

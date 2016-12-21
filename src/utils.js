@@ -147,16 +147,14 @@ function parseDstInfo(data, offset) {
     };
 }
 
-exports.getDstInfo = function (data, isServer) {
+exports.getDstInfo = function (data) {
     // +----+-----+-------+------+----------+----------+
     // |VER | CMD |  RSV  | ATYP | DST.ADDR | DST.PORT |
     // +----+-----+-------+------+----------+----------+
     // | 1  |  1  | X'00' |  1   | Variable |    2     |
     // +----+-----+-------+------+----------+----------+
     // Yet shadowsocks begin with ATYP.
-
-    const offset = isServer ? 0 : 3;
-    return parseDstInfo(data, offset);
+    return parseDstInfo(data, 3);
 }
 
 exports.getDstInfoFromUDPMsg = function (data, isServer) {
