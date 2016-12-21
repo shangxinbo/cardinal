@@ -190,19 +190,3 @@ function formatConfig(_config) {
 
     return formattedConfig;
 }
-
-exports.getDstStr = function (dstInfo) {
-    if (!dstInfo) {
-        return null;
-    }
-
-    switch (dstInfo.atyp) {
-        case 1:
-        case 4:
-            return `${ip.toString(dstInfo.dstAddr)}:${dstInfo.dstPort.readUInt16BE()}`;
-        case 3:
-            return `${dstInfo.dstAddr.toString('utf8')}:${dstInfo.dstPort.readUInt16BE()}`;
-        default:
-            return 'WARN: invalid atyp';
-    }
-}

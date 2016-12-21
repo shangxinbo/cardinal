@@ -1,18 +1,11 @@
 const ip = require('ip');
 const _createServer = require('net').createServer;
 const connect = require('net').connect;
-
 const getDstInfo = require('./utils').getDstInfo;
 const writeOrPause = require('./utils').writeOrPause;
-const getDstStr = require('./utils').getDstStr;
-const closeSilently = require('./utils').closeSilently;
-const createSafeAfterHandler = require('./utils').createSafeAfterHandler;
-
 const createCipher = require('./encryptor').createCipher;
 const createDecipher = require('./encryptor').createDecipher;
-
 const createPACServer = require('./pacServer').createPACServer;
-
 const createUDPRelay = require('./createUDPRelay').createUDPRelay;
 
 function handleMethod(connection, data) {
@@ -27,7 +20,7 @@ function handleMethod(connection, data) {
         buf.writeUInt16BE(0x0500);
         connection.write(buf);
         return 1;
-    }else{
+    } else {
         buf.writeUInt16BE(0x05FF);
         connection.write(buf);
         connection.end();
@@ -93,8 +86,7 @@ function handleRequest(connection, data, {
     repBuf.writeUInt32BE(0x00000000, 4, 4);
     repBuf.writeUInt16BE(0, 8, 2);
 
-    tmp = createCipher(password, method,
-        data.slice(3)); // skip VER, CMD, RSV
+    tmp = createCipher(password, method, data.slice(3)); // skip VER, CMD, RSV
     cipher = tmp.cipher;
     cipheredData = tmp.data;
 
@@ -147,7 +139,7 @@ function handleRequest(connection, data, {
     };
 }
 
-function handleConnection(config, connection) {
+function handleConnection(connection, config) {
 
     let stage = 0;
     let clientToRemote;
@@ -160,7 +152,8 @@ function handleConnection(config, connection) {
     connection.on('data', (data) => {
         switch (stage) {
             case 0:
-                stage = handleMethod(connection, data);break; //建立链接
+                stage = handleMethod(connection, data);
+                break; //建立链接
             case 1:
                 let dstInfo = getDstInfo(data);
 
@@ -168,7 +161,6 @@ function handleConnection(config, connection) {
                     connection.destroy();
                     return;
                 }
-
                 tmp = handleRequest(connection, data, config, dstInfo,
                     () => {
                         remoteConnected = true;
@@ -178,7 +170,6 @@ function handleConnection(config, connection) {
                             remoteConnected = false;
                             clientToRemote.destroy();
                         }
-
                         if (clientConnected) {
                             clientConnected = false;
                             connection.destroy();
@@ -186,9 +177,7 @@ function handleConnection(config, connection) {
                     },
                     () => clientConnected
                 );
-
                 stage = tmp.stage;
-
                 if (stage === 2) {
                     clientToRemote = tmp.clientToRemote;
                     cipher = tmp.cipher;
@@ -236,15 +225,10 @@ function handleConnection(config, connection) {
         }
     });
 
-    connection.on('error', (e) => {
-        console.log(e);
-    });
-
-    timer = setTimeout(() => {
+    timer = setTimeout(function () {
         if (clientConnected) {
             connection.destroy();
         }
-
         if (remoteConnected) {
             clientToRemote.destroy();
         }
@@ -252,9 +236,9 @@ function handleConnection(config, connection) {
 }
 
 exports.createServer = function (config) {
-    const server = _createServer(handleConnection.bind(null, config));
+    const server = _createServer(c => handleConnection(c, config));
     //const udpRelay = createUDPRelay(config, false, logger);
-    const pacServer = createPACServer(config, logger);
+    const pacServer = createPACServer(config);
 
     server.on('close', () => console.log('server close'));
     server.on('error', e => console.log(e));
