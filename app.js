@@ -5,7 +5,7 @@
  */
 
 
-const jet = require('jet');
+const jet = require('./jet/jet');
 
 const host = '127.0.0.1';
 const port = 9527;

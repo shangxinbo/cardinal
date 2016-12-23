@@ -7,15 +7,8 @@ const readFileSync = require('fs').readFileSync;
 const minify = require('uglify-js').minify;
 
 const GFWLIST_FILE_PATH = join(__dirname, '../pac/gfwlist.txt');
-const DEFAULT_CONFIG = {
-    localAddr: '127.0.0.1',
-    localPort: '8090',
-};
 const TARGET_URL = 'https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt';
 const LINE_DELIMER = ['\r\n', '\r', '\n'];
-const MINIFY_OPTIONS = {
-    fromString: true,
-};
 
 let readLineLastContent = null;
 let readLineLastIndex = 0;
@@ -63,10 +56,8 @@ function shouldDropLine(line) {
     return !line || line[0] === '!' || line[0] === '[' || line.length > 100;
 }
 
-const slashReg = /\//g;
-
 function encode(line) {
-    return line.replace(slashReg, '\\/');
+    return line.replace(/\//g, '\\/');
 }
 
 function createListArrayString(text) {
@@ -86,13 +77,27 @@ function createListArrayString(text) {
 
 function createPACFileContent(text, {localAddr, localPort}) {
     const HOST = `${localAddr}:${localPort}`;
-    const readFileOptions = {encoding: 'utf8'};
-    const userRulesString = readFileSync(join(__dirname, '../pac/user.txt'), readFileOptions);
+    const userRulesString = readFileSync(join(__dirname, '../pac/user.txt'), {encoding: 'utf8'});
     const rulesString = createListArrayString(`${userRulesString}\n${text}`);
     const SOCKS_STR = `var proxy = "SOCKS5 ${HOST}; SOCKS ${HOST}; DIRECT;";`;
-    const matcherString = readFileSync(join(__dirname, '../vendor/ADPMatcher.js'), readFileOptions);
+    const matcherString = readFileSync(join(__dirname, '../vendor/ADPMatcher.js'), {encoding: 'utf8'});
 
     return `${SOCKS_STR}\n${rulesString}\n${matcherString}`;
+}
+
+function minifyCode(code) {
+    return minify(code, {
+        fromString: true
+    }).code;
+}
+
+exports.getPACFileContent = function (_config) {
+    const config = _config || {
+            localAddr: '127.0.0.1',
+            localPort: '8090',
+        };
+    const listText = readFileSync(GFWLIST_FILE_PATH, {encoding: 'utf8'});
+    return minifyCode(createPACFileContent(listText, config));
 }
 
 function requestGFWList(targetURL, next) {
@@ -107,8 +112,7 @@ function requestGFWList(targetURL, next) {
         });
 
         res.on('end', () => {
-            // gfwlist.txt use utf8 encoded content to present base64 content
-            const listText = Buffer.from(data.toString(), 'base64');
+            const listText = Buffer.from(data.toString(), 'base64'); // gfwlist.txt use utf8 encoded content to present base64 content
             next(null, listText);
         });
     });
@@ -120,39 +124,12 @@ function requestGFWList(targetURL, next) {
     req.end();
 }
 
-function minifyCode(code) {
-    return minify(code, MINIFY_OPTIONS).code;
-}
-
-// TODO: async this
-exports.getPACFileContent = function (_config) {
-    const config = _config || DEFAULT_CONFIG;
-    const listText = readFileSync(GFWLIST_FILE_PATH, {encoding: 'utf8'});
-
-    return minifyCode(createPACFileContent(listText, config));
-}
-
-function writeGFWList(listBuffer, next) {
-    writeFile(GFWLIST_FILE_PATH, listBuffer, next);
-}
-
-function updateGFWList(...args) {
-    let targetURL = TARGET_URL;
-    let next;
-
-    if (args.length === 1) {
-        next = args[0];
-    } else if (args.length === 2) {
-        targetURL = args[0];
-        next = args[1];
-    }
-
+function updateGFWList() {
     requestGFWList(targetURL, (err, listBuffer) => {
         if (err) {
-            next(err);
+            throw err;
             return;
         }
-
-        writeGFWList(listBuffer, next);
+        writeFile(GFWLIST_FILE_PATH, listBuffer);
     });
 }

@@ -1,10 +1,10 @@
 // proxy options
 module.exports = {
-  serverAddr: 'us.ssip.club',
-  serverPort: 443,
+  serverAddr: 'a.ssx.host',
+  serverPort: 1024,
   localAddr: '127.0.0.1',
-  localPort: 1081,
-  password: '70519453',
+  localPort: 1080,
+  password: '33557265',
   pacServerPort: 8090,
   timeout: 600,
   method: 'aes-256-cfb',
