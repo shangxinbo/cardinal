@@ -5,7 +5,6 @@ const getDstInfo = require('./utils').getDstInfo;
 const writeOrPause = require('./utils').writeOrPause;
 const createCipher = require('./encryptor').createCipher;
 const createDecipher = require('./encryptor').createDecipher;
-const createPACServer = require('./pacServer').createPACServer;
 const createUDPRelay = require('./createUDPRelay').createUDPRelay;
 
 function handleMethod(connection, data) {
@@ -238,7 +237,6 @@ function handleConnection(connection, config) {
 exports.createServer = function (config) {
     const server = _createServer(c => handleConnection(c, config));
     //const udpRelay = createUDPRelay(config, false, logger);
-    const pacServer = createPACServer(config);
 
     server.on('close', () => console.log('server close'));
     server.on('error', e => console.log(e));
