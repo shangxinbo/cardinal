@@ -29,7 +29,7 @@ if (isIpv4(serverAddr)) {
 //创建http server
 
 jet.listen(httpPort, httpServer, () => {
-    console.log(`http Listening on ${httpServer}:${httpPort}...`);
+    console.log(`Listening on ${httpServer}:${httpPort}...`);
 })
 
 jet.on('error', (e) => {
