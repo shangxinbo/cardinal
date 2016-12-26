@@ -152,10 +152,9 @@ function handleConnection(connection, config) {
         switch (stage) {
             case 0:
                 stage = handleMethod(connection, data);
-                break; //建立链接
+                break;
             case 1:
                 let dstInfo = getDstInfo(data);
-
                 if (!dstInfo) {
                     connection.destroy();
                     return;
@@ -240,5 +239,11 @@ exports.createServer = function (config) {
 
     server.on('close', () => console.log('server close'));
     server.on('error', e => console.log(e));
+    server.on('connection', function(){
+        console.log('tcp server connected');
+    });
+    server.on('listening', function(){
+        console.log(`TCP listening on ${config.localPort}…`);
+    });
     server.listen(config.localPort);
 }
