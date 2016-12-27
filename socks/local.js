@@ -48,13 +48,25 @@ function handleRequest(connection, data, {
     localAddr,
     localPort,
     localAddrIPv6
-}, dstInfo, onConnect, onDestroy, isClientConnected) {
+}, onConnect, onDestroy, isClientConnected) {
+    // data
+    // +----+-----+-------+------+----------+----------+
+    // |VER | CMD |  RSV  | ATYP | DST ADDR | DST PROT |
+    // +----+-----+-------+------+----------+----------+
+    // | 1  |  1  | 0x00  |  1   | Variable |    2     |
+    // +----+-----+-------+------+----------+----------+
+    // <Buffer 05 01 00 03 11 77 77 77 2e 67 6f 6f 67 6c 65 2e 63 6f 6d 2e 68 6b 01 bb>
+    // VER是SOCKS版本，这里应该是0x05；
+    // CMD是SOCKS的命令码:0x01表示CONNECT请求,0x02表示BIND请求,0x03表示UDP转发
+    // RSV 0x00，保留
+    // ATYP 地址类型 0x01 IPv4; 0x03 域名; 0x04 ipv6
+    // DST ADDR 目的地址
+    // DST PROT 目的端口
     const cmd = data[1];
     const clientOptions = {
         port: serverPort,
         host: serverAddr
     };
-    const isUDPRelay = false;
 
     let repBuf;
     let tmp = null;
@@ -143,7 +155,6 @@ function handleRequest(connection, data, {
     writeOrPause(connection, clientToRemote, cipheredData);
 
     return {
-        stage: 2,
         cipher,
         clientToRemote
     };
@@ -163,25 +174,7 @@ function handleConnection(connection, config) {
         if (stage == 0) {
             stage = agreeMode(connection, data);
         } else if (stage == 1) {
-            // data
-            // +----+-----+-------+------+----------+----------+
-            // |VER | CMD |  RSV  | ATYP | DST ADDR | DST PROT |
-            // +----+-----+-------+------+----------+----------+
-            // | 1  |  1  | 0x00  |  1   | Variable |    2     |
-            // +----+-----+-------+------+----------+----------+
-            // <Buffer 05 01 00 03 11 77 77 77 2e 67 6f 6f 67 6c 65 2e 63 6f 6d 2e 68 6b 01 bb>
-            // VER是SOCKS版本，这里应该是0x05；
-            // CMD是SOCKS的命令码:0x01表示CONNECT请求,0x02表示BIND请求,0x03表示UDP转发
-            // RSV 0x00，保留
-            // ATYP 地址类型 0x01 IPv4; 0x03 域名; 0x04 ipv6
-            // DST ADDR 目的地址
-            // DST PROT 目的端口
-            let dstInfo = getDstInfo(data);
-            if (!dstInfo) {
-                connection.destroy();
-                return;
-            }
-            tmp = handleRequest(connection, data, config, dstInfo,
+            tmp = handleRequest(connection, data, config,
                 () => {
                     remoteConnected = true;
                 },
@@ -197,15 +190,9 @@ function handleConnection(connection, config) {
                 },
                 () => clientConnected
             );
-            stage = tmp.stage;
-            if (stage === 2) {
-                clientToRemote = tmp.clientToRemote;
-                cipher = tmp.cipher;
-            } else {
-                // udp relay
-                clientConnected = false;
-                connection.end();
-            }
+            stage = 2;
+            clientToRemote = tmp.clientToRemote;
+            cipher = tmp.cipher;
         } else if (stage == 2) {
             tmp = cipher.update(data);
             writeOrPause(connection, clientToRemote, tmp);
