@@ -7,8 +7,9 @@
 const isIpv4 = require('ip').isV4Format;
 const lookup = require('dns').lookup;
 const config = require('./config');
-const local = require('./socks/local');
-const jet = require('./jet/jet');
+const local = require('./tcp/socks');
+const jet = require('./http/jet');
+const logger = require('./logger');
 
 const {serverAddr,httpServer,httpPort} = config;
 
@@ -18,7 +19,7 @@ if (isIpv4(serverAddr)) {
 } else {
     lookup(serverAddr, function(err, addresses){
         if (err) {
-            throw new Error(`failed to resolve 'serverAddr': ${serverAddr}`);
+            logger.error(`Socks resolve 'serverAddr': ${serverAddr} error`);
         } else {
             config.serverAddr = addresses;
             local.createServer(config);
@@ -29,11 +30,12 @@ if (isIpv4(serverAddr)) {
 //创建http server
 
 jet.listen(httpPort, httpServer, () => {
-    console.log(`HTTP listening on ${httpServer}:${httpPort}...`);
-})
+    logger.status(`HTTP listening on ${httpServer}:${httpPort}...`);
+});
 
 jet.on('error', (e) => {
+    logger.error(e.code);
     if (e.code === 'EADDRINUSE') {
         process.exit(1)
     }
-})
+});

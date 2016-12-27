@@ -4,6 +4,7 @@ const ip = require('ip');
 const net = require('net');
 const createCipher = require('./encrypt').createCipher;
 const createDecipher = require('./encrypt').createDecipher;
+const logger = require('../logger');
 
 /**
  * 接受客户端发送请求来协商版本及认证方式
@@ -45,7 +46,7 @@ function handleRequest(proxy, {serverAddr, serverPort, password, method}) {
 
     // 本地socks和云端socks桥接
     const tunnel = net.connect({port: serverPort, host: serverAddr}, function () {
-        console.log(`server ${serverAddr}:${serverPort} connected`);
+        logger.status(`Server ${serverAddr}:${serverPort} connected`);
     });
 
     tunnel.on('data', (remoteData) => {
@@ -173,10 +174,10 @@ exports.createServer = function (config) {
     server.on('close', () => console.log('server close'));
     server.on('error', e => console.log(e));
     server.on('connection', function () {
-        console.log('tcp server connected');
+        logger.doing('TCP server connected');
     });
     server.on('listening', function () {
-        console.log(`TCP listening on ${config.localPort}…`);
+        logger.status(`TCP listening on ${config.localPort}...`);
     });
     server.listen(config.localPort);
 }

@@ -4,13 +4,13 @@ const process = require('process')
 const net = require('net')
 const Socks = require('socks')
 const {localAddr,localPort} = require('../config')
-const logger = require('./logger')
+const logger = require('../logger')
 
 // Proxy Setting
 const proxy = {
     ipaddress: localAddr,
     port: localPort,
-    type: 5
+    type: 5   //socks5
 }
 
 // Jet Header
@@ -51,7 +51,7 @@ function agentHttp(direct = true) {
         })
 
         jetRequest.on('error', (err) => {
-            logger.erro(err)
+            logger.error(err)
         })
         req.pipe(jetRequest)
     }
@@ -77,7 +77,7 @@ function agentHttps(direct = true) {
             })
 
             jetSocket.on('error', (err) => {
-                logger.erro(err)
+                logger.error(err)
             })
         } else {
             logger.request(req, 'tunnel')
@@ -91,7 +91,7 @@ function agentHttps(direct = true) {
                 command: 'connect'
             }, (err, jetSocket, info) => {
                 if (err) {
-                    logger.erro(err)
+                    logger.error(err)
                 } else {
                     // tell the client that the connection is established
                     socket.write(jetHeader(req.httpVersion))

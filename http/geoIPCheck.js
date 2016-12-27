@@ -1,33 +1,33 @@
+"use strict";
+
 const fs = require('fs')
 const path = require('path')
 const dns = require('dns')
-const debug = require('debug')('geoipChecker')
 const ip = require('ip')
 const {dnsServer} = require('../config')
-const logger = require('./logger')
-
-let cidrs
+const logger = require('../logger')
 const geoipFile = path.join(__dirname, './GeoIP-CN')
 
+let cidrs
+
 /**
- set DNS server manually
+ * set DNS server manually
  */
-const dnsServers = dnsServer;
-if (dnsServers.length > 0) {
-    dns.setServers(dnsServers)
+if (dnsServer.length > 0) {
+    dns.setServers(dnsServer)
 }
 
+/**
+ * read china ips
+* */
 function readGeoIPList() {
-    return fs.readFileSync(geoipFile, 'utf8').split('\n')
-        .filter(function (rx) {  // filter blank cidr
-            return rx.length
-        })
+    return fs.readFileSync(geoipFile, 'utf8').split('\n').filter(function (rx) {  // filter blank cidr
+        return rx.length
+    })
 }
 
 function update() {
-    logger.info('Reading GeoIP Rules...')
     cidrs = new Set([...readGeoIPList()])
-    debug(cidrs)
 }
 
 function isip(str) {
@@ -37,10 +37,10 @@ function isip(str) {
 function direct(address, cb) {
     for (let cidr of cidrs) {
         if (ip.cidrSubnet(cidr).contains(address)) {
-            return cb(true)
+            return cb(true)    //direct
         }
     }
-    return cb(false)
+    return cb(false)           //tunnel
 }
 
 function checker(req, cb) {
@@ -52,7 +52,7 @@ function checker(req, cb) {
     } else {
         dns.resolve4(hostname, (err, addresses) => {   //查询ipv4地址
             if (err) {
-                return logger.info(`Failed to resolve: ${hostname}`)
+                return logger.info(`Http solve host: ${hostname} error`)
             }
 
             // only use the first address
@@ -62,7 +62,7 @@ function checker(req, cb) {
     }
 }
 
-logger.info(`Current DNS: ${dns.getServers()}`)
+logger.status(`Current DNS: ${dns.getServers()}`)
 fs.watch(geoipFile, () => {
     update()
 })

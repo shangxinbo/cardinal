@@ -13,16 +13,8 @@ module.exports = {
     pacServerPort: 8090,
     timeout: 600,
     method: 'aes-256-cfb',
-    level: 'warn',
 
     httpServer: '127.0.0.1',
     httpPort: 9527,
     dnsServer:[],         //['8.8.8.8','114.114.114.114'],
-
-    // ipv6
-    localAddrIPv6: '::1',
-    serverAddrIPv6: '::1',
-
-    // dev options
-    _recordMemoryUsage: false
 };
