@@ -40,66 +40,18 @@ function agreeMode(connection, data) {
     }
 }
 
-function handleRequest(connection, data, {
+function handleRequest(proxy, data, {
     serverAddr,
     serverPort,
     password,
     method,
-    localAddr,
-    localPort,
-    localAddrIPv6
 }, onConnect, onDestroy, clientConnected) {
-    // data
-    // +----+-----+-------+------+----------+----------+
-    // |VER | CMD |  RSV  | ATYP | DST ADDR | DST PROT |
-    // +----+-----+-------+------+----------+----------+
-    // | 1  |  1  | 0x00  |  1   | Variable |    2     |
-    // +----+-----+-------+------+----------+----------+
-    // <Buffer 05 01 00 03 11 77 77 77 2e 67 6f 6f 67 6c 65 2e 63 6f 6d 2e 68 6b 01 bb>
-    // VER是SOCKS版本，这里应该是0x05；
-    // CMD是SOCKS的命令码:0x01表示CONNECT请求,0x02表示BIND请求,0x03表示UDP转发
-    // RSV 0x00，保留
-    // ATYP 地址类型 0x01 IPv4; 0x03 域名; 0x04 ipv6
-    // DST ADDR 目的地址
-    // DST PROT 目的端口
 
-    let repBuf;
     let tmp = null;
     let decipher = null;
     let decipheredData = null;
     let cipher = null;
     let cipheredData = null;
-
-    // 服务器返回data
-    // +----+-----+-------+------+----------+----------+
-    // |VER | REP |  RSV  | ATYP | BND.ADDR | BND.PORT |
-    // +----+-----+-------+------+----------+----------+
-    // | 1  |  1  | 0x00  |  1   | Variable |    2     |
-    // +----+-----+-------+------+----------+----------+
-    // VER是SOCKS版本，这里应该是0x05；
-    // REP应答字段
-    //* 0x00表示成功
-    //* 0x01普通SOCKS服务器连接失败
-    //* 0x02现有规则不允许连接
-    //* 0x03网络不可达
-    //* 0x04主机不可达
-    //* 0x05连接被拒
-    //* 0x06 TTL超时
-    //* 0x07不支持的命令
-    //* 0x08不支持的地址类型
-    //* 0x09 - 0xFF未定义
-    // RSV 0x00，保留
-    // ATYP BND.ADDR地址类型 0x01 IPv4; 0x03 域名; 0x04 ipv6
-    // BND ADDR服务器绑定的地址
-    // BND PROT网络字节序表示的服务器绑定的端口
-    repBuf = new Buffer(10);
-    repBuf.writeUInt32BE(0x05000001);
-    repBuf.writeUInt32BE(0x00000000, 4, 4);
-    repBuf.writeUInt16BE(0, 8, 2);
-
-    tmp = createCipher(password, method, data.slice(3)); // skip VER, CMD, RSV
-    cipher = tmp.cipher;
-    cipheredData = tmp.data;
 
     // 本地socks和云端socks桥接
     const tunnel = connect({
@@ -121,38 +73,35 @@ function handleRequest(connection, data, {
         }
 
         if (clientConnected) {
-            writeOrPause(tunnel, connection, decipheredData);
+            writeOrPause(tunnel, proxy, decipheredData);
         } else {
             tunnel.destroy();
         }
     });
 
-    tunnel.on('drain', () => connection.resume());
+    tunnel.on('drain', () => proxy.resume());
 
-    tunnel.on('end', () => connection.end());
+    tunnel.on('end', () => proxy.end());
 
     tunnel.on('error', (e) => onDestroy());
 
     tunnel.on('close', (e) => {
         if (e) {
-            connection.destroy();
+            proxy.destroy();
         } else {
-            connection.end();
+            proxy.end();
         }
     });
 
-    // write
-    connection.write(repBuf);
-
-    writeOrPause(connection, tunnel, cipheredData);
-
-    return {
-        cipher,
-        tunnel
-    };
+    return tunnel;
 }
 
-function handleConnection(connection, config) {
+/**
+ * @method 处理代理请求
+ * @param proxy  本地代理链接
+ * @param config 配置
+* */
+function handleConnection(proxy, config) {
 
     let stage = 0;
     let tunnel;
@@ -162,11 +111,11 @@ function handleConnection(connection, config) {
     let clientConnected = true;
     let timer = null;
 
-    connection.on('data', (data) => {
+    proxy.on('data', (data) => {
         if (stage == 0) {
-            stage = agreeMode(connection, data);
+            stage = agreeMode(proxy, data);
         } else if (stage == 1) {
-            tmp = handleRequest(connection, data, config,
+            tunnel = handleRequest(proxy, data, config,
                 () => {
                     remoteConnected = true;
                 },
@@ -177,17 +126,61 @@ function handleConnection(connection, config) {
                     }
                     if (clientConnected) {
                         clientConnected = false;
-                        connection.destroy();
+                        proxy.destroy();
                     }
                 },
                 clientConnected
             );
+
+            //向应用层返回状态
+            // +----+-----+-------+------+----------+----------+
+            // |VER | CMD |  RSV  | ATYP | DST ADDR | DST PROT |
+            // +----+-----+-------+------+----------+----------+
+            // | 1  |  1  | 0x00  |  1   | Variable |    2     |
+            // +----+-----+-------+------+----------+----------+
+            // <Buffer 05 01 00 03 11 77 77 77 2e 67 6f 6f 67 6c 65 2e 63 6f 6d 2e 68 6b 01 bb>
+            // VER是SOCKS版本，这里应该是0x05；
+            // CMD是SOCKS的命令码:0x01表示CONNECT请求,0x02表示BIND请求,0x03表示UDP转发
+            // RSV 0x00，保留
+            // ATYP 地址类型 0x01 IPv4; 0x03 域名; 0x04 ipv6
+            // DST ADDR 目的地址
+            // DST PROT 目的端口
+            // +----+-----+-------+------+----------+----------+
+            // |VER | REP |  RSV  | ATYP | BND.ADDR | BND.PORT |
+            // +----+-----+-------+------+----------+----------+
+            // | 1  |  1  | 0x00  |  1   | Variable |    2     |
+            // +----+-----+-------+------+----------+----------+
+            // VER是SOCKS版本，这里应该是0x05；
+            // REP应答字段
+            //* 0x00表示成功
+            //* 0x01普通SOCKS服务器连接失败
+            //* 0x02现有规则不允许连接
+            //* 0x03网络不可达
+            //* 0x04主机不可达
+            //* 0x05连接被拒
+            //* 0x06 TTL超时
+            //* 0x07不支持的命令
+            //* 0x08不支持的地址类型
+            //* 0x09 - 0xFF未定义
+            // RSV 0x00，保留
+            // ATYP BND.ADDR地址类型 0x01 IPv4; 0x03 域名; 0x04 ipv6
+            // BND ADDR服务器绑定的地址
+            // BND PROT网络字节序表示的服务器绑定的端口
+            let resBuf = new Buffer(10);
+            resBuf.writeUInt32BE(0x05000001);
+            resBuf.writeUInt32BE(0x00000000, 4, 4);
+            resBuf.writeUInt16BE(0, 8, 2);
+            proxy.write(resBuf);
             stage = 2;
-            tunnel = tmp.tunnel;
-            cipher = tmp.cipher;
+            //向服务端吐数据
+            let encrypt = createCipher(config.password, config.method, data.slice(3)); // skip VER, CMD, RSV
+            cipher = encrypt.cipher;
+            cipheredData = encrypt.data;
+            writeOrPause(proxy, tunnel, cipheredData);
+
         } else if (stage == 2) {
             tmp = cipher.update(data);
-            writeOrPause(connection, tunnel, tmp);
+            writeOrPause(proxy, tunnel, tmp);
         }
     }).on('drain', () => {
         if (remoteConnected) {
@@ -216,7 +209,7 @@ function handleConnection(connection, config) {
 
     timer = setTimeout(function () {
         if (clientConnected) {
-            connection.destroy();
+            proxy.destroy();
         }
         if (remoteConnected) {
             tunnel.destroy();

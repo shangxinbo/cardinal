@@ -9,7 +9,7 @@ module.exports = {
     serverPort: 20000,
     localAddr: '127.0.0.1',
     localPort: 1080,
-    password: '84754323',
+    password: '96966747',
     pacServerPort: 8090,
     timeout: 600,
     method: 'aes-256-cfb',

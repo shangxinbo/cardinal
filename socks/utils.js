@@ -98,7 +98,6 @@ exports.writeOrPause = function (fromCon, toCon, data) {
     if (!res) {
         fromCon.pause();
     }
-
     return res;
 }
 
