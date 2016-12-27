@@ -52,7 +52,7 @@ function checker(req, cb) {
     } else {
         dns.resolve4(hostname, (err, addresses) => {   //查询ipv4地址
             if (err) {
-                return logger.info(`Http solve host: ${hostname} error`)
+                return logger.error(`Http solve host: ${hostname} error`)
             }
 
             // only use the first address

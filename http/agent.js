@@ -51,7 +51,6 @@ function agentHttp(direct = true) {
         })
 
         jetRequest.on('error', (err) => {
-            console.log(123);
             logger.error(err)
         })
         req.pipe(jetRequest)
