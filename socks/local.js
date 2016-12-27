@@ -145,7 +145,7 @@ function handleRequest(connection, data, {
     return {
         stage: 2,
         cipher,
-        clientToRemote,
+        clientToRemote
     };
 }
 

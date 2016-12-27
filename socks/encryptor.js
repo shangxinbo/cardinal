@@ -15,7 +15,7 @@ const cryptoParamLength = {
   'des-cfb': [8, 8],
   'idea-cfb': [16, 8],
   'rc2-cfb': [16, 8],
-  rc4: [16, 0],
+  'rc4': [16, 0],
   'rc4-md5': [16, 16],
   'seed-cfb': [16, 16],
 };
