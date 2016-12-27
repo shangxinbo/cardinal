@@ -48,7 +48,7 @@ function handleRequest(connection, data, {
     localAddr,
     localPort,
     localAddrIPv6
-}, onConnect, onDestroy, isClientConnected) {
+}, onConnect, onDestroy, clientConnected) {
     // data
     // +----+-----+-------+------+----------+----------+
     // |VER | CMD |  RSV  | ATYP | DST ADDR | DST PROT |
@@ -62,11 +62,6 @@ function handleRequest(connection, data, {
     // ATYP 地址类型 0x01 IPv4; 0x03 域名; 0x04 ipv6
     // DST ADDR 目的地址
     // DST PROT 目的端口
-    const cmd = data[1];
-    const clientOptions = {
-        port: serverPort,
-        host: serverAddr
-    };
 
     let repBuf;
     let tmp = null;
@@ -74,12 +69,6 @@ function handleRequest(connection, data, {
     let decipheredData = null;
     let cipher = null;
     let cipheredData = null;
-
-    if (cmd !== 0x01) {
-        return {
-            stage: -1,
-        };
-    }
 
     // 服务器返回data
     // +----+-----+-------+------+----------+----------+
@@ -112,10 +101,13 @@ function handleRequest(connection, data, {
     cipher = tmp.cipher;
     cipheredData = tmp.data;
 
-    // connect
-    const clientToRemote = connect(clientOptions, () => onConnect());
+    // 本地socks和云端socks桥接
+    const tunnel = connect({
+        port: serverPort,
+        host: serverAddr
+    }, () => onConnect());
 
-    clientToRemote.on('data', (remoteData) => {
+    tunnel.on('data', (remoteData) => {
         if (!decipher) {
             tmp = createDecipher(password, method, remoteData);
             if (!tmp) {
@@ -128,20 +120,20 @@ function handleRequest(connection, data, {
             decipheredData = decipher.update(remoteData);
         }
 
-        if (isClientConnected()) {
-            writeOrPause(clientToRemote, connection, decipheredData);
+        if (clientConnected) {
+            writeOrPause(tunnel, connection, decipheredData);
         } else {
-            clientToRemote.destroy();
+            tunnel.destroy();
         }
     });
 
-    clientToRemote.on('drain', () => connection.resume());
+    tunnel.on('drain', () => connection.resume());
 
-    clientToRemote.on('end', () => connection.end());
+    tunnel.on('end', () => connection.end());
 
-    clientToRemote.on('error', (e) => onDestroy());
+    tunnel.on('error', (e) => onDestroy());
 
-    clientToRemote.on('close', (e) => {
+    tunnel.on('close', (e) => {
         if (e) {
             connection.destroy();
         } else {
@@ -152,18 +144,18 @@ function handleRequest(connection, data, {
     // write
     connection.write(repBuf);
 
-    writeOrPause(connection, clientToRemote, cipheredData);
+    writeOrPause(connection, tunnel, cipheredData);
 
     return {
         cipher,
-        clientToRemote
+        tunnel
     };
 }
 
 function handleConnection(connection, config) {
 
     let stage = 0;
-    let clientToRemote;
+    let tunnel;
     let tmp;
     let cipher;
     let remoteConnected = false;
@@ -181,30 +173,30 @@ function handleConnection(connection, config) {
                 () => {
                     if (remoteConnected) {
                         remoteConnected = false;
-                        clientToRemote.destroy();
+                        tunnel.destroy();
                     }
                     if (clientConnected) {
                         clientConnected = false;
                         connection.destroy();
                     }
                 },
-                () => clientConnected
+                clientConnected
             );
             stage = 2;
-            clientToRemote = tmp.clientToRemote;
+            tunnel = tmp.tunnel;
             cipher = tmp.cipher;
         } else if (stage == 2) {
             tmp = cipher.update(data);
-            writeOrPause(connection, clientToRemote, tmp);
+            writeOrPause(connection, tunnel, tmp);
         }
     }).on('drain', () => {
         if (remoteConnected) {
-            clientToRemote.resume();
+            tunnel.resume();
         }
     }).on('end', () => {
         clientConnected = false;
         if (remoteConnected) {
-            clientToRemote.end();
+            tunnel.end();
         }
     }).on('close', (e) => {
         if (timer) {
@@ -215,9 +207,9 @@ function handleConnection(connection, config) {
 
         if (remoteConnected) {
             if (e) {
-                clientToRemote.destroy();
+                tunnel.destroy();
             } else {
-                clientToRemote.end();
+                tunnel.end();
             }
         }
     });
@@ -227,7 +219,7 @@ function handleConnection(connection, config) {
             connection.destroy();
         }
         if (remoteConnected) {
-            clientToRemote.destroy();
+            tunnel.destroy();
         }
     }, config.timeout * 1000);
 }
