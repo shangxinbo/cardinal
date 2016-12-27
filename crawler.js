@@ -61,8 +61,8 @@ const items = [
             }
         }
     },
-    {
-        url: 'https://www.ishadowsocks.biz/',
+    /*{
+        url: 'https://www.ishadowsocks.info/',
         deXml: function (body) {
             try {
                 let $ = cheerio.load(body);
@@ -83,7 +83,7 @@ const items = [
                 return null;
             }
         }
-    },
+    },*/
     {
         url: 'http://freevpnss.cc/',
         deXml: function (body) {

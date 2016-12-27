@@ -1,1 +1,109 @@
-{"configs":[{"server":"s1.freess.co","server_port":"9999","password":"692","method":"rc4-md5","remarks":"tss","auth":false},{"server":"47.89.9.201","server_port":"10010","password":"3342","method":"rc4-md5","remarks":"tss","auth":false},{"server":"221.229.173.206","server_port":"10012","password":"7268","method":"rc4-md5","remarks":"tss","auth":false},{"server":"a.ssx.host","server_port":"1024","password":"22698074","method":"aes-256-cfb","remarks":"tss","auth":false},{"server":"b.ssx.host","server_port":"20000","password":"30705330","method":"aes-256-cfb","remarks":"tss","auth":false},{"server":"c.ssx.host","server_port":"10008","password":"09101013","method":"aes-256-cfb","remarks":"tss","auth":false},{"server":"47.88.188.62","server_port":"10008","password":"9458","method":"rc4-md5","remarks":"tss","auth":false},{"server":"a.ssx.host","server_port":"1024","password":"22698074","method":"aes-256-cfb","remarks":"iss","auth":false},{"server":"b.ssx.host","server_port":"20000","password":"30705330","method":"aes-256-cfb","remarks":"iss","auth":false},{"server":"c.ssx.host","server_port":"10008","password":"09101013","method":"aes-256-cfb","remarks":"iss","auth":false},{"server":"us.ssip.club","server_port":"443","password":"33374428","method":"AES-256-CFB","remarks":"fvss","auth":false},{"server":"jp.ssip.club","server_port":"23333","password":"44798307","method":"RC4-MD5","remarks":"fvss","auth":false},{"server":"usa.ssip.club","server_port":"443","password":"48559723","method":"AES-256-CFB","remarks":"fvss","auth":false}],"strategy":false,"index":0,"global":false,"enabled":true,"shareOverLan":true,"isDefault":false,"localPort":1080,"pacUrl":null,"useOnlinePac":false,"availabilityStatistics":false,"autoCheckUpdate":true,"isVerboseLogging":false,"logViewer":null,"useProxy":false,"proxyServer":null,"proxyPort":0}
+{
+  "configs": [
+    {
+      "server": "s1.freess.co",
+      "server_port": 9999,
+      "password": "&#x672C;&#x6708;2T&#x6D41;&#x91CF;&#x5DF2;&#x8D85;&#x6807;",
+      "method": "rc4-md5",
+      "remarks": "tss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "a.ssx.host",
+      "server_port": 1024,
+      "password": "93472450",
+      "method": "aes-256-cfb",
+      "remarks": "tss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "b.ssx.host",
+      "server_port": 20000,
+      "password": "96966747",
+      "method": "aes-256-cfb",
+      "remarks": "tss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "c.ssx.host",
+      "server_port": 10008,
+      "password": "27335354",
+      "method": "aes-256-cfb",
+      "remarks": "tss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "us.ssip.club",
+      "server_port": 443,
+      "password": "25451341",
+      "method": "AES-256-CFB",
+      "remarks": "fvss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "jp.ssip.club",
+      "server_port": 23333,
+      "password": "00263862",
+      "method": "RC4-MD5",
+      "remarks": "fvss",
+      "auth": false,
+      "timeout": 5
+    },
+    {
+      "server": "usa.ssip.club",
+      "server_port": 443,
+      "password": "75492418",
+      "method": "AES-256-CFB",
+      "remarks": "fvss",
+      "auth": false,
+      "timeout": 5
+    }
+  ],
+  "strategy": null,
+  "index": 1,
+  "global": false,
+  "enabled": true,
+  "shareOverLan": true,
+  "isDefault": false,
+  "localPort": 1080,
+  "pacUrl": null,
+  "useOnlinePac": false,
+  "availabilityStatistics": false,
+  "autoCheckUpdate": true,
+  "isVerboseLogging": false,
+  "logViewer": {
+    "fontName": "Consolas",
+    "fontSize": 8.0,
+    "bgColor": "black",
+    "textColor": "white",
+    "topMost": false,
+    "wrapText": false,
+    "toolbarShown": false,
+    "width": 600,
+    "height": 400,
+    "top": 640,
+    "left": 1320,
+    "maximized": true
+  },
+  "proxy": {
+    "useProxy": false,
+    "proxyType": 0,
+    "proxyServer": "",
+    "proxyPort": 0,
+    "proxyTimeout": 3
+  },
+  "hotkey": {
+    "SwitchSystemProxy": "",
+    "ChangeToPac": "",
+    "ChangeToGlobal": "",
+    "SwitchAllowLan": "",
+    "ShowLogs": "",
+    "ServerMoveUp": "",
+    "ServerMoveDown": ""
+  }
+}
