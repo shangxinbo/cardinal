@@ -7,23 +7,23 @@ const createCipher = require('./encryptor').createCipher;
 const createDecipher = require('./encryptor').createDecipher;
 
 /**
-* 接受客户端发送请求来协商版本及认证方式
-* +----+----------+----------+
-* |VER | NMETHODS | METHODS  |
-* +----+----------+----------+
-* | 1  |    1     | 1 to 255 |
-* +----+----------+----------+
-* VER是SOCKS版本，这里应该是0x05；
-* NMETHODS是METHODS部分的长度；
-* METHODS是客户端支持的认证方式列表，每个方法占1字节。当前的定义是：
-** 0x00 不需要认证
-** 0x01 GSSAPI
-** 0x02 用户名、密码认证
-** 0x03 - 0x7F由IANA分配（保留）
-** 0x80 - 0xFE为私人方法保留
-** 0xFF 无可接受的方法
-* 服务端选择一种验证方式返回给客户端
-**/
+ * 接受客户端发送请求来协商版本及认证方式
+ * +----+----------+----------+
+ * |VER | NMETHODS | METHODS  |
+ * +----+----------+----------+
+ * | 1  |    1     | 1 to 255 |
+ * +----+----------+----------+
+ * VER是SOCKS版本，这里应该是0x05；
+ * NMETHODS是METHODS部分的长度；
+ * METHODS是客户端支持的认证方式列表，每个方法占1字节。当前的定义是：
+ ** 0x00 不需要认证
+ ** 0x01 GSSAPI
+ ** 0x02 用户名、密码认证
+ ** 0x03 - 0x7F由IANA分配（保留）
+ ** 0x80 - 0xFE为私人方法保留
+ ** 0xFF 无可接受的方法
+ * 服务端选择一种验证方式返回给客户端
+ **/
 function agreeMode(connection, data) {
 
     const buf = new Buffer(2);
@@ -40,12 +40,7 @@ function agreeMode(connection, data) {
     }
 }
 
-function handleRequest(proxy, data, {
-    serverAddr,
-    serverPort,
-    password,
-    method,
-}, onConnect, onDestroy, clientConnected) {
+function handleRequest(proxy, data, {serverAddr, serverPort, password, method}, onConnect) {
 
     let tmp = null;
     let decipher = null;
@@ -54,45 +49,33 @@ function handleRequest(proxy, data, {
     let cipheredData = null;
 
     // 本地socks和云端socks桥接
-    const tunnel = connect({
-        port: serverPort,
-        host: serverAddr
-    }, () => onConnect());
+    const tunnel = connect({port: serverPort, host: serverAddr}, () => onConnect());
 
     tunnel.on('data', (remoteData) => {
         if (!decipher) {
             tmp = createDecipher(password, method, remoteData);
-            if (!tmp) {
-                onDestroy();
+            if (tmp) {
+                decipher = tmp.decipher;
+                decipheredData = tmp.data;
+            } else {
+                tunnel.destroy();
+                proxy.end();
                 return;
             }
-            decipher = tmp.decipher;
-            decipheredData = tmp.data;
         } else {
             decipheredData = decipher.update(remoteData);
         }
-
-        if (clientConnected) {
-            writeOrPause(tunnel, proxy, decipheredData);
-        } else {
-            tunnel.destroy();
-        }
+        writeOrPause(tunnel, proxy, decipheredData);
+    }).on('drain', function () {
+        proxy.resume()
+    }).on('end', function () {
+        proxy.end()
+    }).on('error', function () {
+        tunnel.destroy();
+        proxy.end();
+    }).on('close', function () {
+        proxy.end();
     });
-
-    tunnel.on('drain', () => proxy.resume());
-
-    tunnel.on('end', () => proxy.end());
-
-    tunnel.on('error', (e) => onDestroy());
-
-    tunnel.on('close', (e) => {
-        if (e) {
-            proxy.destroy();
-        } else {
-            proxy.end();
-        }
-    });
-
     return tunnel;
 }
 
@@ -100,7 +83,7 @@ function handleRequest(proxy, data, {
  * @method 处理代理请求
  * @param proxy  本地代理链接
  * @param config 配置
-* */
+ * */
 function handleConnection(proxy, config) {
 
     let stage = 0;
