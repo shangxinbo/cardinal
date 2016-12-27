@@ -68,11 +68,14 @@ function handleRequest(proxy, {serverAddr, serverPort, password, method}) {
         proxy.resume()
     }).on('end', function () {
         proxy.end()
+        console.log('服务器结束');
     }).on('error', function () {
         tunnel.destroy();
+        console.log('服务器异常结束');
         proxy.end();
     }).on('close', function () {
         proxy.end();
+        console.log('服务器关闭');
     });
     return tunnel;
 }
@@ -145,8 +148,12 @@ function handleConnection(proxy, config) {
         }
     }).on('drain', () => {
         tunnel.resume();
+        console.log('asdfasdf');
+        proxy.end();
     }).on('end', () => {
+        console.log('tcp connection hang up');
         tunnel.end();
+        proxy.destroy();
     }).on('close', (e) => {
         tunnel.destroy();
     });
