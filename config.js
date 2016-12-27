@@ -5,11 +5,11 @@
  */
 
 module.exports = {
-    serverAddr: 'b.ssx.host',
-    serverPort: 20000,
+    serverAddr: 'us.ssip.club',
+    serverPort: 443,
     localAddr: '127.0.0.1',
     localPort: 1080,
-    password: '96966747',
+    password: '25451341',
     pacServerPort: 8090,
     timeout: 600,
     method: 'aes-256-cfb',
