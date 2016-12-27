@@ -51,6 +51,7 @@ function agentHttp(direct = true) {
         })
 
         jetRequest.on('error', (err) => {
+            console.log(123);
             logger.error(err)
         })
         req.pipe(jetRequest)
@@ -77,6 +78,7 @@ function agentHttps(direct = true) {
             })
 
             jetSocket.on('error', (err) => {
+                console.log(234);
                 logger.error(err)
             })
         } else {
@@ -91,6 +93,7 @@ function agentHttps(direct = true) {
                 command: 'connect'
             }, (err, jetSocket, info) => {
                 if (err) {
+                    console.log(345);
                     logger.error(err)
                 } else {
                     // tell the client that the connection is established

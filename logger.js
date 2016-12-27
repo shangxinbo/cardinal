@@ -15,7 +15,7 @@ function doing(log = '') {
 }
 
 function error(log = '') {
-    console.log(`[ERRO] ${log}`.yellow)
+    console.log(`[ERROR] ${log}`.yellow)
 }
 function status(log = '') {
     console.log(`[STATUS] ${log}`.gray)

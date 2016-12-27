@@ -1,6 +1,7 @@
 "use strict";
 
 const crypto = require('crypto');
+const logger = require('../logger');
 
 const hasOwnProperty = {}.hasOwnProperty;
 
@@ -62,7 +63,7 @@ function getKey(method, secret) {
         keyCache[cacheIndex] = hash;
         return hash;
     }else{
-        throw new Error('unsupported method');
+        logger.error('unsupported method');
     }
 }
 
