@@ -24,5 +24,5 @@ module.exports = {
     serverAddrIPv6: '::1',
 
     // dev options
-    _recordMemoryUsage: false,
+    _recordMemoryUsage: false
 };
