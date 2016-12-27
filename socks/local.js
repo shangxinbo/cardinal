@@ -1,7 +1,9 @@
+"use strict";
+
 const ip = require('ip');
 const net = require('net');
-const createCipher = require('./encryptor').createCipher;
-const createDecipher = require('./encryptor').createDecipher;
+const createCipher = require('./encrypt').createCipher;
+const createDecipher = require('./encrypt').createDecipher;
 
 /**
  * 接受客户端发送请求来协商版本及认证方式
@@ -135,9 +137,7 @@ function handleConnection(proxy, config) {
             //向服务端吐数据
             let encrypt = createCipher(config.password, config.method, data.slice(3)); // skip VER, CMD, RSV
             cipher = encrypt.cipher;
-            cipheredData = encrypt.data;
-            flowData(proxy, tunnel, cipheredData);
-
+            flowData(proxy, tunnel, encrypt.data);
         } else if (stage == 2) {
             tmp = cipher.update(data);
             flowData(proxy, tunnel, tmp);

@@ -1,3 +1,5 @@
+"use strict";
+
 const crypto = require('crypto');
 
 const hasOwnProperty = {}.hasOwnProperty;
@@ -100,12 +102,4 @@ exports.createDecipher = function (secret, methodName, initialData) {
         decipher,
         data,
     };
-}
-
-exports.encrypt = function (secret, methodName, data, _iv) {
-    return createCipher(secret, methodName, data, _iv).data;
-}
-
-exports.decrypt = function (secret, methodName, data) {
-    return createDecipher(secret, methodName, data).data;
 }
