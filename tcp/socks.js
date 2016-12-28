@@ -148,13 +148,14 @@ function handleConnection(proxy, config) {
         }
     }).on('drain', () => {
         tunnel.resume();
-        console.log('asdfasdf');
-        proxy.end();
     }).on('end', () => {
         console.log('tcp connection hang up');
         tunnel.end();
         proxy.destroy();
-    }).on('close', (e) => {
+    }).on('close', (has_error) => {
+        if(has_error){
+            logger.error('local connection close unexpected');
+        }
         tunnel.destroy();
     });
 }
@@ -168,9 +169,8 @@ function handleConnection(proxy, config) {
 * */
 function flowData(from,to,data){
     const res = to.write(data);
-
     if (!res) {
-        from.pause();
+        from.pause();  //内存边界
     }
     return res;
 }
@@ -178,10 +178,13 @@ function flowData(from,to,data){
 exports.createServer = function (config) {
     const server = net.createServer(c => handleConnection(c, config));
 
-    server.on('close', () => console.log('server close'));
-    server.on('error', e => console.log(e));
+    server.on('close', function(){
+        logger.error('TCP server close unexpacted');
+    });
     server.on('connection', function () {
         logger.doing('TCP server connected');
+        var proxyConnects = server.getConnections();
+        logger.status(`TCP have ${proxyConnects} connections`);
     });
     server.on('listening', function () {
         logger.status(`TCP listening on ${config.localPort}...`);
