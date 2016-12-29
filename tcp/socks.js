@@ -67,15 +67,11 @@ function handleRequest(proxy, {serverAddr, serverPort, password, method}) {
     }).on('drain', function () {
         proxy.resume()
     }).on('end', function () {
-        proxy.end()
-        console.log('服务器结束');
-    }).on('error', function () {
-        tunnel.destroy();
-        console.log('服务器异常结束');
         proxy.end();
+        logger.status('server connection end');
     }).on('close', function () {
-        proxy.end();
-        console.log('服务器关闭');
+        proxy.destroy();
+        console.log('server connection error');
     });
     return tunnel;
 }
@@ -149,9 +145,8 @@ function handleConnection(proxy, config) {
     }).on('drain', () => {
         tunnel.resume();
     }).on('end', () => {
-        console.log('tcp connection hang up');
+        logger.status('tcp connection end');
         tunnel.end();
-        proxy.destroy();
     }).on('close', (has_error) => {
         if(has_error){
             logger.error('local connection close unexpected');
