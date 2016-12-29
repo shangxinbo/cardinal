@@ -158,7 +158,9 @@ function handleConnection(proxy, config) {
     });
 
     process.on('uncaughtException', function (err) {
-        tunnel.destroy();   //程序异常退出，tcp连接处理
+        if(tunnel){
+            tunnel.destroy();   //程序异常退出，tcp连接处理
+        }
     });
 }
 
@@ -186,7 +188,7 @@ exports.createServer = function (config) {
     server.on('connection', function () {
         logger.doing('TCP server connected');
         var proxyConnects = server.getConnections;
-        //logger.status(`TCP have ${proxyConnects} connections`);
+        logger.status(`TCP have ${proxyConnects} connections`);
     });
     server.on('listening', function () {
         logger.status(`TCP listening on ${config.localPort}...`);
