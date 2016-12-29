@@ -48,7 +48,6 @@ function handleRequest(proxy, {serverAddr, serverPort, password, method}) {
     const tunnel = net.connect({port: serverPort, host: serverAddr}, function () {
         logger.status(`Server ${serverAddr}:${serverPort} connected`);
     });
-
     tunnel.on('data', (remoteData) => {
         if (!decipher) {
             let tmp = createDecipher(password, method, remoteData);
@@ -69,9 +68,11 @@ function handleRequest(proxy, {serverAddr, serverPort, password, method}) {
     }).on('end', function () {
         proxy.end();
         logger.status('server connection end');
-    }).on('close', function () {
+    }).on('close', function (has_error) {
+        if(has_error){
+            logger.error('server connection close error');
+        }
         proxy.destroy();
-        console.log('server connection error');
     });
     return tunnel;
 }
@@ -146,12 +147,18 @@ function handleConnection(proxy, config) {
         tunnel.resume();
     }).on('end', () => {
         logger.status('tcp connection end');
-        tunnel.end();
+        if(tunnel){
+            tunnel.end();
+        }
     }).on('close', (has_error) => {
         if(has_error){
             logger.error('local connection close unexpected');
         }
         tunnel.destroy();
+    });
+
+    process.on('uncaughtException', function (err) {
+        tunnel.destroy();   //程序异常退出，tcp连接处理
     });
 }
 
@@ -178,8 +185,8 @@ exports.createServer = function (config) {
     });
     server.on('connection', function () {
         logger.doing('TCP server connected');
-        var proxyConnects = server.getConnections();
-        logger.status(`TCP have ${proxyConnects} connections`);
+        var proxyConnects = server.getConnections;
+        //logger.status(`TCP have ${proxyConnects} connections`);
     });
     server.on('listening', function () {
         logger.status(`TCP listening on ${config.localPort}...`);
