@@ -69,7 +69,7 @@ function handleRequest(proxy, {serverAddr, serverPort, password, method}) {
         proxy.end();
         logger.status('server connection end');
     }).on('close', function (has_error) {
-        if(has_error){
+        if (has_error) {
             logger.error('server connection close error');
         }
         proxy.destroy();
@@ -147,11 +147,11 @@ function handleConnection(proxy, config) {
         tunnel.resume();
     }).on('end', () => {
         logger.status('tcp connection end');
-        if(tunnel){
+        if (tunnel) {
             tunnel.end();
         }
     }).on('close', (has_error) => {
-        if(has_error){
+        if (has_error) {
             logger.error('local connection close unexpected');
         }
         tunnel.destroy();
@@ -168,8 +168,8 @@ function handleConnection(proxy, config) {
  * @param to   Socks 数据桶
  * @param data Buffer  数据
  *
-* */
-function flowData(from,to,data){
+ * */
+function flowData(from, to, data) {
     const res = to.write(data);
     if (!res) {
         from.pause();  //内存边界
@@ -180,7 +180,7 @@ function flowData(from,to,data){
 exports.createServer = function (config) {
     const server = net.createServer(c => handleConnection(c, config));
 
-    server.on('close', function(){
+    server.on('close', function () {
         logger.error('TCP server close unexpacted');
     });
     server.on('connection', function () {

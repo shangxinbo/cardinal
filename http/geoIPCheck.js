@@ -19,7 +19,7 @@ if (dnsServer.length > 0) {
 
 /**
  * read china ips
-* */
+ * */
 function readGeoIPList() {
     return fs.readFileSync(geoipFile, 'utf8').split('\n').filter(function (rx) {  // filter blank cidr
         return rx.length

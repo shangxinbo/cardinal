@@ -37,7 +37,7 @@ function getMD5Hash(data) {
  * @param method String  加密算法
  * @param secret String  明文密码
  * return hash
-* */
+ * */
 function getKey(method, secret) {
     const secretBuf = new Buffer(secret, 'utf8');
     const tokens = [];
@@ -62,7 +62,7 @@ function getKey(method, secret) {
         hash = Buffer.concat(tokens).slice(0, keyLength);
         keyCache[cacheIndex] = hash;
         return hash;
-    }else{
+    } else {
         logger.error('unsupported method');
     }
 }
@@ -83,7 +83,7 @@ exports.createCipher = function (secret, method, data, _iv) {
 
     return {
         cipher,
-        data:Buffer.concat([iv, cipher.update(data)])
+        data: Buffer.concat([iv, cipher.update(data)])
     };
 };
 

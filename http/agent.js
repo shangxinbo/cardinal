@@ -3,7 +3,7 @@ const url = require('url')
 const process = require('process')
 const net = require('net')
 const Socks = require('socks')
-const {localAddr,localPort} = require('../config')
+const {localAddr, localPort} = require('../config')
 const logger = require('../logger')
 
 // Proxy Setting
