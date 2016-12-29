@@ -3,7 +3,7 @@
     {
       "server": "a.ssx.host",
       "server_port": 1024,
-      "password": "45327056",
+      "password": "25622525",
       "method": "aes-256-cfb",
       "remarks": "iss",
       "auth": false,
@@ -12,7 +12,7 @@
     {
       "server": "b.ssx.host",
       "server_port": 20000,
-      "password": "46842846",
+      "password": "64570510",
       "method": "aes-256-cfb",
       "remarks": "iss",
       "auth": false,
@@ -21,7 +21,7 @@
     {
       "server": "c.ssx.host",
       "server_port": 10008,
-      "password": "99843485",
+      "password": "20095073",
       "method": "aes-256-cfb",
       "remarks": "iss",
       "auth": false,
@@ -30,7 +30,7 @@
     {
       "server": "us.ssip.club",
       "server_port": 443,
-      "password": "04174144",
+      "password": "87211840",
       "method": "AES-256-CFB",
       "remarks": "fvss",
       "auth": false,
@@ -39,7 +39,7 @@
     {
       "server": "jp.ssip.club",
       "server_port": 23333,
-      "password": "26367524",
+      "password": "89379677",
       "method": "RC4-MD5",
       "remarks": "fvss",
       "auth": false,
@@ -48,7 +48,7 @@
     {
       "server": "usa.ssip.club",
       "server_port": 443,
-      "password": "71285410",
+      "password": "18169793",
       "method": "AES-256-CFB",
       "remarks": "fvss",
       "auth": false,
