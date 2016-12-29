@@ -1,0 +1,22 @@
+{
+  "list":[
+    {
+      "host": "45.124.64.36",
+      "port": 20000,
+      "password": "75368834",
+      "method": "aes-256-cfb"
+    },
+    {
+      "host": "106.187.101.74",
+      "port": 10008,
+      "password": "66550782",
+      "method": "aes-256-cfb"
+    },
+    {
+      "host": "45.55.14.59",
+      "port": 1024,
+      "password": "23539545",
+      "method": "aes-256-cfb"
+    }
+  ]
+}

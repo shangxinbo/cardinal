@@ -4,33 +4,35 @@
  * AUTHOR shangxinbo
  */
 
+global.LOCAL_CONF = require('./config/local.json');
+global.SERVER_CONF = require('./config/server.json');
+
 const isIpv4 = require('ip').isV4Format;
-const lookup = require('dns').lookup;
-const config = require('./config');
 const local = require('./tcp/socks');
 const jet = require('./http/jet');
 const logger = require('./logger');
+/*const lookup = require('dns').lookup;*/
 
-const {serverAddr,httpServer,httpPort} = config;
 
 //创建socks server
-if (isIpv4(serverAddr)) {
-    local.createServer(config);
+local.createServer();
+/*if (isIpv4(serverAddr)) {
+    local.createServer();
 } else {
     lookup(serverAddr, function(err, addresses){
         if (err) {
-            logger.error(`Socks resolve 'serverAddr': ${serverAddr} error`);
+            logger.error(`Socks resolve 'serverAddr': ${LOCAL_CONF.socksHost} error`);
         } else {
-            config.serverAddr = addresses;
-            local.createServer(config);
+            LOCAL_CONF.socksHost = addresses;
+            local.createServer();
         }
     });
-}
+}*/
 
 //创建http server
 
-jet.listen(httpPort, httpServer, () => {
-    logger.status(`HTTP listening on ${httpServer}:${httpPort}...`);
+jet.listen(LOCAL_CONF.httpPort, LOCAL_CONF.httpHost, () => {
+    logger.status(`HTTP listening on ${LOCAL_CONF.httpHost}:${LOCAL_CONF.httpPort}...`);
 });
 
 jet.on('error', (e) => {

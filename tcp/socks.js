@@ -5,7 +5,7 @@ const net = require('net');
 const createCipher = require('./encrypt').createCipher;
 const createDecipher = require('./encrypt').createDecipher;
 const logger = require('../logger');
-
+const server = require('./balun').getServer();
 /**
  * 接受客户端发送请求来协商版本及认证方式
  * +----+----------+----------+
@@ -40,17 +40,17 @@ function agreeMode(connection, data) {
     }
 }
 
-function handleRequest(proxy, {serverAddr, serverPort, password, method}) {
+function handleRequest(proxy) {
 
     let decipher, decipheredData;
 
     // 本地socks和云端socks桥接
-    const tunnel = net.connect({port: serverPort, host: serverAddr}, function () {
-        logger.status(`Server ${serverAddr}:${serverPort} connected`);
+    const tunnel = net.connect({port: server.port, host: server.host}, function () {
+        logger.status(`Server ${server.host}:${server.port} connected`);
     });
     tunnel.on('data', (remoteData) => {
         if (!decipher) {
-            let tmp = createDecipher(password, method, remoteData);
+            let tmp = createDecipher(server.password, server.method, remoteData);
             if (tmp) {
                 decipher = tmp.decipher;
                 decipheredData = tmp.data;
@@ -116,7 +116,7 @@ function handleRequest(proxy, {serverAddr, serverPort, password, method}) {
  * BND ADDR服务器绑定的地址
  * BND PROT网络字节序表示的服务器绑定的端口
  * */
-function handleConnection(proxy, config) {
+function handleConnection(proxy) {
 
     let stage = 0;
     let tunnel;
@@ -128,7 +128,7 @@ function handleConnection(proxy, config) {
         if (stage == 0) {
             stage = agreeMode(proxy, data);
         } else if (stage == 1) {
-            tunnel = handleRequest(proxy, config);
+            tunnel = handleRequest(proxy);
             let resBuf = new Buffer(10);
             resBuf.writeUInt32BE(0x05000001);
             resBuf.writeUInt32BE(0x00000000, 4, 4);
@@ -136,7 +136,7 @@ function handleConnection(proxy, config) {
             proxy.write(resBuf);
             stage = 2;
             //向服务端吐数据
-            let encrypt = createCipher(config.password, config.method, data.slice(3)); // skip VER, CMD, RSV
+            let encrypt = createCipher(server.password, server.method, data.slice(3)); // skip VER, CMD, RSV
             cipher = encrypt.cipher;
             flowData(proxy, tunnel, encrypt.data);
         } else if (stage == 2) {
@@ -158,7 +158,7 @@ function handleConnection(proxy, config) {
     });
 
     process.on('uncaughtException', function (err) {
-        if(tunnel){
+        if (tunnel) {
             tunnel.destroy();   //程序异常退出，tcp连接处理
         }
     });
@@ -179,19 +179,17 @@ function flowData(from, to, data) {
     return res;
 }
 
-exports.createServer = function (config) {
-    const server = net.createServer(c => handleConnection(c, config));
+exports.createServer = function () {
+    const server = net.createServer(c => handleConnection(c));
 
     server.on('close', function () {
         logger.error('TCP server close unexpacted');
     });
     server.on('connection', function () {
         logger.doing('TCP server connected');
-        var proxyConnects = server.getConnections;
-        logger.status(`TCP have ${proxyConnects} connections`);
     });
     server.on('listening', function () {
-        logger.status(`TCP listening on ${config.localPort}...`);
+        logger.status(`TCP listening on ${LOCAL_CONF.socksHost}:${LOCAL_CONF.socksPort}...`);
     });
-    server.listen(config.localPort);
+    server.listen(LOCAL_CONF.socksPort);
 }

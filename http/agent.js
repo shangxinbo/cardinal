@@ -3,14 +3,13 @@ const url = require('url')
 const process = require('process')
 const net = require('net')
 const Socks = require('socks')
-const {localAddr, localPort} = require('../config')
 const logger = require('../logger')
 
 // Proxy Setting
 const proxy = {
-    ipaddress: localAddr,
-    port: localPort,
-    type: 5   //socks5
+    ipaddress: LOCAL_CONF.socksHost,
+    port: LOCAL_CONF.socksPort,
+    type: 5
 }
 
 // Jet Header

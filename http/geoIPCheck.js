@@ -4,7 +4,6 @@ const fs = require('fs')
 const path = require('path')
 const dns = require('dns')
 const ip = require('ip')
-const {dnsServer} = require('../config')
 const logger = require('../logger')
 const geoipFile = path.join(__dirname, './GeoIP-CN')
 
@@ -13,8 +12,8 @@ let cidrs
 /**
  * set DNS server manually
  */
-if (dnsServer.length > 0) {
-    dns.setServers(dnsServer)
+if (LOCAL_CONF.dnsServer.length > 0) {
+    dns.setServers(LOCAL_CONF.dnsServer)
 }
 
 /**
