@@ -38,7 +38,7 @@ const items = [
             }
         }
     },*/
-    {
+    /*{
         url: 'http://tempss.com/',
         deXml: function (body) {
             try {
@@ -60,9 +60,9 @@ const items = [
                 return null;
             }
         }
-    },
-    /*{
-        url: 'https://www.ishadowsocks.info/',
+    },*/
+    {
+        url: 'http://www.ishadowsocks.me/',
         deXml: function (body) {
             try {
                 let $ = cheerio.load(body);
@@ -83,7 +83,7 @@ const items = [
                 return null;
             }
         }
-    },*/
+    },
     {
         url: 'http://freevpnss.cc/',
         deXml: function (body) {
