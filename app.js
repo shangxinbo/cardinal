@@ -10,12 +10,14 @@ global.SERVER_CONF = require('./config/server.json');
 const isIpv4 = require('ip').isV4Format;
 const local = require('./tcp/socks');
 const jet = require('./http/jet');
+const pac = require('./http/pac');
 const logger = require('./logger');
 /*const lookup = require('dns').lookup;*/
 
 
 //创建socks server
 local.createServer();
+pac.createPACServer();
 /*if (isIpv4(serverAddr)) {
     local.createServer();
 } else {
