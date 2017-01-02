@@ -1,7 +1,7 @@
 "use strict";
 
 const crypto = require('crypto');
-const logger = require('../logger');
+const logger = require('../utils/logger');
 
 const hasOwnProperty = {}.hasOwnProperty;
 
@@ -101,6 +101,6 @@ exports.createDecipher = function (secret, methodName, initialData) {
 
     return {
         decipher,
-        data,
+        data
     };
 }

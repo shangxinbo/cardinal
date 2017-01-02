@@ -1,11 +1,12 @@
 "use strict";
 
-const ip = require('ip');
 const net = require('net');
+const ip = require('ip');
+const logger = require('../utils/logger');
 const createCipher = require('./encrypt').createCipher;
 const createDecipher = require('./encrypt').createDecipher;
-const logger = require('../logger');
 const SERVER_CONF = require('../config/server.json');
+
 /**
  * 接受客户端发送请求来协商版本及认证方式
  * +----+----------+----------+
@@ -40,7 +41,7 @@ function agreeMode(connection, data) {
     }
 }
 
-function handleRequest(proxy,config) {
+function handleRequest(proxy, config) {
 
     let decipher, decipheredData;
 
@@ -116,7 +117,7 @@ function handleRequest(proxy,config) {
  * BND ADDR服务器绑定的地址
  * BND PROT网络字节序表示的服务器绑定的端口
  * */
-function handleConnection(proxy,config) {
+function handleConnection(proxy, config) {
 
     let stage = 0;
     let tunnel;
@@ -128,7 +129,7 @@ function handleConnection(proxy,config) {
         if (stage == 0) {
             stage = agreeMode(proxy, data);
         } else if (stage == 1) {
-            tunnel = handleRequest(proxy,config);
+            tunnel = handleRequest(proxy, config);
             let resBuf = new Buffer(10);
             resBuf.writeUInt32BE(0x05000001);
             resBuf.writeUInt32BE(0x00000000, 4, 4);
@@ -146,7 +147,7 @@ function handleConnection(proxy,config) {
     }).on('drain', () => {
         tunnel.resume();
     }).on('end', () => {
-        logger.status('tcp connection end');
+        logger.status('socks connection end');
         if (tunnel) {
             tunnel.end();
         }
@@ -159,7 +160,7 @@ function handleConnection(proxy,config) {
 
     process.on('uncaughtException', function (err) {
         if (tunnel) {
-            tunnel.destroy();   //程序异常退出，tcp连接处理
+            tunnel.destroy();   //TODO
         }
     });
 }
@@ -182,21 +183,20 @@ function flowData(from, to, data) {
 exports.createServer = function () {
     let serverList = SERVER_CONF.list;
     let socksServerArr = [];
-    for(let i=0;i<serverList.length;i++){
+    let ceilPort = 12345;
+    let host = '127.0.0.1';
+    for (let i = 0; i < serverList.length; i++) {
         let config = serverList[i];
-        let server = net.createServer(c => handleConnection(c,config));
-        let port = 12345 + i;
+        let server = net.createServer(c => handleConnection(c, config));
+        let port = ceilPort + i;
         server.on('close', function () {
             logger.error('TCP server close unexpacted');
-        });
-        server.on('connection', function () {
+        }).on('connection', function () {
             logger.doing('TCP server connected');
+        }).listen({host: host, port: port}, function () {
+            logger.status(`TCP listening on ${host}:${port}...`);
         });
-        server.on('listening', function () {
-            logger.status(`TCP listening on 127.0.0.1:${port}...`);
-        });
-        server.listen(port);
         socksServerArr.push(port);
     }
     return socksServerArr;
-}
+};
