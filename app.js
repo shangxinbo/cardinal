@@ -11,11 +11,12 @@ const http = require('http');
 const ipChecker = require('./http/geoIPCheck');
 const agent = require('./http/agent');
 const fs = require('fs');
-
+const path = require('path');
+const geoipFile = path.join(__dirname, './config/GeoIP-CN');
 
 //创建socks server
 let socksPorts = local.createServer();
-
+let httpPorts = [];
 
 //创建http server
 for(let i=0;i<socksPorts.length;i++){
@@ -40,7 +41,59 @@ for(let i=0;i<socksPorts.length;i++){
             process.exit(1)
         }*/
     });
+    httpPorts.push(port);
 }
+
+
+/**
+ * read china ips
+ * */
+function readGeoIPList() {
+    return fs.readFileSync(geoipFile, 'utf8').split('\r\n').filter(function (rx) {  // filter blank cidr
+        return rx.length
+    })
+}
+var CHINA_NETS = readGeoIPList();
+var ipsArr = [];
+var proxyStr = 'var proxy = "';
+for(var h=0;h<httpPorts.length;h++){
+    proxyStr += 'PROXY 127.0.0.1:'+ httpPorts[h] + ';';
+}
+proxyStr += 'DIRECT;";';
+
+for(var i=0;i<CHINA_NETS.length;i++){
+    var thisIp = CHINA_NETS[i];
+    var tmp = thisIp.split('/');
+    ipsArr.push(JSON.stringify({
+        ip:tmp[0],
+        mask:subNetMask(tmp[1])
+    }));
+}
+function subNetMask(num){
+    var str = '';
+    for(var i=0;i<32;i++){
+        if(i<num){
+            str += '1';
+        }else{
+            str += '0';
+        }
+    }
+    var arr = [
+        str.substr(0,8),
+        str.substr(8,8),
+        str.substr(16,8),
+        str.substr(24,8)
+    ];
+    for(var j = 0;j<4;j++){
+        arr[j] = parseInt(arr[j],2);
+    }
+    return arr.join('.');
+}
+
+var rulesStr = 'var ipsArr=[' + ipsArr.join(',') + '];';
+var proxyFun = fs.readFileSync('./config/pac.js',{encoding:'utf8'});
+fs.writeFileSync('proxy.pac',`${proxyStr}\n${rulesStr}\n${proxyFun}`);
+
 
 var pacServer = http.createServer(function(req,res){
     fs.readFile('proxy.pac','binary',function(err,file){
