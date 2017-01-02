@@ -97,3 +97,4 @@ If you are the proxy administrator, please put the required file(s)in the (confd
 * 2016-12-08 ishadowsocks.net 转为 https://www.ishadowsocks.biz/ 服务
 * 2016-12-08 tempss.com 服务恢复，freessr.top服务暂停
 * 2016-12-16 ishadowsocks.biz 更换为 http://www.ishadowsocks.info 
+* 2017-01-02 ishadowsocks.me 被攻击
