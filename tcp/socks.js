@@ -5,7 +5,7 @@ const net = require('net');
 const createCipher = require('./encrypt').createCipher;
 const createDecipher = require('./encrypt').createDecipher;
 const logger = require('../logger');
-const server = require('./balun').getServer();
+const SERVER_CONF = require('../config/server.json');
 /**
  * 接受客户端发送请求来协商版本及认证方式
  * +----+----------+----------+
@@ -40,17 +40,17 @@ function agreeMode(connection, data) {
     }
 }
 
-function handleRequest(proxy) {
+function handleRequest(proxy,config) {
 
     let decipher, decipheredData;
 
     // 本地socks和云端socks桥接
-    const tunnel = net.connect({port: server.port, host: server.host}, function () {
-        logger.status(`Server ${server.host}:${server.port} connected`);
+    const tunnel = net.connect({port: config.port, host: config.host}, function () {
+        logger.status(`Server ${config.host}:${config.port} connected`);
     });
     tunnel.on('data', (remoteData) => {
         if (!decipher) {
-            let tmp = createDecipher(server.password, server.method, remoteData);
+            let tmp = createDecipher(config.password, config.method, remoteData);
             if (tmp) {
                 decipher = tmp.decipher;
                 decipheredData = tmp.data;
@@ -116,7 +116,7 @@ function handleRequest(proxy) {
  * BND ADDR服务器绑定的地址
  * BND PROT网络字节序表示的服务器绑定的端口
  * */
-function handleConnection(proxy) {
+function handleConnection(proxy,config) {
 
     let stage = 0;
     let tunnel;
@@ -128,7 +128,7 @@ function handleConnection(proxy) {
         if (stage == 0) {
             stage = agreeMode(proxy, data);
         } else if (stage == 1) {
-            tunnel = handleRequest(proxy);
+            tunnel = handleRequest(proxy,config);
             let resBuf = new Buffer(10);
             resBuf.writeUInt32BE(0x05000001);
             resBuf.writeUInt32BE(0x00000000, 4, 4);
@@ -136,7 +136,7 @@ function handleConnection(proxy) {
             proxy.write(resBuf);
             stage = 2;
             //向服务端吐数据
-            let encrypt = createCipher(server.password, server.method, data.slice(3)); // skip VER, CMD, RSV
+            let encrypt = createCipher(config.password, config.method, data.slice(3)); // skip VER, CMD, RSV
             cipher = encrypt.cipher;
             flowData(proxy, tunnel, encrypt.data);
         } else if (stage == 2) {
@@ -180,16 +180,23 @@ function flowData(from, to, data) {
 }
 
 exports.createServer = function () {
-    const server = net.createServer(c => handleConnection(c));
-
-    server.on('close', function () {
-        logger.error('TCP server close unexpacted');
-    });
-    server.on('connection', function () {
-        logger.doing('TCP server connected');
-    });
-    server.on('listening', function () {
-        logger.status(`TCP listening on ${LOCAL_CONF.socksHost}:${LOCAL_CONF.socksPort}...`);
-    });
-    server.listen(LOCAL_CONF.socksPort);
+    let serverList = SERVER_CONF.list;
+    let socksServerArr = [];
+    for(let i=0;i<serverList.length;i++){
+        let config = serverList[i];
+        let server = net.createServer(c => handleConnection(c,config));
+        let port = 12345 + i;
+        server.on('close', function () {
+            logger.error('TCP server close unexpacted');
+        });
+        server.on('connection', function () {
+            logger.doing('TCP server connected');
+        });
+        server.on('listening', function () {
+            logger.status(`TCP listening on 127.0.0.1:${port}...`);
+        });
+        server.listen(port);
+        socksServerArr.push(port);
+    }
+    return socksServerArr;
 }

@@ -5,13 +5,6 @@ const net = require('net')
 const Socks = require('socks')
 const logger = require('../logger')
 
-// Proxy Setting
-const proxy = {
-    ipaddress: LOCAL_CONF.socksHost,
-    port: LOCAL_CONF.socksPort,
-    type: 5
-}
-
 // Jet Header
 function jetHeader(httpVersion) {
     return `HTTP/${httpVersion} 200 Connection Established\r\n` +
@@ -19,7 +12,7 @@ function jetHeader(httpVersion) {
         '\r\n'
 }
 
-function agentHttp(direct = true) {
+function agentHttp(direct = true,sockPort) {
     return function (req, res) {
         const _url = url.parse(req.url)
 
@@ -41,7 +34,13 @@ function agentHttp(direct = true) {
             logger.request(req, 'direct')
         } else {
             logger.request(req, 'tunnel')
-            options.agent = new Socks.Agent({proxy}, false, false)
+            options.agent = new Socks.Agent({
+                proxy:{
+                    ipaddress: '127.0.0.1',
+                    port: sockPort,
+                    type:5
+                }
+            },false, false)
         }
 
         const jetRequest = http.request(options, (_res) => {
@@ -56,7 +55,7 @@ function agentHttp(direct = true) {
     }
 }
 
-function agentHttps(direct = true) {
+function agentHttps(direct = true,sockPort) {
     return function (req, socket, head) {
         const _url = url.parse(`https://${req.url}`)
 
@@ -82,7 +81,11 @@ function agentHttps(direct = true) {
             logger.request(req, 'tunnel')
 
             Socks.createConnection({
-                proxy,
+                proxy:{
+                    ipaddress: '127.0.0.1',
+                    port: sockPort,
+                    type:5
+                },
                 target: {
                     host: hostname,
                     port: port

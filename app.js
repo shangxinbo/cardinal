@@ -5,41 +5,60 @@
  */
 
 global.LOCAL_CONF = require('./config/local.json');
-global.SERVER_CONF = require('./config/server.json');
-
-const isIpv4 = require('ip').isV4Format;
 const local = require('./tcp/socks');
-const jet = require('./http/jet');
-const pac = require('./http/pac');
 const logger = require('./logger');
-/*const lookup = require('dns').lookup;*/
+const http = require('http');
+const ipChecker = require('./http/geoIPCheck');
+const agent = require('./http/agent');
+const fs = require('fs');
 
 
 //创建socks server
-local.createServer();
-pac.createPACServer();
-/*if (isIpv4(serverAddr)) {
-    local.createServer();
-} else {
-    lookup(serverAddr, function(err, addresses){
-        if (err) {
-            logger.error(`Socks resolve 'serverAddr': ${LOCAL_CONF.socksHost} error`);
-        } else {
-            LOCAL_CONF.socksHost = addresses;
-            local.createServer();
-        }
-    });
-}*/
+let socksPorts = local.createServer();
+
 
 //创建http server
+for(let i=0;i<socksPorts.length;i++){
+    let proxy = http.createServer();
+    let port = socksPorts[i]+100;
+    proxy.on('request', (req, res) => {
+        ipChecker(req, (tunnel) => {
+            agent.http(tunnel,socksPorts[i])(req, res);
+        });
+    });
+    proxy.on('connect', (req, socket, head) => {
+        ipChecker(req, (tunnel) => {
+            agent.https(tunnel,socksPorts[i])(req, socket, head);
+        });
+    });
+    proxy.listen(port, '127.0.0.1', () => {
+        logger.status(`HTTP listening on 127.0.0.1:${port}...`);
+    });
+    proxy.on('error', (e) => {
+        logger.error(e.code);
+        /*if (e.code === 'EADDRINUSE') {
+            process.exit(1)
+        }*/
+    });
+}
 
-jet.listen(LOCAL_CONF.httpPort, LOCAL_CONF.httpHost, () => {
-    logger.status(`HTTP listening on ${LOCAL_CONF.httpHost}:${LOCAL_CONF.httpPort}...`);
+var pacServer = http.createServer(function(req,res){
+    fs.readFile('proxy.pac','binary',function(err,file){
+        if (err) {
+            res.writeHead(500, {
+                'Content-Type': 'text/plain'
+            });
+            res.end(err);
+        } else {
+            var contentType = "application/x-ns-proxy-autoconfig";
+            res.writeHead(200, {
+                'Content-Type': contentType
+            });
+            res.write(file, "binary");
+            res.end();
+        }
+    });
 });
+pacServer.listen('8090');
+logger.status('pacserver listening on 8090');
 
-jet.on('error', (e) => {
-    logger.error(e.code);
-    if (e.code === 'EADDRINUSE') {
-        process.exit(1)
-    }
-});

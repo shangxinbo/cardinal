@@ -15,12 +15,8 @@
   "author": "shangxinbo",
   "license": "GPL",
   "dependencies": {
-    "cheerio": "^0.22.0",
+    "colors": "^1.1.2",
     "ip": "^1.1.4",
-    "jet": "github:m31271n/jet",
-    "lru-cache": "^4.0.2",
-    "sync-request": "^3.0.1",
-    "uglify-js": "^2.7.5",
-    "winston": "^2.2.0"
+    "socks": "^1.1.9"
   }
 }
