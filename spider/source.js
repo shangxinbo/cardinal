@@ -18,8 +18,8 @@ const items = [
                 let arr = [];
                 for (let i = 0; i < list.length - 1; i++) {
                     arr.push({
-                        "server": $(list[i]).find('h4').eq('0').html().split(':')[1],
-                        "server_port": $(list[i]).find('h4').eq('1').html().split(':')[1],
+                        "host": $(list[i]).find('h4').eq('0').html().split(':')[1],
+                        "port": $(list[i]).find('h4').eq('1').html().split(':')[1],
                         "password": $(list[i]).find('h4').eq('2').html().split(':')[1],
                         "method": $(list[i]).find('h4').eq('3').html().split(':')[1],
                         "remarks": "frss",
@@ -41,8 +41,8 @@ const items = [
                 let arr = [];
                 for (let i = 0; i < list.length; i++) {
                     arr.push({
-                        "server": $(list[i]).find('td').eq('0').html(),
-                        "server_port": $(list[i]).find('td').eq('1').html(),
+                        "host": $(list[i]).find('td').eq('0').html(),
+                        "port": $(list[i]).find('td').eq('1').html(),
                         "password": $(list[i]).find('td').eq('3').html(),
                         "method": $(list[i]).find('td').eq('2').html(),
                         "remarks": "tss",
@@ -64,8 +64,8 @@ const items = [
                 let arr = [];
                 for (let i = 0; i < list.length; i++) {
                     arr.push({
-                        "server": $(list[i]).find('h4').eq('0').html().split(':')[1],
-                        "server_port": $(list[i]).find('h4').eq('1').html().split(':')[1],
+                        "host": $(list[i]).find('h4').eq('0').html().split(':')[1],
+                        "port": $(list[i]).find('h4').eq('1').html().split(':')[1],
                         "password": $(list[i]).find('h4').eq('2').html().split(':')[1],
                         "method": $(list[i]).find('h4').eq('3').html().split(':')[1],
                         "remarks": "iss",
@@ -87,8 +87,8 @@ const items = [
                 let arr = [];
                 for (let i = 0; i < list.length; i++) {
                     arr.push({
-                        "server": $(list[i]).find('p').eq('0').html().replace(/&#x(.*);/g, ''),
-                        "server_port": $(list[i]).find('p').eq('1').html().replace(/&#x(.*);/g, ''),
+                        "host": $(list[i]).find('p').eq('0').html().replace(/&#x(.*);/g, ''),
+                        "port": $(list[i]).find('p').eq('1').html().replace(/&#x(.*);/g, ''),
                         "password": $(list[i]).find('p').eq('2').html().replace(/&#x(.*);/g, ''),
                         "method": $(list[i]).find('p').eq('3').html().replace(/&#x(.*);/g, ''),
                         "remarks": "fvss",
