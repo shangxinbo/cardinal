@@ -6,7 +6,7 @@ const logger = require('../utils/logger');
 const createCipher = require('./encrypt').createCipher;
 const createDecipher = require('./encrypt').createDecipher;
 const SERVER_CONF = require('../config/server.json');
-
+const LOCAL_CONF = require('../config/local.json');
 /**
  * 接受客户端发送请求来协商版本及认证方式
  * +----+----------+----------+
@@ -183,8 +183,8 @@ function flowData(from, to, data) {
 exports.createServer = function () {
     let serverList = SERVER_CONF.list;
     let socksServerArr = [];
-    let ceilPort = 12345;
-    let host = '127.0.0.1';
+    let ceilPort = parseInt(LOCAL_CONF.proxyPortCeil);
+    let host = LOCAL_CONF.host;
     for (let i = 0; i < serverList.length; i++) {
         let config = serverList[i];
         let server = net.createServer(c => handleConnection(c, config));

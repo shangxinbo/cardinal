@@ -4,7 +4,7 @@ const http = require('http');
 const agent = require('./agent');
 const logger = require('../utils/logger');
 
-let host = '127.0.0.1';
+const host = require('../config/local.json').host;
 
 /**
  * @desc create http servers

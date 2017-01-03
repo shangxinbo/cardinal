@@ -4,7 +4,7 @@ const net = require('net')
 const Socks = require('socks')
 const logger = require('../utils/logger')
 
-let host = '127.0.0.1';
+const host = require('../config/local.json').host;
 
 function getHeader(httpVersion) {
     return `HTTP/${httpVersion} 200 Connection Established\r\n` +
