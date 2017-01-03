@@ -1,0 +1,8 @@
+{
+  "socksHost": "127.0.0.1",
+  "socksPort": 1080,
+  "httpHost": "127.0.0.1",
+  "httpPort": 9527,
+  "dnsServer": [],
+  "pacPort":"8290"
+}
