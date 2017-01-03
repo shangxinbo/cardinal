@@ -25,7 +25,10 @@ exports.createServer = function (socks) {
                 logger.error(e.code);
                 proxy.close();
             }).on('timeout', () => {
+                console.log('http timeout');
                 proxy.close();
+            }).on('clientError',(err,socks)=>{
+                console.log('clientError' + err);
             });
             proxy.listen(port, host, () => {
                 logger.status(`HTTP listening on ${host}:${port}...`);

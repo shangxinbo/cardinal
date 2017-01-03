@@ -51,7 +51,7 @@ function handleRequest(proxy, config) {
     });
     tunnel.on('data', (remoteData) => {
         if (!decipher) {
-            let tmp = createDecipher(config.password, config.method, remoteData);
+            let tmp = createDecipher(config.password, config.method.toLowerCase(), remoteData);
             if (tmp) {
                 decipher = tmp.decipher;
                 decipheredData = tmp.data;
@@ -74,6 +74,11 @@ function handleRequest(proxy, config) {
             logger.error('server connection close error');
         }
         proxy.destroy();
+    }).on('error',function(err){
+        //传输错误，服务器禁止链接 connect ECONNREFUSED
+        //TODO 关闭链接
+        console.log(err);
+        proxy.end();
     });
     return tunnel;
 }
@@ -137,7 +142,8 @@ function handleConnection(proxy, config) {
             proxy.write(resBuf);
             stage = 2;
             //向服务端吐数据
-            let encrypt = createCipher(config.password, config.method, data.slice(3)); // skip VER, CMD, RSV
+            console.log(config.method.toLowerCase());
+            let encrypt = createCipher(config.password, config.method.toLowerCase(), data.slice(3)); // skip VER, CMD, RSV
             cipher = encrypt.cipher;
             flowData(proxy, tunnel, encrypt.data);
         } else if (stage == 2) {
@@ -156,12 +162,8 @@ function handleConnection(proxy, config) {
             logger.error('local connection close unexpected');
         }
         tunnel.destroy();
-    });
-
-    process.on('uncaughtException', function (err) {
-        if (tunnel) {
-            tunnel.destroy();   //TODO
-        }
+    }).on('error',(err)=>{
+        console.log(err);
     });
 }
 
