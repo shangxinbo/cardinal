@@ -2,7 +2,7 @@
 
 const crypto = require('crypto');
 const logger = require('../utils/logger');
-
+console.log(crypto.getCiphers().slice(23));
 const hasOwnProperty = {}.hasOwnProperty;
 
 const cryptoParamLength = {
