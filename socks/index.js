@@ -46,7 +46,7 @@ function handleRequest(proxy, config) {
     let decipher, decipheredData;
 
     // 本地socks和云端socks桥接
-    const tunnel = net.connect({port: config.port, host: config.host}, function () {
+    const tunnel = net.connect({ port: config.port, host: config.host }, function () {
         logger.status(`Server ${config.host}:${config.port} connected`);
     });
     tunnel.on('data', (remoteData) => {
@@ -68,13 +68,13 @@ function handleRequest(proxy, config) {
         proxy.resume()
     }).on('end', function () {
         proxy.end();
-        logger.status('server connection end');
+        logger.status(`server ${config.host} connection end`);
     }).on('close', function (has_error) {
         if (has_error) {
             logger.error('server connection close error');
         }
         proxy.destroy();
-    }).on('error',function(err){
+    }).on('error', function (err) {
         //传输错误，服务器禁止链接 connect ECONNREFUSED
         //TODO 关闭链接
         console.log(err);
@@ -161,7 +161,7 @@ function handleConnection(proxy, config) {
             logger.error('local connection close unexpected');
         }
         tunnel.destroy();
-    }).on('error',(err)=>{
+    }).on('error', (err) => {
         console.log(err);
     });
 }
@@ -194,7 +194,7 @@ exports.createServer = function () {
             logger.error('TCP server close unexpacted');
         }).on('connection', function () {
             logger.doing('TCP server connected');
-        }).listen({host: host, port: port}, function () {
+        }).listen({ host: host, port: port }, function () {
             logger.status(`TCP listening on ${host}:${port}...`);
         });
         socksServerArr.push(port);

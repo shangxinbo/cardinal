@@ -2,7 +2,6 @@
 
 const cheerio = require('cheerio');
 const ciphers = require('../socks/ciphers');
-console.log(ciphers);
 /**
  * 每个item 需要遵循以下格式，添加或修改时最好复制原有样例进行修改
  * 需要有url和deXml属性
@@ -35,7 +34,7 @@ const items = [
             }
         }
     },
-    {
+    /*{
         url: 'http://tempss.com/',
         deXml: function (body) {
             try {
@@ -109,7 +108,7 @@ const items = [
                 return null;
             }
         }
-    }
+    }*/
 ];
 
 module.exports = items;

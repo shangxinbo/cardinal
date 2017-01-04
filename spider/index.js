@@ -22,21 +22,6 @@ function grab(url) {
     }
 }
 
-/**
- * 保存shadowsocks配置
- * @param configs
- */
-function save(configs) {
-    fs.writeFile(path.join(__dirname,'../config/server.json'), JSON.stringify(configs), function (err) {
-        if (err) {
-            console.log(err);
-            logger.error('update server config error');
-        }else{
-            logger.status('update server config success');
-        }  
-    });
-}
-
 exports.update = function(init) {
     let dymicArr = [];
     if (sources.length > 0) {
@@ -52,5 +37,5 @@ exports.update = function(init) {
     } else {
         logger.error('source is null');
     }
-    save({"list":dymicArr});
+    fs.writeFileSync(path.join(__dirname,'../config/server.json'), JSON.stringify({"list":dymicArr}));
 }
