@@ -1,8 +1,8 @@
 "use strict";
 
 const exec = require('child_process').exec;
-const Socks = require('socksv5');
 const http = require('http');
+const socks = require('socksv5');
 const tcp = require('../socks');
 const mhttp = require('../http');
 const pac = require('../pac');
@@ -20,12 +20,12 @@ for (let i = 0; i < tcpPorts.length; i++) {
     let socksConfig = {
         proxyHost: '127.0.0.1',
         proxyPort: tcpPorts[i],
-        auths: [Socks.auth.None()]
+        auths: [socks.auth.None()]
     };
     let req = http.get({
         hostname: 'google.com',
         port: 80,
-        agent: new Socks.HttpAgent(socksConfig)
+        agent: new socks.HttpAgent(socksConfig)
     }, function (res) {
         if (res.statusCode == 200 || res.statusCode == 302) {
             filters.push(tcpPorts[i]);
@@ -35,7 +35,7 @@ for (let i = 0; i < tcpPorts.length; i++) {
         logger.error('TCP hang up unexpacted');
         req.end();
     });
-    req.setTimeout(1000, function () {
+    req.setTimeout(1000, function () {  //设置请求响应界限
         req.abort();
     });
 }
