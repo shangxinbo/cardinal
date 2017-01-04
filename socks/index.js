@@ -142,7 +142,6 @@ function handleConnection(proxy, config) {
             proxy.write(resBuf);
             stage = 2;
             //向服务端吐数据
-            console.log(config.method.toLowerCase());
             let encrypt = createCipher(config.password, config.method.toLowerCase(), data.slice(3)); // skip VER, CMD, RSV
             cipher = encrypt.cipher;
             flowData(proxy, tunnel, encrypt.data);
