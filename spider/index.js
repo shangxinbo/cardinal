@@ -22,7 +22,7 @@ function grab(url) {
     }
 }
 
-exports.update = function(init) {
+exports.update = function() {
     let dymicArr = [];
     if (sources.length > 0) {
         for (let i = 0; i < sources.length; i++) {

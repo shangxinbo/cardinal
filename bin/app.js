@@ -10,22 +10,19 @@ const config = require('../config/local.json');
 const logger = require('../utils/logger');
 const spider = require('../spider');
 
-//更新server list
-spider.update();
+spider.update();  //sync update list
 
 let tcpPorts = tcp.createServer();
-//TODO 选择合适的tcp代理
 let filters = [];
 for (let i = 0; i < tcpPorts.length; i++) {
-    let socksConfig = {
-        proxyHost: '127.0.0.1',
-        proxyPort: tcpPorts[i],
-        auths: [socks.auth.None()]
-    };
     let req = http.get({
         hostname: 'google.com',
         port: 80,
-        agent: new socks.HttpAgent(socksConfig)
+        agent: new socks.HttpAgent({
+            proxyHost: config.host,
+            proxyPort: tcpPorts[i],
+            auths: [socks.auth.None()]
+        })
     }, function (res) {
         if (res.statusCode == 200 || res.statusCode == 302) {
             filters.push(tcpPorts[i]);
@@ -44,22 +41,29 @@ start();
 function start() {
     setTimeout(function () {
         if (filters.length > 0) {
-            let httpPorts = mhttp.createServer(filters);
+            let httpPorts = mhttp.createServer(filters[0], function () {
+                //TODO: 重启相关服务
+            });
             let pacServer = pac.createServer(httpPorts);
 
-            // set browser proxy auto config url
-            // on windows platform chrome://settings/ ——>  更改代理服务器 ——> 连接 ——> 局域网设置 ——>使用自动配置脚本
+            //windows set browser proxy auto config script
             var cmd = 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v AutoConfigURL /t REG_SZ /d "http://' + config.host + ':' + config.pacPort + '/proxy.pac" /f';
             var child = exec(cmd, function (err, stdout, stderr) {
-                if (err) throw err;
-                logger.status('set PAC success');
-            });
-            process.on('uncaughtException', function (err) {
-                //TODO recovery browser proxy auto url
-                logger.error('uncaughtException' + err);
+                if (err) {
+                    logger.error(err);
+                } else {
+                    logger.status('set PAC success');
+                }
             });
         } else {
             start();
         }
     }, 1000);
 }
+
+process.on('uncaughtException', function (err) {
+    //windows recovery browser proxy auto config script
+    var cmd = 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v AutoConfigURL /t REG_SZ /d "-" /f';
+    var child = exec(cmd);
+    logger.error('uncaughtException' + err);
+});

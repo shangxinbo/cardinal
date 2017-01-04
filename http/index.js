@@ -3,14 +3,9 @@
 const http = require('http');
 const agent = require('./agent');
 const logger = require('../utils/logger');
-
 const host = require('../config/local.json').host;
 
-/**
- * @desc create http servers
- * @param socks Array socks port list
- * */
-exports.createServer = function (socks) {
+exports.createServer = function (socks,stopCallback) {
     let vector = 100;     // 相较于socks 代理端口的偏移向量
     let servers = [];
     if (socks instanceof Array && socks.length > 0) {
@@ -22,11 +17,13 @@ exports.createServer = function (socks) {
             }).on('connect', (req, socket, head) => {
                 agent.https(socks[i])(req, socket, head);
             }).on('error', (e) => {
-                logger.error(e.code);
+                logger.error('http server error' + e);
                 proxy.close();
+                if(stopCallback) stopCallback();
             }).on('timeout', () => {
-                console.log('http timeout');
+                logger.status('http timeout');
                 proxy.close();
+                if(stopCallback) stopCallback();                
             }).on('clientError',(err,socks)=>{
                 console.log('clientError' + err);
             });
