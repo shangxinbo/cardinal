@@ -11,38 +11,41 @@ const logger = require('../utils/logger');
 const spider = require('../spider');
 
 spider.update();  //sync update list
-
 let tcpPorts = tcp.createServer();
-let filters = [];
-for (let i = 0; i < tcpPorts.length; i++) {
-    let req = http.get({
-        hostname: 'google.com',
-        port: 80,
-        agent: new socks.HttpAgent({
-            proxyHost: config.host,
-            proxyPort: tcpPorts[i],
-            auths: [socks.auth.None()]
-        })
-    }, function (res) {
-        if (res.statusCode == 200 || res.statusCode == 302) {
-            filters.push(tcpPorts[i]);
-        }
-    });
-    req.on('error', function () {
-        logger.error('TCP hang up unexpacted');
-        req.end();
-    });
-    req.setTimeout(1000, function () {  //设置请求响应界限
-        req.abort();
-    });
+let best = null;
+function optimal() {
+    best = null;
+    for (let i = 0; i < tcpPorts.length; i++) {
+        let tmp = tcpPorts[i];
+        let req = http.get({
+            hostname: 'google.com',
+            port: 80,
+            agent: new socks.HttpAgent({
+                proxyHost: config.host,
+                proxyPort: tcpPorts[i],
+                auths: [socks.auth.None()]
+            })
+        }, function (res) {
+            if (res.statusCode == 200 || res.statusCode == 302) {
+                best = tmp;
+                req.end();
+            }
+        });
+        req.on('error', function () { //tcp挂掉的错误接收 
+            req.end();
+        });
+        req.setTimeout(1000, function () {  //设置请求响应界限
+            req.abort();
+        });
+    }
 }
 
-start();
 function start() {
     setTimeout(function () {
-        if (filters.length > 0) {
-            let httpPorts = mhttp.createServer(filters[0], function () {
-                //TODO: 重启相关服务
+        if (best) {
+            let httpPorts = mhttp.createServer([best], function () {
+                optimal();
+                start();
             });
             let pacServer = pac.createServer(httpPorts);
 
@@ -60,6 +63,9 @@ function start() {
         }
     }, 1000);
 }
+
+optimal();
+start();
 
 process.on('uncaughtException', function (err) {
     //windows recovery browser proxy auto config script
