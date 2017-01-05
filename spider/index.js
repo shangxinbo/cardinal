@@ -13,7 +13,8 @@ const logger = require('../utils/logger');
  * @return buffer response body
  */
 function grab(url) {
-    var res = request('GET', url);
+    //TODO: 链接请求不到throw error
+    var res = request('GET', url); 
     if (res.statusCode == 200) {
         return res.getBody();
     } else {
