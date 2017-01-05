@@ -43,11 +43,13 @@ function optimal() {
 function start() {
     setTimeout(function () {
         if (best) {
-            let httpPorts = mhttp.createServer(best, function () {
-                optimal();
-                start();
-            });
             let pacServer = pac.createServer();
+            let httpPorts = mhttp.createServer(best, function () {
+                pacServer.close(function(){
+                    optimal();
+                    start();
+                });
+            });
 
             //windows set browser proxy auto config script
             let pacUrl = new Buffer('http://' + config.host + ':' + config.pacPort + '/proxy.pac');
