@@ -50,8 +50,15 @@ function start() {
             let pacServer = pac.createServer(httpPorts);
 
             //windows set browser proxy auto config script
-            var cmd = 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v AutoConfigURL /t REG_SZ /d "http://' + config.host + ':' + config.pacPort + '/proxy.pac" /f';
-            var child = exec(cmd, function (err, stdout, stderr) {
+            let pacUrl = new Buffer('http://' + config.host + ':' + config.pacPort + '/proxy.pac');
+            let pacHex = pacUrl.toString('hex');
+
+            //var cmd = 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v AutoConfigURL /t REG_SZ /d "http://' + config.host + ':' + config.pacPort + '/proxy.pac" /f';
+            let cmd = 'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections" /v DefaultConnectionSettings /t REG_BINARY /d 46000000d2eb00000500000000000000000000001f000000'
+                + pacHex
+                + '0100000000000000000000000000000000000000000000000000000000000000 /f';
+            console.log(cmd);
+            exec(cmd, function (err, stdout, stderr) {
                 if (err) {
                     logger.error(err);
                 } else {
@@ -69,7 +76,14 @@ start();
 
 process.on('uncaughtException', function (err) {
     //windows recovery browser proxy auto config script
-    var cmd = 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v AutoConfigURL /t REG_SZ /d "-" /f';
-    var child = exec(cmd);
+    //var cmd = 'reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v AutoConfigURL /t REG_SZ /d "-" /f';
+    var cmd = 'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections" /v DefaultConnectionSettings /t REG_BINARY /d 46000000d1eb0000010000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000 /f';
+    exec(cmd);
     logger.error('uncaughtException' + err);
+});
+process.on('SIGINT', function () {
+    var cmd = 'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections" /v DefaultConnectionSettings /t REG_BINARY /d 46000000d1eb0000010000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000 /f';
+    exec(cmd, function () {
+        process.exit();
+    });
 });
