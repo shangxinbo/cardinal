@@ -4,6 +4,7 @@ const http = require('http');
 const agent = require('./agent');
 const logger = require('../utils/logger');
 const config = require('../config/local.json');
+const socksv5 = require('socksv5');
 
 exports.createServer = function (socks, stopCallback) {
     if (socks) {
@@ -17,14 +18,9 @@ exports.createServer = function (socks, stopCallback) {
             proxy.close(function(){
                 if (stopCallback) stopCallback();
             });
-        }).on('timeout', () => {
-            logger.status('http timeout');
-            proxy.close(function(){
-                if (stopCallback) stopCallback();
-            });
         }).on('clientError', (err, socks) => {  // client browser throw error 
             console.log('clientError' + err);
-            console.log(socks);
+            console.log(socks)
         });
         proxy.listen(config.httpPort, config.host, () => {
             logger.status(`HTTP listening on ${config.host}:${config.httpPort}...`);
