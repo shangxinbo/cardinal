@@ -6,13 +6,8 @@ const fs = require('fs');
 const logger = require('../utils/logger');
 const config = require('../config/local.json');
 
-function getProxy(ports) {
-    let str = 'var proxy = "';
-    for (var i = 0; i < ports.length; i++) {
-        str += 'PROXY '+ config.host +':' + ports[i] + ';';
-    }
-    str += 'DIRECT;";';
-    return str;
+function getProxy() {
+    return 'var proxy = "PROXY '+ config.host +':' + config.httpPort + ';DIRECT;";';
 }
 
 function getRules() {
@@ -54,9 +49,9 @@ function subNetMask(num) {
     return arr.join('.');
 }
 
-exports.createServer = function (ports) {
+exports.createServer = function () {
 
-    let proxyStr = getProxy(ports);
+    let proxyStr = getProxy();
     let ruleStr = getRules();
     let proxyFunc = fs.readFileSync(path.join(__dirname, '../config/pac.js'), { encoding: 'utf8' });
 
