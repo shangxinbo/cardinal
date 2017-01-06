@@ -23,6 +23,7 @@ function grab(url) {
     }
 }
 
+//TODO: async this
 exports.update = function() {
     let dymicArr = [];
     if (sources.length > 0) {
