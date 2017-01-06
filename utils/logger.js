@@ -2,6 +2,7 @@
 
 require('colors');
 
+//TODO: 规范logger类型
 function request(req, type) {
     if (type === 'tunnel') {
         console.log(`> ${req.connection.remoteAddress} TUNNEL ${req.headers.host}`.yellow)

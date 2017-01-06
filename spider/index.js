@@ -2,42 +2,46 @@
 
 const fs = require('fs');
 const path = require('path');
-const cheerio = require("cheerio");
-const request = require('sync-request');
+const axios = require("axios");
 const sources = require('./source');
 const logger = require('../utils/logger');
 
+
 /**
- * 抓取信息
- * @param url
- * @return buffer response body
+ * @method store server list to a file for cache
+ * @param {Array} arr
+ * @param {Function} callback 
  */
-function grab(url) {
-    //TODO: 链接请求不到throw error
-    var res = request('GET', url); 
-    if (res.statusCode == 200) {
-        return res.getBody();
-    } else {
-        logger.error(res.statusCode);
-        return null;
-    }
+function store(arr, callback) {
+    fs.writeFileSync(path.join(__dirname, '../config/server.json'), JSON.stringify({ "list": arr }));
+    callback();
 }
 
-//TODO: async this
-exports.update = function() {
+exports.update = function (callback) {
     let dymicArr = [];
-    if (sources.length > 0) {
+    if (sources instanceof Array && sources.length > 0) {
+        let counter = sources.length; //爬虫结果计数
         for (let i = 0; i < sources.length; i++) {
-            let data = grab(sources[i].url);
-            if (data) {
-                let arr = sources[i].deXml(data);
-                if (arr) {
-                    dymicArr = dymicArr.concat(arr);
-                }
-            }
+            axios.get(sources[i].url, { timeout: 1000 })
+                .then(res => {
+                    counter--;
+                    let arr = sources[i].deXml(res.data);
+                    if (arr) {
+                        dymicArr = dymicArr.concat(arr);
+                    }
+                    if (counter == 0) {
+                        store(dymicArr, callback);
+                    }
+                })
+                .catch(err => {
+                    counter--;
+                    if (counter == 0) {
+                        store(dymicArr, callback);
+                    }
+                });
         }
     } else {
-        logger.error('source is null');
+        //TODO: 将爬虫的源配置到config里
+        logger.error('the source of servers is null,please check spider/source.js');
     }
-    fs.writeFileSync(path.join(__dirname,'../config/server.json'), JSON.stringify({"list":dymicArr}));
 }

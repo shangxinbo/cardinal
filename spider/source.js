@@ -34,7 +34,7 @@ const items = [
             }
         }
     },
-    /*{
+    {
         url: 'http://tempss.com/',
         deXml: function (body) {
             try {
@@ -85,7 +85,7 @@ const items = [
         }
     },
     {
-        url: 'http://freevpnss.cc/',
+        url: 'https://freevpnss.cc/',
         deXml: function (body) {
             try {
                 let $ = cheerio.load(body);
@@ -108,7 +108,7 @@ const items = [
                 return null;
             }
         }
-    }*/
+    }
 ];
 
 module.exports = items;

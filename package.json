@@ -13,13 +13,13 @@
     "crawler"
   ],
   "author": "shangxinbo",
-  "license": "GPL",
+  "license": "GPL-3.0",
   "dependencies": {
+    "axios": "^0.15.3",
     "cheerio": "^0.22.0",
     "colors": "^1.1.2",
     "ip": "^1.1.4",
     "socks": "^1.1.9",
-    "socksv5": "0.0.6",
-    "sync-request": "^3.0.1"
+    "socksv5": "0.0.6"
   }
 }
