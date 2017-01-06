@@ -25,7 +25,7 @@ function optimal() {
     if(tcpPorts.length>0){
         for (let i = 0; i < tcpPorts.length; i++) {
             let tmp = tcpPorts[i];
-            let req = http.get({
+            let req = http.get({    //TODO: 改成axios 形式请求
                 hostname: 'google.com',
                 port: 80,
                 agent: new socks.HttpAgent({
