@@ -6,7 +6,11 @@ const logger = require('../utils/logger');
 const config = require('../config/local.json');
 const socksv5 = require('socksv5');
 
-exports.createServer = function (socks, stopCallback) {
+/**
+ * @param {number} socks tcp port 
+ * @param {function} callback HTTP SERVER 异常挂掉时回调函数
+*/
+exports.createServer = function (socks, callback) {
     if (socks) {
         let proxy = http.createServer();
         proxy.on('request', (req, res) => {
@@ -16,7 +20,7 @@ exports.createServer = function (socks, stopCallback) {
         }).on('error', (e) => {
             logger.error('http server error' + e);
             proxy.close(function(){
-                if (stopCallback) stopCallback();
+                if (callback) callback();
             });
         }).on('clientError', (err, socks) => {  // client browser throw error 
             console.log('clientError' + err);

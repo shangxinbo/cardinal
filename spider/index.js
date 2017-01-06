@@ -20,7 +20,7 @@ function store(arr, callback) {
 exports.update = function (callback) {
     let dymicArr = [];
     if (sources instanceof Array && sources.length > 0) {
-        let counter = sources.length; //爬虫结果计数
+        let counter = sources.length;       //爬虫结果计数
         for (let i = 0; i < sources.length; i++) {
             axios.get(sources[i].url, { timeout: 1000 })
                 .then(res => {

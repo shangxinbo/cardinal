@@ -8,6 +8,8 @@ const ciphers = require('../socks/ciphers');
  * @attr url String  抓取路径
  * @func deXml   解析抓取结果转换成shadowsocks的配置项, param body return array or null
  */
+
+//TODO 优化爬虫配置项
 const items = [
     {
         url: 'https://freessr.xyz/',
