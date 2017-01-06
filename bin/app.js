@@ -9,8 +9,11 @@ const pac = require('../pac');
 const config = require('../config/local.json');
 const logger = require('../utils/logger');
 const spider = require('../spider');
+const axios = require('axios');
+const tunnel = require('tunnel');
 
 let tcpPorts = [];
+//TODO 改成命令行形式使用npm安装
 init();
 
 function init(){
@@ -19,7 +22,34 @@ function init(){
         optimal();
     });  
 }
+/*spider.update(function(){
+tcpPorts = tcp.createServer();
+for (let i = 0; i < tcpPorts.length; i++) {
+    let tmp = tcpPorts[i];
+    let ss = tunnel.httpsOverHttp({
+        proxy: {
+            host: config.host,
+            port: tcpPorts[i]
+        }
+    });
+    axios.request({
+        url:'https://www.google.com.hk',
+        httpAgent: ss
+    })
+    .then(function(res){
+        console.log(res);
+    })
+    .catch(function(err){
+        console.log(err);
+    })
+}
+});*/
 
+
+
+/**
+ * 择优选择线路
+ */
 function optimal() {
     let httpRunning = false;  // 防止多服务耗费资源
     if(tcpPorts.length>0){

@@ -36,7 +36,7 @@ const items = [
             }
         }
     },
-    {
+    /*{
         url: 'http://tempss.com/',
         deXml: function (body) {
             try {
@@ -110,7 +110,7 @@ const items = [
                 return null;
             }
         }
-    }
+    }*/
 ];
 
 module.exports = items;

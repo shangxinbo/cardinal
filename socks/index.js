@@ -160,7 +160,9 @@ function handleConnection(proxy, config) {
         if (has_error) {
             logger.error('local connection close unexpected');
         }
-        tunnel.destroy();
+        if(tunnel){
+            tunnel.destroy();
+        }
     }).on('error', (err) => {
         console.log(err);
     });
