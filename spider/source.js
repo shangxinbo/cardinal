@@ -36,7 +36,7 @@ const items = [
             }
         }
     },
-    /*{
+    {
         url: 'http://tempss.com/',
         deXml: function (body) {
             try {
@@ -86,7 +86,7 @@ const items = [
             }
         }
     },
-    {
+    /*{
         url: 'https://freevpnss.cc/',
         deXml: function (body) {
             try {
