@@ -9,6 +9,8 @@ const pac = require('../pac');
 const config = require('../config/local.json');
 const logger = require('../utils/logger');
 const spider = require('../spider');
+const fs = require('fs');
+const path = require('path');
 
 let tcpPorts = [];
 //TODO 改成命令行形式使用npm安装
@@ -29,7 +31,7 @@ function optimal() {
     if (tcpPorts.length > 0) {
         for (let i = 0; i < tcpPorts.length; i++) {
             let tmp = tcpPorts[i];
-            let req = http.get({    //TODO: 封装形式
+            let req = http.get({
                 hostname: 'google.com',
                 port: 80,
                 agent: new socks.HttpAgent({
@@ -41,6 +43,7 @@ function optimal() {
                 if (res.statusCode == 200 || res.statusCode == 302) {
                     if (!httpRunning) {
                         start(tmp);
+                        //getIpsOnline(tmp);
                         httpRunning = true;
                     }
                     req.end();
@@ -79,6 +82,37 @@ function start(socks) {
         } else {
             logger.status('PAC url set success in OS by reg command');
         }
+    });
+}
+
+
+function getIpsOnline(port) {
+    let req = http.get({
+        hostname: 'www.ipdeny.com',
+        port: 80,
+        path:'/ipblocks/data/aggregated/cn-aggregated.zone',
+        agent: new socks.HttpAgent({
+            proxyHost: config.host,
+            proxyPort: port,
+            auths: [socks.auth.None()]
+        })
+    }, function (res) {
+        if (res.statusCode == 200 || res.statusCode == 302) {
+            res.setEncoding('utf-8');
+            let allIps = '';
+            res.on('data',function(chunk){
+                allIps += chunk;
+            }).on('end',function(){
+                fs.writeFile(path.join(__dirname, '../config/GeoIP-CN'), allIps);
+            })
+        }
+    });
+    req.on('error', function (err) {
+        console.log(err);
+        req.end();
+    });
+    req.setTimeout(5000, function () {  //设置请求响应界限
+        req.abort();
     });
 }
 

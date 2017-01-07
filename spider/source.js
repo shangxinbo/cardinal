@@ -86,7 +86,7 @@ const items = [
             }
         }
     },
-    /*{
+    {
         url: 'https://freevpnss.cc/',
         deXml: function (body) {
             try {
@@ -110,7 +110,7 @@ const items = [
                 return null;
             }
         }
-    }*/
+    }
 ];
 
 module.exports = items;

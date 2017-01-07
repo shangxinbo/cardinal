@@ -6,7 +6,6 @@ const axios = require("axios");
 const sources = require('./source');
 const logger = require('../utils/logger');
 
-
 /**
  * @method store server list to a file for cache
  * @param {Array} arr
@@ -22,7 +21,7 @@ exports.update = function (callback) {
     if (sources instanceof Array && sources.length > 0) {
         let counter = sources.length;       //爬虫结果计数
         for (let i = 0; i < sources.length; i++) {
-            axios.get(sources[i].url, { timeout: 1500 })
+            axios.get(sources[i].url, { timeout: 2000 })
                 .then(res => {
                     counter--;
                     let arr = sources[i].deXml(res.data);
