@@ -16,7 +16,6 @@ function getRules() {
         .filter((rx) => {
             return rx.length
         });
-        console.log(ipFromFile);
     let ipsArr = [];
     for (let i = 0; i < ipFromFile.length; i++) {
         let tmp = ipFromFile[i].split('/');

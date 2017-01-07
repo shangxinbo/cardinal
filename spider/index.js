@@ -21,7 +21,7 @@ exports.update = function (callback) {
     if (sources instanceof Array && sources.length > 0) {
         let counter = sources.length;       //爬虫结果计数
         for (let i = 0; i < sources.length; i++) {
-            axios.get(sources[i].url, { timeout: 2000 })
+            axios.get(sources[i].url, { timeout: 2500 })
                 .then(res => {
                     counter--;
                     let arr = sources[i].deXml(res.data);
