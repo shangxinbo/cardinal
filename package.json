@@ -2,14 +2,16 @@
   "name": "xShadowsocks",
   "version": "2.1.3",
   "description": "A simple tool for overing the Great Firewall of China with shadowsocks",
-  "main": "index.js",
+  "main": "bin/app",
   "scripts": {
-    "test": "node index.js"
+    "test": "node bin/app"
   },
   "keywords": [
     "shadowsocks",
     "firewall",
-    "free shadowsocks",
+    "tcp proxy",
+    "http proxy",
+    "proxy",
     "crawler"
   ],
   "author": "shangxinbo",
