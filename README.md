@@ -88,3 +88,5 @@ node bin/app
 * [In Windows 7, how to change proxy settings from command line?](https://superuser.com/questions/419696/in-windows-7-how-to-change-proxy-settings-from-command-line)
 * [shadowsocks cipher](http://shadowsocks.org/en/spec/cipher.html)
 * [SOCKS Protocol Version 5](https://www.ietf.org/rfc/rfc1928.txt)
+* [电子前哨基金会](https://www.eff.org/)
+* [Tor](https://www.torproject.org/index.html)
