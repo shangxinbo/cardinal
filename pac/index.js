@@ -12,10 +12,11 @@ function getProxy() {
 
 function getRules() {
     let ipFromFile = fs.readFileSync(path.join(__dirname, '../config/GeoIP-CN'), 'utf8')
-        .split('\r\n')
+        .split('\n')
         .filter((rx) => {
             return rx.length
         });
+        console.log(ipFromFile);
     let ipsArr = [];
     for (let i = 0; i < ipFromFile.length; i++) {
         let tmp = ipFromFile[i].split('/');
