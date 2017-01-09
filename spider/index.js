@@ -5,6 +5,7 @@ const path = require('path');
 const axios = require("axios");
 const sources = require('./source');
 const logger = require('../utils/logger');
+const dns = require('dns');
 
 /**
  * @method store server list to a file for cache
@@ -12,8 +13,18 @@ const logger = require('../utils/logger');
  * @param {Function} callback 
  */
 function store(arr, callback) {
-    fs.writeFileSync(path.join(__dirname, '../config/server.json'), JSON.stringify({ "list": arr }));
-    callback();
+    let c = arr.length;
+    for(let i=0;i<arr.length;i++){
+        dns.lookup(arr[i].host,function(err,address,family){
+            c--;
+            if(err) logger.error(err);
+            arr[i].host = address;
+            if(c==0){
+                callback();
+                fs.writeFileSync(path.join(__dirname, '../config/server.json'), JSON.stringify({ "list": arr }));
+            } 
+        });
+    }
 }
 
 exports.update = function (callback) {

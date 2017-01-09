@@ -90,3 +90,5 @@ node bin/app
 * [SOCKS Protocol Version 5](https://www.ietf.org/rfc/rfc1928.txt)
 * [电子前哨基金会](https://www.eff.org/)
 * [Tor](https://www.torproject.org/index.html)
+* [mocha](https://github.com/mochajs/mocha)
+* [chai](https://github.com/chaijs/chai)

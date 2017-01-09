@@ -7,8 +7,10 @@ const createCipher = require('./encrypt').createCipher;
 const createDecipher = require('./encrypt').createDecipher;
 const SERVER_CONF = require('../config/server.json');
 const LOCAL_CONF = require('../config/local.json');
+
 /**
- * 接受客户端发送请求来协商版本及认证方式
+ * 和客户端协商版本及认证方式
+ * client -> server
  * +----+----------+----------+
  * |VER | NMETHODS | METHODS  |
  * +----+----------+----------+
@@ -23,7 +25,16 @@ const LOCAL_CONF = require('../config/local.json');
  ** 0x03 - 0x7F由IANA分配（保留）
  ** 0x80 - 0xFE为私人方法保留
  ** 0xFF 无可接受的方法
- * 服务端选择一种验证方式返回给客户端
+ * 
+ * server -> client
+ * +----+----------+
+ * |VER | METHOD   | 
+ * +----+----------+
+ * | 1  |    1     | 
+ * +----+----------+
+ * @param {object} connection socks 连接
+ * @param {buffer} data       tcp(socks)传送的数据
+ * @return {boolean} true/false  是否继续通信
  **/
 function agreeMode(connection, data) {
 
@@ -32,12 +43,12 @@ function agreeMode(connection, data) {
     if (data.indexOf(0x00, 2) >= 0) { //不需要认证
         buf.writeUInt16BE(0x0500);
         connection.write(buf);
-        return 1;
+        return true;             
     } else {
         buf.writeUInt16BE(0x05FF);    //不接受其他方法，客户端需要关闭链接
         connection.write(buf);
         connection.end();
-        return -1;
+        return false;          
     }
 }
 
@@ -84,7 +95,7 @@ function handleRequest(proxy, config) {
 }
 
 /**
- * @method 处理代理请求
+ * @method 在tcp基础上建立会话层SOCKS连接
  * @param proxy  本地代理链接
  * @param config 配置
  * 向应用层返回状态
@@ -122,29 +133,32 @@ function handleRequest(proxy, config) {
  * BND ADDR服务器绑定的地址
  * BND PROT网络字节序表示的服务器绑定的端口
  * */
-function handleConnection(proxy, config) {
+function socksHandle(localSocksConnect, config,port) {
 
-    let stage = 0;
+    let stage = 0;  //通信阶段
     let tunnel;
     let tmp;
     let cipher;
     let timer = null;
 
-    proxy.on('data', (data) => {
+    localSocksConnect.on('data', (data) => {
         if (stage == 0) {
-            stage = agreeMode(proxy, data);
+            if(agreeMode(localSocksConnect, data)){
+               stage = 1;
+            }
         } else if (stage == 1) {
-            tunnel = handleRequest(proxy, config);
-            let resBuf = new Buffer(10);
-            resBuf.writeUInt32BE(0x05000001);
-            resBuf.writeUInt32BE(0x00000000, 4, 4);
-            resBuf.writeUInt16BE(0, 8, 2);
-            proxy.write(resBuf);
+            tunnel = handleRequest(localSocksConnect, config);
+            let BND_ADDR = ip.toBuffer(config.host);
+            let BND_PROT = new Buffer(2);
+            BND_PROT.writeUInt16BE(port);
+            console.log(1234);
+            let resBuf = new Buffer([0x05,0x00,0x00,0x01,0x00,0x00,0x00,0x00,BND_ADDR,BND_PROT]);
+            localSocksConnect.write(resBuf);
             stage = 2;
             //向服务端吐数据
             let encrypt = createCipher(config.password, config.method.toLowerCase(), data.slice(3)); // skip VER, CMD, RSV
             cipher = encrypt.cipher;
-            flowData(proxy, tunnel, encrypt.data);
+            flowData(localSocksConnect, tunnel, encrypt.data);
         } else if (stage == 2) {
             tmp = cipher.update(data);
             flowData(proxy, tunnel, tmp);
@@ -190,8 +204,8 @@ exports.createServer = function () {
     let host = LOCAL_CONF.host;
     for (let i = 0; i < serverList.length; i++) {
         let config = serverList[i];
-        let server = net.createServer(c => handleConnection(c, config));
         let port = ceilPort + i;
+        let server = net.createServer(c => socksHandle(c, config,port));
         server.on('close', function () {
             logger.error('TCP server close unexpacted');
         }).on('connection', function () {
