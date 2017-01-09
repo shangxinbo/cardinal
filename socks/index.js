@@ -147,21 +147,20 @@ function socksHandle(localSocksConnect, config,port) {
                stage = 1;
             }
         } else if (stage == 1) {
-            tunnel = handleRequest(localSocksConnect, config);
             let BND_ADDR = ip.toBuffer(config.host);
             let BND_PROT = new Buffer(2);
             BND_PROT.writeUInt16BE(port);
-            console.log(1234);
             let resBuf = new Buffer([0x05,0x00,0x00,0x01,0x00,0x00,0x00,0x00,BND_ADDR,BND_PROT]);
             localSocksConnect.write(resBuf);
+            tunnel = handleRequest(localSocksConnect, config);
             stage = 2;
             //向服务端吐数据
             let encrypt = createCipher(config.password, config.method.toLowerCase(), data.slice(3)); // skip VER, CMD, RSV
             cipher = encrypt.cipher;
-            flowData(localSocksConnect, tunnel, encrypt.data);
+            tunnel.write(encrypt.data);
         } else if (stage == 2) {
             tmp = cipher.update(data);
-            flowData(proxy, tunnel, tmp);
+            flowData(localSocksConnect, tunnel, tmp);
         }
     }).on('drain', () => {
         tunnel.resume();

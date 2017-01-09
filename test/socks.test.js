@@ -5,7 +5,7 @@ const socks = require('socksv5');
 const config =require('../config/local.json');
 
 describe('TCP SOCKS 建立测试', function () {
-    it('建立socks server是否成功', function (done) {
+    it('建立socks server是否成功', function () {
         var ports = tcp.createServer();
         for (let i = 0; i < ports.length; i++) {
             let tmp = ports[i];
@@ -19,11 +19,9 @@ describe('TCP SOCKS 建立测试', function () {
                 })
             }, function (res) {
                 if (res.statusCode == 200 || res.statusCode == 302) {
-                    console.log(res);
                     expect(ports).to.be.an.instanceOf(Array);
                     expect(ports).to.be.have.length.above(0);
                     req.end();
-                    done();
                 }
             });
         }
