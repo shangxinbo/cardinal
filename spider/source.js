@@ -35,7 +35,7 @@ const items = [
                 return null;
             }
         }
-    }/*,
+    },
     {
         url: 'http://tempss.com/',
         deXml: function (body) {
@@ -46,7 +46,7 @@ const items = [
                 for (let i = 0; i < list.length; i++) {
                     if(ciphers[$(list[i]).find('td').eq('2').html()]){
                         arr.push({
-                            "host": dns.resolve4($(list[i]).find('td').eq('0').html())[0],
+                            "host": $(list[i]).find('td').eq('0').html(),
                             "port": $(list[i]).find('td').eq('1').html(),
                             "password": $(list[i]).find('td').eq('3').html(),
                             "method": $(list[i]).find('td').eq('2').html(),
@@ -110,7 +110,7 @@ const items = [
                 return null;
             }
         }
-    }*/
+    }
 ];
 
 module.exports = items;
