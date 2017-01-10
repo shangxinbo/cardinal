@@ -40,7 +40,7 @@ exports.update = function (callback) {
                     return;
                 }
                 counter--;
-                let arr = sources[i].deXml(data); console.log(arr);
+                let arr = sources[i].deXml(data);
                 if (arr) {
                     dymicArr = dymicArr.concat(arr);
                 }

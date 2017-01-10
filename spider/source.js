@@ -35,7 +35,7 @@ const items = [
                 return null;
             }
         }
-    }/*,
+    },
     {
         url: 'http://tempss.com/',
         deXml: function (body) {
@@ -60,7 +60,7 @@ const items = [
                 return null;
             }
         }
-    }/*,
+    },
     {
         url: 'http://www.ishadowsocks.me/',
         deXml: function (body) {
@@ -110,7 +110,7 @@ const items = [
                 return null;
             }
         }
-    }*/
+    }
 ];
 
 module.exports = items;
