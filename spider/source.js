@@ -11,7 +11,7 @@ const ciphers = require('../socks/ciphers');
 
 //TODO 优化爬虫配置项
 const items = [
-    {
+    /*{
         url: 'https://freessr.xyz/',
         deXml: function (body) {
             try {
@@ -35,7 +35,7 @@ const items = [
                 return null;
             }
         }
-    }/*,
+    },*/
     {
         url: 'http://tempss.com/',
         deXml: function (body) {
@@ -60,7 +60,7 @@ const items = [
                 return null;
             }
         }
-    },
+    }/*,
     {
         url: 'http://www.ishadowsocks.me/',
         deXml: function (body) {
