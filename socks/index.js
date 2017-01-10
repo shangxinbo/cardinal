@@ -55,8 +55,7 @@ function agreeMode(connection, data) {
 function handleRequest(proxy, config) {
 
     let decipher, decipheredData;
-
-    // 本地socks和云端socks桥接
+    //create TCP to remote
     const tunnel = net.connect({ port: config.port, host: config.host }, function () {
         logger.status(`Server ${config.host}:${config.port} connected`);
     });
@@ -79,7 +78,7 @@ function handleRequest(proxy, config) {
         proxy.resume()
     }).on('end', function () {
         proxy.end();
-        logger.status(`server ${config.host} connection end`);
+        logger.status(`server ${config.host}:${config.port} connection end`);
     }).on('close', function (has_error) {
         if (has_error) {
             logger.error('server connection close error');
@@ -171,13 +170,11 @@ function socksHandle(localSocksConnect, config,port) {
         }
     }).on('close', (has_error) => {
         if (has_error) {
-            logger.error('local connection close unexpected');
+            logger.error('local connection close unexpected');  //调试使用error事件
         }
         if(tunnel){
             tunnel.destroy();
         }
-    }).on('error', (err) => {
-        console.log(err);
     });
 }
 
@@ -186,7 +183,6 @@ function socksHandle(localSocksConnect, config,port) {
  * @param from Socks 数据源
  * @param to   Socks 数据桶
  * @param data Buffer  数据
- *
  * */
 function flowData(from, to, data) {
     const res = to.write(data);
