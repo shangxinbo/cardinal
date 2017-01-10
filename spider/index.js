@@ -6,10 +6,8 @@ const dns = require('dns');
 const http = require('http');
 const https = require('https');
 const url = require('url');
-const axios = require("axios");
 const sources = require('./source');
 const logger = require('../utils/logger');
-
 
 /**
  * @method store server list to a file for cache
@@ -42,7 +40,7 @@ exports.update = function (callback) {
                     return;
                 }
                 counter--;
-                let arr = sources[i].deXml(data);
+                let arr = sources[i].deXml(data); console.log(arr);
                 if (arr) {
                     dymicArr = dymicArr.concat(arr);
                 }
@@ -67,11 +65,11 @@ function agent(_url, callback) {
                 res.on('data', function (chunk) {
                     data += chunk;
                 }).on('end', function () {
-                    callback(null, data);
+                    if (callback) callback(null, data);
                 })
             }
         }).on('error', function (err) {
-            callback(err);
+            if (callback) callback(err);
         });
         req.setTimeout(1500, function () {
             req.abort();
@@ -84,15 +82,14 @@ function agent(_url, callback) {
                 res.on('data', function (chunk) {
                     data += chunk;
                 }).on('end', function () {
-                    callback(null, data);
+                    if (callback) callback(null, data);
                 })
             }
         }).on('error', function (err) {
-            callback(err);
+            if (callback) callback(err);
         });
         req.setTimeout(1500, function () {
             req.abort();
         });
     }
 }
-module.exports.update();
