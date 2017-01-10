@@ -1,6 +1,6 @@
 # xShadowsocks
 
-一个用node实现的shadowsocks代理，包括socksV5代理包括http代理(支持https)。
+一个用node实现的shadowsocks代理，包括socks代理包括http代理(支持https)。
 
 相信你来这里之前肯定已经熟知了shadowsocks的历史，没错，这个库的基础思想就是基于shadowsocks，只不过是借助node的另一种实现。同样的shadowsocks实现还有很多，详见 [shadowsocks家族](https://github.com/shadowsocks) 。
 

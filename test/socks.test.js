@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const msocks = require('../socks/index');
 const http = require('http');
-const socks = require('socksv5');
+const socks = require('socks');
 const config =require('../config/local.json');
 
 describe('SOCKS 测试', function () {
@@ -13,11 +13,13 @@ describe('SOCKS 测试', function () {
         let req = http.get({
             hostname: 'google.com',
             port: 80,
-            agent: new socks.HttpAgent({
-                proxyHost: config.host,
-                proxyPort: ports[0],
-                auths: [socks.auth.None()]
-            })
+            agent: new socks.Agent({
+                proxy: {
+                    ipaddress: config.host,
+                    port: socksPorts[i],
+                    type: 5
+                } 
+            }, false, false)
         }, function (res) {
             if (res.statusCode == 200 || res.statusCode == 302) {
                 req.end();

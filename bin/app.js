@@ -1,7 +1,7 @@
 "use strict";
 
 const http = require('http');
-const socks = require('socksv5');
+const socks = require('socks');
 const tcp = require('../socks');
 const mhttp = require('../http');
 const pac = require('../pac');
@@ -35,11 +35,13 @@ function optimal() {
         let req = http.get({
             hostname: 'google.com',
             port: 80,
-            agent: new socks.HttpAgent({
-                proxyHost: config.host,
-                proxyPort: socksPorts[i],
-                auths: [socks.auth.None()]
-            })
+            agent: new socks.Agent({
+                proxy: {
+                    ipaddress: config.host,
+                    port: socksPorts[i],
+                    type: 5
+                }
+            }, false, false)
         }, function (res) {
             if (res.statusCode == 200 || res.statusCode == 302) {
                 if (!httpRunning) {
@@ -48,8 +50,7 @@ function optimal() {
                 }
             }
             req.end();
-        });
-        req.on('error', function () {
+        }).on('error', function () {
             req.end();
         });
         req.setTimeout(1000, function () {    // 设置请求响应时限
@@ -68,17 +69,18 @@ function start(socks) {
     pac.addPacUrl();
 }
 
-
 function getIpsOnline(port) {
     let req = http.get({
         hostname: 'www.ipdeny.com',
         port: 80,
         path: '/ipblocks/data/aggregated/cn-aggregated.zone',
-        agent: new socks.HttpAgent({
-            proxyHost: config.host,
-            proxyPort: port,
-            auths: [socks.auth.None()]
-        })
+        agent: new socks.Agent({
+            proxy: {
+                ipaddress: config.host,
+                port: socksPorts[i],
+                type: 5
+            }
+        }, false, false)
     }, function (res) {
         if (res.statusCode == 200 || res.statusCode == 302) {
             res.setEncoding('utf-8');
@@ -89,9 +91,8 @@ function getIpsOnline(port) {
                 fs.writeFile(path.join(__dirname, '../config/GeoIP-CN'), allIps);
             })
         }
-    });
-    req.on('error', function (err) {
-        console.log(err);
+    }).on('error', function (err) {
+        logger.error('update IPs error');
         req.end();
     });
     req.setTimeout(5000, function () {  //设置请求响应界限
