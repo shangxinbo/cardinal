@@ -36,6 +36,7 @@ exports.update = function (callback) {
                 .then(res => {
                     counter--;
                     let arr = sources[i].deXml(res.data);
+                    console.log(res.data);
                     if (arr) {
                         dymicArr = dymicArr.concat(arr);
                     }
@@ -55,3 +56,4 @@ exports.update = function (callback) {
         logger.error('the source of servers is null,please check spider/source.js');
     }
 }
+module.exports.update();
