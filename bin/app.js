@@ -1,6 +1,5 @@
 "use strict";
 
-const exec = require('child_process').exec;
 const http = require('http');
 const socks = require('socksv5');
 const tcp = require('../socks');
@@ -12,52 +11,50 @@ const spider = require('../spider');
 const fs = require('fs');
 const path = require('path');
 
-let tcpPorts = [];
+let socksPorts = [];
+let bestSocks = null;
 //TODO 改成命令行形式使用npm安装
 init();
 
 function init() {
-    spider.update(function () {   // 更新shadowsocks服务器地址
-        tcpPorts = tcp.createServer();
+    spider.update(function () {                // 更新节点
+        socksPorts = tcp.createServer();
         optimal();
     });
 }
 
-/**
- * 择优选择线路
- */
+//择优选择线路
 function optimal() {
-    let httpRunning = false;  // 防止多服务耗费资源
-    if (tcpPorts.length > 0) {
-        for (let i = 0; i < tcpPorts.length; i++) {
-            let tmp = tcpPorts[i];
-            let req = http.get({
-                hostname: 'google.com',
-                port: 80,
-                agent: new socks.HttpAgent({
-                    proxyHost: config.host,
-                    proxyPort: tcpPorts[i],
-                    auths: [socks.auth.None()]
-                })
-            }, function (res) {
-                if (res.statusCode == 200 || res.statusCode == 302) {
-                    if (!httpRunning) {
-                        start(tmp);
-                        //getIpsOnline(tmp);
-                        httpRunning = true;
-                    }
-                    req.end();
+    let httpRunning = false;                  // 防止多服务耗费资源
+    if (socksPorts.length <= 0) {             // 没有可用的socks,重新更新节点
+        init();
+        return false;
+    }
+    for (let i = 0; i < socksPorts.length; i++) {
+        let tmp = socksPorts[i];
+        let req = http.get({
+            hostname: 'google.com',
+            port: 80,
+            agent: new socks.HttpAgent({
+                proxyHost: config.host,
+                proxyPort: socksPorts[i],
+                auths: [socks.auth.None()]
+            })
+        }, function (res) {
+            if (res.statusCode == 200 || res.statusCode == 302) {
+                if (!httpRunning) {
+                    start(tmp);
+                    httpRunning = true;
                 }
-            });
-            req.on('error', function () { //tcp挂掉的错误接收 
-                req.end();
-            });
-            req.setTimeout(1000, function () {  //设置请求响应界限
-                req.abort();
-            });
-        }
-    } else {
-        init();   //没有可用的socks proxy 重新执行程序更新shadowsocks server list
+            }
+            req.end();
+        });
+        req.on('error', function () {
+            req.end();
+        });
+        req.setTimeout(1000, function () {    // 设置请求响应时限
+            req.abort();
+        });
     }
 }
 
@@ -65,24 +62,10 @@ function start(socks) {
     let pacServer = pac.createServer();
     let httpPorts = mhttp.createServer(socks, function () {
         pacServer.close(function () {
-            optimal();  //重新选择可用资源
+            optimal();                        // 重新选择可用资源
         });
     });
-
-    //windows set browser proxy auto config script
-    let pacUrl = new Buffer('http://' + config.host + ':' + config.pacPort + '/proxy.pac');
-    let pacHex = pacUrl.toString('hex');
-
-    let cmd = 'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections" /v DefaultConnectionSettings /t REG_BINARY /d 46000000d2eb00000500000000000000000000001f000000'
-        + pacHex
-        + '0100000000000000000000000000000000000000000000000000000000000000 /f';
-    exec(cmd, function (err, stdout, stderr) {
-        if (err) {
-            logger.error(err);
-        } else {
-            logger.status('PAC url set success in OS by reg command');
-        }
-    });
+    pac.addPacUrl();
 }
 
 
@@ -90,7 +73,7 @@ function getIpsOnline(port) {
     let req = http.get({
         hostname: 'www.ipdeny.com',
         port: 80,
-        path:'/ipblocks/data/aggregated/cn-aggregated.zone',
+        path: '/ipblocks/data/aggregated/cn-aggregated.zone',
         agent: new socks.HttpAgent({
             proxyHost: config.host,
             proxyPort: port,
@@ -100,9 +83,9 @@ function getIpsOnline(port) {
         if (res.statusCode == 200 || res.statusCode == 302) {
             res.setEncoding('utf-8');
             let allIps = '';
-            res.on('data',function(chunk){
+            res.on('data', function (chunk) {
                 allIps += chunk;
-            }).on('end',function(){
+            }).on('end', function () {
                 fs.writeFile(path.join(__dirname, '../config/GeoIP-CN'), allIps);
             })
         }
@@ -117,16 +100,10 @@ function getIpsOnline(port) {
 }
 
 /*process.on('uncaughtException', function (err) {
-    //windows recovery browser proxy auto config script
-    var cmd = 'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections" /v DefaultConnectionSettings /t REG_BINARY /d 46000000d1eb0000010000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000 /f';
-    exec(cmd);
+    pac.removePacUrl();
     logger.error('uncaughtException' + err);
 });*/
-
 //程序正常退出时，恢复系统代理配置
 process.on('SIGINT', function () {
-    var cmd = 'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections" /v DefaultConnectionSettings /t REG_BINARY /d 46000000d1eb0000010000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000 /f';
-    exec(cmd, function () {
-        process.exit();
-    });
+    pac.removePacUrl(() => { process.exit() });
 });
