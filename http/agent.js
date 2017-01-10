@@ -1,33 +1,19 @@
 const http = require('http')
 const url = require('url')
-const net = require('net')
 const Socks = require('socks')
 const logger = require('../utils/logger')
-
 const host = require('../config/local.json').host;
 
-function getHeader(httpVersion) {
-    return `HTTP/${httpVersion} 200 Connection Established\r\n` +
-        'Proxy-agent: Jet Proxy\r\n' +
-        '\r\n'
-}
-
-function agentHttp(sockPort) {
+exports.http = function (sockPort) {
     return function (req, res) {
         const _url = url.parse(req.url)
 
-        const hostname = _url.hostname
-        const port = _url.port
-        const path = _url.path
-        const method = req.method
-        const headers = req.headers
-
-        const options = {
-            hostname,
-            port,
-            path,
-            method,
-            headers
+        let options = {
+            hostname: _url.hostname,
+            port: _url.port,
+            path: _url.path,
+            method: _url.method,
+            headers: req.headers
         }
 
         options.agent = new Socks.Agent({
@@ -38,19 +24,18 @@ function agentHttp(sockPort) {
             }
         }, false, false)
 
-        const jetRequest = http.request(options, (_res) => {
-            _res.pipe(res)
+        const _req = http.request(options, (_res) => {
             res.writeHead(_res.statusCode, _res.headers)
+            _res.pipe(res)
+        }).on('error', (err) => {
+            logger.error('Agent http ' + err)
+            res.end()
         })
-
-        jetRequest.on('error', (err) => {
-            logger.error(err)
-        })
-        req.pipe(jetRequest)
+        req.pipe(_req)
     }
 }
 
-function agentHttps(sockPort) {
+exports.https = function (sockPort) {
     return function (req, socket, head) {
         const _url = url.parse(`https://${req.url}`)
 
@@ -67,22 +52,15 @@ function agentHttps(sockPort) {
                 port: port
             },
             command: 'connect'
-        }, (err, jetSocket, info) => {
+        }, (err, _socket, info) => {
             if (err) {
                 logger.error(err)
             } else {
-                // tell the client that the connection is established
-                socket.write(getHeader(req.httpVersion))
-                jetSocket.write(head)
-                // creating pipes in both ends
-                jetSocket.pipe(socket)
-                socket.pipe(jetSocket)
+                socket.write(`HTTP/${req.httpVersion} 200 Connection Established\r\n\r\n`) // tell the client that the connection is established
+                _socket.write(head)
+                _socket.pipe(socket) // creating pipes in both ends
+                socket.pipe(_socket)
             }
         })
     }
 }
-
-module.exports = {
-    http: agentHttp,
-    https: agentHttps
-};

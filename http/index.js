@@ -4,7 +4,6 @@ const http = require('http');
 const agent = require('./agent');
 const logger = require('../utils/logger');
 const config = require('../config/local.json');
-const socksv5 = require('socksv5');
 
 /**
  * @param {number} socks tcp port 

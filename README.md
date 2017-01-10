@@ -92,3 +92,4 @@ node bin/app
 * [Tor](https://www.torproject.org/index.html)
 * [mocha](https://github.com/mochajs/mocha)
 * [chai](https://github.com/chaijs/chai)
+* [HTTP 代理原理及实现](https://imququ.com/post/web-proxy.html)
