@@ -80,7 +80,7 @@ function makeTunnel(localSocksConnect, config) {
         } else {
             decipheredData = decipher.update(remoteData);
         }
-        flowData(tunnel, proxy, decipheredData);
+        flowData(tunnel, localSocksConnect, decipheredData);
     }).on('drain', function () {
         localSocksConnect.resume()
     }).on('end', function () {
