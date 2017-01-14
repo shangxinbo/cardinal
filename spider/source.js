@@ -71,7 +71,7 @@ const items = [
                 for (let i = 0; i < list.length; i++) {
                     if(ciphers[$(list[i]).find('h4').eq('3').html().split(':')[1]]){
                         arr.push({
-                            "host": dns.resolve4($(list[i]).find('h4').eq('0').html().split(':')[1])[0],
+                            "host": $(list[i]).find('h4').eq('0').html().split(':')[1],
                             "port": $(list[i]).find('h4').eq('1').html().split(':')[1],
                             "password": $(list[i]).find('h4').eq('2').html().split(':')[1],
                             "method": $(list[i]).find('h4').eq('3').html().split(':')[1],
@@ -96,7 +96,7 @@ const items = [
                 for (let i = 0; i < list.length; i++) {
                     if(ciphers[$(list[i]).find('p').eq('3').html().replace(/&#x(.*);/g, '')]){
                         arr.push({
-                            "host": dns.resolve4($(list[i]).find('p').eq('0').html().replace(/&#x(.*);/g, ''))[0],
+                            "host": $(list[i]).find('p').eq('0').html().replace(/&#x(.*);/g, ''),
                             "port": $(list[i]).find('p').eq('1').html().replace(/&#x(.*);/g, ''),
                             "password": $(list[i]).find('p').eq('2').html().replace(/&#x(.*);/g, ''),
                             "method": $(list[i]).find('p').eq('3').html().replace(/&#x(.*);/g, ''),
