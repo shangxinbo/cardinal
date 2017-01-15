@@ -1,6 +1,7 @@
 const path = require('path');
 const http = require('http');
 const fs = require('fs');
+const socks = require('socks');
 const exec = require('child_process').exec;
 const logger = require('../utils/logger');
 const config = require('../config/local.json');
@@ -73,7 +74,7 @@ exports.createServer = function () {
     });
 };
 
-exports.updateIPs = function(){
+exports.updateIPs = function(port){
     let req = http.get({
         hostname: 'www.ipdeny.com',
         port: 80,
@@ -81,7 +82,7 @@ exports.updateIPs = function(){
         agent: new socks.Agent({
             proxy: {
                 ipaddress: config.host,
-                port: socksPorts[i],
+                port: port,
                 type: 5
             }
         }, false, false)

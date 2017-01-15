@@ -10,7 +10,6 @@ const logger = require('../utils/logger');
 const spider = require('../spider');
 
 let socksPorts = [];
-let bestSocks = null;
 //TODO: 改成命令行形式使用npm安装
 init();
 
@@ -44,7 +43,7 @@ function optimal() {
             if (res.statusCode == 200 || res.statusCode == 302) {
                 if (!httpRunning) {
                     start(tmp);
-                    bestSocks = tmp;
+                    //pac.updateIPs(tmp);
                     httpRunning = true;
                 }
             }
