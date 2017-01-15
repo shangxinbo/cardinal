@@ -1,5 +1,3 @@
-"use strict";
-
 const crypto = require('crypto');
 const logger = require('../utils/logger');
 const ciphers = require('./ciphers');
@@ -40,12 +38,11 @@ function getKey(method, secret) {
     }
 }
 
-//加密算法
-exports.createCipher = function (secret, method, data, _iv) {
+exports.createCipher = function (secret, method, data) {
     const key = getKey(method, secret);
     const rules = ciphers[method];
     if (rules && key) {
-        const iv = _iv || crypto.randomBytes(rules[1]);
+        const iv = crypto.randomBytes(rules[1]);
         const cipher = crypto.createCipheriv(method, key, iv);
         return {
             cipher,
@@ -56,7 +53,7 @@ exports.createCipher = function (secret, method, data, _iv) {
         return false;
     }
 };
-//解密算法
+
 exports.createDecipher = function (secret, method, initialData) {
     if (ciphers[method]) {
         const ivLength = ciphers[method][1];

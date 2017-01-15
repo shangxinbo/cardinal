@@ -1,5 +1,3 @@
-"use strict";
-
 const net = require('net');
 const ip = require('ip');
 const logger = require('../utils/logger');
@@ -34,7 +32,7 @@ const LOCAL_CONF = require('../config/local.json');
  * +----+----------+
  * @param {object} connection socks 连接
  * @param {buffer} data       tcp(socks)传送的数据
- * @return {boolean} true/false  是否继续通信
+ * @return {boolean}          是否继续通信
  **/
 function agreeMode(connection, data) {
 
@@ -52,10 +50,9 @@ function agreeMode(connection, data) {
     }
 }
 
-
 /**
- * 和远端建立TCP链接
- * @param {connetion}  本地建立的socks连接
+ * @method 与远端建立TCP链接
+ * @param {connetion}  localSocksConnect  本地建立的socks连接
  * @param {object} config 
  * @returns
  */
@@ -63,9 +60,7 @@ function makeTunnel(localSocksConnect, config) {
 
     let decipher, decipheredData;
 
-    let tunnel = net.connect({ port: config.port, host: config.host }, function () {
-        logger.status(`remote ${config.host}:${config.port} connected`);
-    });
+    let tunnel = net.connect({ port: config.port, host: config.host });
     tunnel.on('data', (remoteData) => {
         if (!decipher) {
             let tmp = createDecipher(config.password, config.method.toLowerCase(), remoteData);
@@ -81,28 +76,26 @@ function makeTunnel(localSocksConnect, config) {
             decipheredData = decipher.update(remoteData);
         }
         flowData(tunnel, localSocksConnect, decipheredData);
-    }).on('drain', function () {
+    }).on('drain', () => {
         localSocksConnect.resume()
-    }).on('end', function () {
+    }).on('end', () => {
         localSocksConnect.end();
-        logger.status(`remote ${config.host}:${config.port} server connection end`);
-    }).on('close', function (has_error) {
+        logger.status(`${config.host}:${config.port} connection end`);
+    }).on('close', (has_error) => {
         if (has_error) {
-            logger.error('remote connection close error');
+            logger.error(`${config.host}:${config.port} close error`);
         }
         localSocksConnect.destroy();
-    }).on('error', function (err) {
-        //传输错误，服务器禁止链接 connect ECONNREFUSED
-        console.log(err);  //TODO 关闭链接 debug
-        localSocksConnect.end();
+    }).on('error', (err) => {
+        logger.error(err);    //connect ECONNREFUSED
     });
     return tunnel;
 }
 
 /**
- * @method 在tcp基础上建立会话层SOCKS连接
- * @param proxy  本地代理链接
- * @param config 配置
+ * @method 在tcp上建立会话层SOCKS连接
+ * @param {connect} proxy  本地代理链接
+ * @param {object} config  配置
  * 向应用层返回状态
  * +----+-----+-------+------+----------+----------+
  * |VER | CMD |  RSV  | ATYP | DST ADDR | DST PROT |
@@ -140,11 +133,10 @@ function makeTunnel(localSocksConnect, config) {
  * */
 function socksHandle(localSocksConnect, config, port) {
 
-    let stage = 0;  //通信阶段
+    let stage = 0;  //0 协商认证模式，1 返回状态， 2，传输数据 
     let tunnel;
     let tmp;
     let cipher;
-    let timer = null;
 
     localSocksConnect.on('data', (data) => {
         if (stage == 0) {
@@ -207,10 +199,8 @@ exports.createServer = function () {
         let config = serverList[i];
         let port = ceilPort + i;
         let server = net.createServer(c => socksHandle(c, config, port));
-        server.on('close', function () {
+        server.on('close', () => {
             logger.error('TCP server close unexpacted');
-        }).on('connection', function () {
-            logger.doing('TCP server connected');
         }).listen({ host: host, port: port }, function () {
             logger.status(`TCP listening on ${host}:${port}...`);
         });

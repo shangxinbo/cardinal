@@ -1,5 +1,3 @@
-"use strict";
-
 require('colors');
 
 //TODO: 规范logger类型

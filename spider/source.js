@@ -1,5 +1,3 @@
-'use strict';
-
 const cheerio = require('cheerio');
 const ciphers = require('../socks/ciphers');
 /**
