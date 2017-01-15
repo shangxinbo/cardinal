@@ -10,14 +10,21 @@ const logger = require('../utils/logger');
 const spider = require('../spider');
 
 let socksPorts = [];
+let spiderOpen = true;
+
 //TODO: 改成命令行形式使用npm安装
 init();
 
-function init() {
-    spider.update(() => {                // 更新节点
+function init(set) {
+    if (spiderOpen) {
+        spider.update(() => {                // 更新节点
+            socksPorts = msocks.createServer();
+            optimal();
+        });
+    } else {
         socksPorts = msocks.createServer();
         optimal();
-    });
+    }
 }
 
 //择优选择线路
@@ -48,8 +55,8 @@ function optimal() {
                 }
             }
             req.end();
-        }).on('error', () => req.end() );
-        req.setTimeout(1000, ()=> req.abort());    //TODO: 设置请求响应时限
+        }).on('error', () => req.end());
+        req.setTimeout(1000, () => req.abort());    //TODO: 设置请求响应时限
     }
 }
 
