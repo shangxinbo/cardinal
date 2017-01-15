@@ -56,7 +56,7 @@ function optimal() {
             }
             req.end();
         }).on('error', () => req.end());
-        req.setTimeout(1000, () => req.abort());    //TODO: 设置请求响应时限
+        req.setTimeout(config.allowDelay, () => req.abort());
     }
 }
 
