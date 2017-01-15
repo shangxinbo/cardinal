@@ -15,7 +15,7 @@ const logger = require('../utils/logger');
 function store(arr, callback) {
     let c = arr.length;
     for (let i = 0; i < arr.length; i++) {
-        dns.lookup(arr[i].host, function (err, address, family) {
+        dns.lookup(arr[i].host, (err, address, family) => {
             c--;
             if (err) logger.error(err);
             arr[i].host = address;
@@ -30,39 +30,35 @@ function store(arr, callback) {
 function getData(_url, callback) {
     let protocol = url.parse(_url).protocol;
     if (protocol == 'https:') {
-        let req = https.get(_url, function (res) {
+        let req = https.get(_url, (res) => {
             if (res.statusCode == 200) {
                 res.setEncoding('utf-8');
                 let data = '';
-                res.on('data', function (chunk) {
+                res.on('data', (chunk) => {
                     data += chunk;
-                }).on('end', function () {
+                }).on('end', () => {
                     if (callback) callback(null, data);
                 })
             }
-        }).on('error', function (err) {
+        }).on('error', (err) => {
             if (callback) callback(err);
         });
-        req.setTimeout(1500, function () {
-            req.abort()
-        });
+        req.setTimeout(1500, () => req.abort());
     } else {  // http
-        let req = http.get(_url, function (res) {
+        let req = http.get(_url, (res) => {
             if (res.statusCode == 200) {
                 res.setEncoding('utf-8')
                 let data = ''
-                res.on('data', function (chunk) {
+                res.on('data', (chunk) => {
                     data += chunk;
-                }).on('end', function () {
+                }).on('end', () => {
                     if (callback) callback(null, data);
                 })
             }
-        }).on('error', function (err) {
+        }).on('error', (err) => {
             if (callback) callback(err)
         });
-        req.setTimeout(1500, function () {
-            req.abort()
-        });
+        req.setTimeout(1500, () => req.abort());
     }
 }
 
@@ -71,7 +67,7 @@ exports.update = function (callback) {
     if (sources instanceof Array && sources.length > 0) {
         let counter = sources.length;                 //爬虫结果计数
         for (let i = 0; i < sources.length; i++) {
-            getData(sources[i].url, function (err, data) {
+            getData(sources[i].url, (err, data) => {
                 counter--
                 if (!err) {
                     let arr = sources[i].deXml(data);
