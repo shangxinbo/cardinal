@@ -35,14 +35,12 @@ exports.update = function (callback) {
         let counter = sources.length;                    //爬虫结果计数
         for (let i = 0; i < sources.length; i++) {
             agent(sources[i].url, function (err, data) {
-                if (err) {
-                    logger.error(err);
-                    return;
-                }
                 counter--;
-                let arr = sources[i].deXml(data);
-                if (arr) {
-                    dymicArr = dymicArr.concat(arr);
+                if (!err) {
+                    let arr = sources[i].deXml(data);
+                    if (arr) {
+                        dymicArr = dymicArr.concat(arr);
+                    }
                 }
                 if (counter == 0) {
                     store(dymicArr, callback);
