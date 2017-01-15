@@ -2,9 +2,9 @@ const http = require('http')
 const url = require('url')
 const Socks = require('socks')
 const logger = require('../utils/logger')
-const host = require('../config/local.json').host;
+const host = require('../config/local.json').host
 
-exports.http = function (sockPort) {
+exports.http = function (sockPort, callback) {
     return function (req, res) {
         const _url = url.parse(req.url)
 
@@ -28,14 +28,15 @@ exports.http = function (sockPort) {
             res.writeHead(_res.statusCode, _res.headers)
             _res.pipe(res)
         }).on('error', (err) => {
-            logger.error('Agent http ' + err)
+            logger.error(`Agent http ${err}`)
+            if (callback) callback()
             res.end()
         })
         req.pipe(_req)
     }
 }
 
-exports.https = function (sockPort) {
+exports.https = function (sockPort, callback) {
     return function (req, socket, head) {
         const _url = url.parse(`https://${req.url}`)
 
@@ -54,11 +55,13 @@ exports.https = function (sockPort) {
             command: 'connect'
         }, (err, _socket, info) => {
             if (err) {
-                logger.error(err)
+                logger.error(`Agent https ${err}`)
+                if (callback) callback()
             } else {
-                socket.write(`HTTP/${req.httpVersion} 200 Connection Established\r\n\r\n`) // tell the client that the connection is established
+                // tell the client that the connection is established
+                socket.write(`HTTP/${req.httpVersion} 200 Connection Established\r\n\r\n`)
                 _socket.write(head)
-                _socket.pipe(socket) // creating pipes in both ends
+                _socket.pipe(socket)      // creating pipes in both ends
                 socket.pipe(_socket)
             }
         })
