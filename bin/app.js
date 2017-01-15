@@ -1,23 +1,22 @@
-
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 const socks = require('socks');
-const tcp = require('../socks');
+const msocks = require('../socks');
 const mhttp = require('../http');
 const pac = require('../pac');
 const config = require('../config/local.json');
 const logger = require('../utils/logger');
 const spider = require('../spider');
-const fs = require('fs');
-const path = require('path');
 
 let socksPorts = [];
 let bestSocks = null;
-//TODO 改成命令行形式使用npm安装
+//TODO: 改成命令行形式使用npm安装
 init();
 
 function init() {
-    spider.update(function () {                // 更新节点
-        socksPorts = tcp.createServer();
+    spider.update(() => {                // 更新节点
+        socksPorts = msocks.createServer();
         optimal();
     });
 }
@@ -41,69 +40,33 @@ function optimal() {
                     type: 5
                 }
             }, false, false)
-        }, function (res) {
+        }, (res) => {
             if (res.statusCode == 200 || res.statusCode == 302) {
                 if (!httpRunning) {
                     start(tmp);
+                    bestSocks = tmp;
                     httpRunning = true;
                 }
             }
             req.end();
-        }).on('error', function () {
-            req.end();
-        });
-        req.setTimeout(1000, function () {    // 设置请求响应时限
-            req.abort();
-        });
+        }).on('error', () => req.end() );
+        req.setTimeout(1000, ()=> req.abort());    //TODO: 设置请求响应时限
     }
 }
 
 function start(socks) {
     let pacServer = pac.createServer();
-    let httpPorts = mhttp.createServer(socks, function () {
-        pacServer.close(function () {
-            optimal();                        // 重新选择可用资源
-        });
+    let httpPorts = mhttp.createServer(socks, () => {
+        pacServer.close(() => optimal());         // 重新选择可用资源
     });
     pac.addPacUrl();
 }
 
-function getIpsOnline(port) {
-    let req = http.get({
-        hostname: 'www.ipdeny.com',
-        port: 80,
-        path: '/ipblocks/data/aggregated/cn-aggregated.zone',
-        agent: new socks.Agent({
-            proxy: {
-                ipaddress: config.host,
-                port: socksPorts[i],
-                type: 5
-            }
-        }, false, false)
-    }, function (res) {
-        if (res.statusCode == 200 || res.statusCode == 302) {
-            res.setEncoding('utf-8');
-            let allIps = '';
-            res.on('data', function (chunk) {
-                allIps += chunk;
-            }).on('end', function () {
-                fs.writeFile(path.join(__dirname, '../config/GeoIP-CN'), allIps);
-            })
-        }
-    }).on('error', function (err) {
-        logger.error('update IPs error');
-        req.end();
-    });
-    req.setTimeout(5000, function () {  //设置请求响应界限
-        req.abort();
-    });
-}
-
-/*process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
     pac.removePacUrl();
     logger.error('uncaughtException' + err);
-});*/
+});
 //程序正常退出时，恢复系统代理配置
-process.on('SIGINT', function () {
+process.on('SIGINT', () => {
     pac.removePacUrl(() => { process.exit() });
 });
