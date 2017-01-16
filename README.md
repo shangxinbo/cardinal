@@ -1,7 +1,7 @@
 # cardinal
 
 A shadowsocks client by nodejs, include socks proxy and http proxy
-shadowsocks节点，加上自动配置，高可用达到稳定翻墙
+
 ## why another 
 @clowwindy was asked to delete all the shadowsocks code,and shadowsocks-R's cribbing, and lantern start charging a fee. Because of that, I made it. 
 * [shadowsocks-nodejs](https://github.com/shadowsocks/shadowsocks-nodejs) stop update
