@@ -4,17 +4,17 @@
  * @param {String} url  抓取路径
  * @param {function} deXml   to resolve socks server configs
  */
-const cheerio = require('cheerio');
-const ciphers = require('../socks/ciphers');
+const cheerio = require('cheerio')
+const ciphers = require('../socks/ciphers')
 
 const items = [
     {
         url: 'https://freessr.xyz/',
         deXml: function (body) {
             try {
-                let $ = cheerio.load(body);
-                let list = $('.col-md-6.text-center');
-                let arr = [];
+                let $ = cheerio.load(body)
+                let list = $('.col-md-6.text-center')
+                let arr = []
                 for (let i = 0; i < list.length - 1; i++) {
                     if (ciphers[$(list[i]).find('h4').eq('3').html().split(':')[1]]) {
                         arr.push({
@@ -24,12 +24,12 @@ const items = [
                             "method": $(list[i]).find('h4').eq('3').html().split(':')[1],
                             "remarks": "frss",
                             "auth": false
-                        });
+                        })
                     }
                 }
-                return arr;
+                return arr
             } catch (e) {
-                return null;
+                return null
             }
         }
     },
@@ -37,9 +37,9 @@ const items = [
         url: 'http://tempss.com/',
         deXml: function (body) {
             try {
-                let $ = cheerio.load(body);
-                let list = $('#tbody tr');
-                let arr = [];
+                let $ = cheerio.load(body)
+                let list = $('#tbody tr')
+                let arr = []
                 for (let i = 0; i < list.length; i++) {
                     if (ciphers[$(list[i]).find('td').eq('2').html()]) {
                         arr.push({
@@ -49,12 +49,12 @@ const items = [
                             "method": $(list[i]).find('td').eq('2').html(),
                             "remarks": "tss",
                             "auth": false
-                        });
+                        })
                     }
                 }
-                return arr;
+                return arr
             } catch (e) {
-                return null;
+                return null
             }
         }
     },
@@ -62,9 +62,9 @@ const items = [
         url: 'http://www.ishadowsocks.me/',
         deXml: function (body) {
             try {
-                let $ = cheerio.load(body);
-                let list = $('#free .col-sm-4');
-                let arr = [];
+                let $ = cheerio.load(body)
+                let list = $('#free .col-sm-4')
+                let arr = []
                 for (let i = 0; i < list.length; i++) {
                     if (ciphers[$(list[i]).find('h4').eq('3').html().split(':')[1]]) {
                         arr.push({
@@ -74,12 +74,12 @@ const items = [
                             "method": $(list[i]).find('h4').eq('3').html().split(':')[1],
                             "remarks": "iss",
                             "auth": false
-                        });
+                        })
                     }
                 }
-                return arr;
+                return arr
             } catch (e) {
-                return null;
+                return null
             }
         }
     },
@@ -87,9 +87,9 @@ const items = [
         url: 'https://freevpnss.cc/',
         deXml: function (body) {
             try {
-                let $ = cheerio.load(body);
-                let list = $('#shadowsocks').next('.row.text-center').find('.panel-body');
-                let arr = [];
+                let $ = cheerio.load(body)
+                let list = $('#shadowsocks').next('.row.text-center').find('.panel-body')
+                let arr = []
                 for (let i = 0; i < list.length; i++) {
                     if (ciphers[$(list[i]).find('p').eq('3').html().replace(/&#x(.*);/g, '')]) {
                         arr.push({
@@ -99,15 +99,15 @@ const items = [
                             "method": $(list[i]).find('p').eq('3').html().replace(/&#x(.*);/g, ''),
                             "remarks": "fvss",
                             "auth": false
-                        });
+                        })
                     }
                 }
-                return arr;
+                return arr
             } catch (e) {
-                return null;
+                return null
             }
         }
     }
-];
+]
 
-module.exports = items;
+module.exports = items
