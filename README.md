@@ -68,10 +68,10 @@ $ cardinal sc
 ### normal
 * config/GeoIP-CN    ------   IPs in china 
 * config/local.json  ------   host and port config
-  > * host
-  > * proxyPortCeil  ----   socks port min
-  > * httpPort
-  > * pacPort
+  * host
+  * proxyPortCeil  ----   socks port min
+  * httpPort
+  * pacPort
 * config/pac.js      ------   pac file functions
 * config/server.json ------   shadowsocks server and password,types
 
