@@ -1,7 +1,7 @@
 {
-  "host":"127.0.0.1",
-  "proxyPortCeil":"10081",
-  "httpPort":"10080",
-  "pacPort":"8290",
-  "allowDelay":"1000"
+  "host": "127.0.0.1",
+  "proxyPortCeil": "10081",
+  "httpPort": "10080",
+  "pacPort": "8290",
+  "allowDelay": 1000
 }

@@ -56,7 +56,7 @@ function optimal() {
             }
             req.end();
         }).on('error', () => req.end());
-        req.setTimeout(config.allowDelay, () => req.abort());
+        req.setTimeout(parseInt(config.allowDelay), () => req.abort());  //msecs argument must be a number
     }
 }
 
