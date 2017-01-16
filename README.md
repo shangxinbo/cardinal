@@ -9,6 +9,7 @@ A shadowsocks client by nodejs, include socks proxy and http proxy
 * [shadowsocks-js](https://github.com/oyyd/shadowsocks-js) no http proxy,and no high availability
 * [shadowsocks-windows](https://github.com/shadowsocks/shadowsocks-windows) can't auto config and can't meet me
 * surport Windows(win7+),MacOS
+
 ## model
 ![model pic](https://raw.githubusercontent.com/shangxinbo/cardinal/master/model.png)
 
@@ -63,14 +64,14 @@ start by closing the auto spider.That use your own server.json(server config)
 ```
 $ cardinal sc
 ```
-## config
+## configs
 ### normal
 * config/GeoIP-CN    ------   IPs in china 
 * config/local.json  ------   host and port config
-    > * host
-    > * proxyPortCeil  ----   socks port min
-    > * httpPort
-    > * pacPort
+  > * host
+  > * proxyPortCeil  ----   socks port min
+  > * httpPort
+  > * pacPort
 * config/pac.js      ------   pac file functions
 * config/server.json ------   shadowsocks server and password,types
 
@@ -125,3 +126,4 @@ deXml：deXml是解析函数，deXml参数是抓取的buffer，返回值是一�
 * [SSR的讨论](https://github.com/breakwa11/shadowsocks-rss/issues/28)
 * [纪念ss,向一个伟大的创造告别](https://www.starduster.me/2015/08/21/say-goodbye-to-ss/)
 * [Shadowsocks 的前世后生](http://chinadigitaltimes.net/chinese/2016/08/gfw-blog%EF%BD%9Cshadowsocks-%E7%9A%84%E5%89%8D%E4%B8%96%E5%90%8E%E7%94%9F/)
+* [MacOS set pac](https://support.apple.com/kb/PH18553?locale=zh_CN)
