@@ -80,8 +80,11 @@ $ cardinal sc
 * config/server.json ------   shadowsocks server and password,types
 
 ### spider rules
-url:抓取地址,
-deXml：deXml是解析函数，deXml参数是抓取的buffer，返回值是一个配置的数组或null
+In spider/source.js, all shadowsocks server nodes item list.You can add/edit/delete them.cardinal use this to make tunnel.if you have a shadowsocks server,you can use sc start option.
+* url spider webpage url.
+* deXml DOM analyse function, param is a buffer,return a array/null.
+
+example like this:
 ```
 {
     url: 'https://freessr.xyz/',
