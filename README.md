@@ -8,7 +8,7 @@ A shadowsocks client by nodejs, include socks proxy and http proxy
 * [shadowsocks-nodejs](https://github.com/shadowsocks/shadowsocks-nodejs) stop update
 * [shadowsocks-js](https://github.com/oyyd/shadowsocks-js) no http proxy,and no high availability
 * [shadowsocks-windows](https://github.com/shadowsocks/shadowsocks-windows) can't auto config and can't meet me
-
+* surport Windows(win7+),MacOS
 ## model
 ![model pic](https://raw.githubusercontent.com/shangxinbo/cardinal/master/model.png)
 
@@ -49,6 +49,7 @@ Use cardinal to start in CLI
 ### options
 * upip
 * sc
+
 ### examples
 default start
 ```
@@ -62,17 +63,16 @@ start by closing the auto spider.That use your own server.json(server config)
 ```
 $ cardinal sc
 ```
-
 ## config
 ### normal
-* config/GeoIP-CN    IPs in china 
-* config/local.json     host and port config
-  > * host
-  > * proxyPortCeil   //socks port min
-  > * httpPort
-  > * pacPort
-* config/pac.js  pac file functions
-* config/server.json    shadowsocks server and password,types
+* config/GeoIP-CN    ------   IPs in china 
+* config/local.json  ------   host and port config
+    > * host
+    > * proxyPortCeil  ----   socks port min
+    > * httpPort
+    > * pacPort
+* config/pac.js      ------   pac file functions
+* config/server.json ------   shadowsocks server and password,types
 
 ### spider rules
 url:抓取地址,

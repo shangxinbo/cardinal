@@ -1,6 +1,7 @@
 const path = require('path');
 const http = require('http');
 const fs = require('fs');
+const os = require('os');
 const socks = require('socks');
 const exec = require('child_process').exec;
 const logger = require('../utils/logger');
@@ -74,7 +75,7 @@ exports.createServer = function () {
     });
 };
 
-exports.updateIPs = function(port){
+exports.updateIPs = function (port) {
     let req = http.get({
         hostname: 'www.ipdeny.com',
         port: 80,
@@ -109,11 +110,15 @@ exports.addPacUrl = function () {
 
     //windows set browser proxy auto config script
     const pacUrl = new Buffer(`http://${config.host}:${config.pacPort}/proxy.pac`);
-
-    let cmd = 'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections"' +
-        ' /v DefaultConnectionSettings /t REG_BINARY /d 46000000d2eb00000500000000000000000000001f000000' +
-        pacUrl.toString('hex') +
-        '0100000000000000000000000000000000000000000000000000000000000000 /f';
+    let cmd;
+    if (os.type() == 'Windows_NT') {
+        cmd = 'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections"' +
+            ' /v DefaultConnectionSettings /t REG_BINARY /d 46000000d2eb00000500000000000000000000001f000000' +
+            pacUrl.toString('hex') +
+            '0100000000000000000000000000000000000000000000000000000000000000 /f';
+    } else {
+        cmd = 'networksetup -setautoproxyurl "Wi-Fi" "http://somedomain.com/proxy.pac"';
+    }
 
     exec(cmd, (err, stdout, stderr) => {
         if (err) {
@@ -126,11 +131,14 @@ exports.addPacUrl = function () {
 }
 
 exports.removePacUrl = function (callback) {
-
-    let cmd = 'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections"' +
-        ' /v DefaultConnectionSettings /t REG_BINARY' +
-        ' /d 46000000d1eb0000010000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000 /f';
-
+    let cmd;
+    if (os.type() == 'Windows_NT') {
+        cmd = 'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections"' +
+            ' /v DefaultConnectionSettings /t REG_BINARY' +
+            ' /d 46000000d1eb0000010000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000 /f';
+    } else {
+        cmd = 'networksetup -setautoproxyurl "Wi-Fi" "http://somedomain.com/proxy.pac"';
+    }
     exec(cmd, () => { if (callback) callback() });
 }
 
