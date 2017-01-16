@@ -20,26 +20,25 @@ A shadowsocks client by nodejs, include socks proxy and http proxy
 * [jet](https://github.com/m31271n/jet)
 * use GeoIp to pac file not use gfwlist
 * encrypt type filter by shadowsocks and node surport 
-
-|method | size and length|
-|-------|----------------|
-|aes-128-ctr | [16, 16]  |
-|aes-192-ctr | [24, 16]  |
-|aes-192-ctr | [24, 16]  |
-|aes-256-ctr | [32, 16]  |
-|aes-128-cfb | [16, 16]  |
-|aes-192-cfb | [24, 16]  |
-|aes-256-cfb | [32, 16]  |
-|bf-cfb      | [16, 8]   |
-|camellia-128-cfb | [16, 16]|
-|camellia-192-cfb | [24, 16]|
-|camellia-256-cfb | [32, 16]|
-|cast5-cfb   | [16, 8]   |
-|des-cfb     | [8, 8]    |
-|idea-cfb    | [16, 8]   |
-|rc2-cfb     | [16, 8]   |
-|salsa20     | [32, 8]   |
-|seed-cfb    | [16, 16]  |
+    >|method | size and length|
+    >|-------|----------------|
+    >|aes-128-ctr | [16, 16]  |
+    >|aes-192-ctr | [24, 16]  |
+    >|aes-192-ctr | [24, 16]  |
+    >|aes-256-ctr | [32, 16]  |
+    >|aes-128-cfb | [16, 16]  |
+    >|aes-192-cfb | [24, 16]  |
+    >|aes-256-cfb | [32, 16]  |
+    >|bf-cfb      | [16, 8]   |
+    >|camellia-128-cfb | [16, 16]|
+    >|camellia-192-cfb | [24, 16]|
+    >|camellia-256-cfb | [32, 16]|
+    >|cast5-cfb   | [16, 8]   |
+    >|des-cfb     | [8, 8]    |
+    >|idea-cfb    | [16, 8]   |
+    >|rc2-cfb     | [16, 8]   |
+    >|salsa20     | [32, 8]   |
+    >|seed-cfb    | [16, 16]  |
 
 ## install  
 ```
@@ -72,6 +71,7 @@ $ cardinal sc
   * proxyPortCeil  ----   socks port min
   * httpPort
   * pacPort
+  * allowDelay     ----   optimal timeout
 * config/pac.js      ------   pac file functions
 * config/server.json ------   shadowsocks server and password,types
 
