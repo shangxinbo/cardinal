@@ -8,11 +8,18 @@ const pac = require('../pac');
 const config = require('../config/local.json');
 const logger = require('../utils/logger');
 const spider = require('../spider');
+const argv = process.argv;
 
 let socksPorts = [];
 let spiderOpen = true;
+let updateIPs = false;
 
-//TODO: 改成命令行形式使用npm安装
+if (argv.indexOf('upip')) {
+    updateIPs = true;
+}
+if (argv.indexOf('sc')) {
+    spiderOpen = false;
+}
 init();
 
 function init(set) {
@@ -50,7 +57,9 @@ function optimal() {
             if (res.statusCode == 200 || res.statusCode == 302) {
                 if (!httpRunning) {
                     start(tmp);
-                    //pac.updateIPs(tmp);
+                    if (updateIPs) {
+                        pac.updateIPs(tmp);
+                    }
                     httpRunning = true;
                 }
             }

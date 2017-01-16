@@ -88,7 +88,7 @@ deXml：deXml是解析函数，deXml参数是抓取的buffer，返回值是一�
 }
 ```
 
-## LICENSE
+## license
 * [GPL](LICENSE)
 
 ## other

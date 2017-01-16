@@ -1,7 +1,7 @@
 {
-  "name": "xShadowsocks",
-  "version": "2.1.3",
-  "description": "A simple tool for overing the Great Firewall of China with shadowsocks",
+  "name": "cardinalis",
+  "version": "3.1.2",
+  "description": "A socks and http proxy by nodejs for you to over GWF",
   "main": "bin/app",
   "scripts": {
     "test": "node bin/app"
@@ -12,6 +12,7 @@
     "tcp proxy",
     "http proxy",
     "proxy",
+    "socks",
     "crawler"
   ],
   "author": "shangxinbo",
