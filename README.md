@@ -18,8 +18,11 @@ A shadowsocks client by nodejs, include socks proxy and http proxy
 
 ## achieve
 * [jet](https://github.com/m31271n/jet)
+
 * use GeoIp to pac file not use gfwlist
+
 * encrypt type filter by shadowsocks and node surport 
+
     >|method | size and length|
     >|-------|----------------|
     >|aes-128-ctr | [16, 16]  |
