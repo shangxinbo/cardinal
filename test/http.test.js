@@ -2,9 +2,8 @@ const expect = require('chai').expect
 const http = require('http')
 const socks = require('socks')
 const config = require('../config/local.json')
-const msocks = require('../socks/index')
-const cipher = require('../socks/ciphers')
-const encrypt = require('../socks/encrypt')
+const mhttp = require('../http/index')
+const magent = require('../http/agent')
 
 describe('socks 模块测试', () => {
 

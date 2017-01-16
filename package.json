@@ -4,7 +4,7 @@
   "description": "A socks and http proxy by nodejs for you to over GWF",
   "main": "bin/app",
   "scripts": {
-    "test": "node bin/app"
+    "test": "mocha"
   },
   "bin":{
     "cardinal": "./bin/app"
