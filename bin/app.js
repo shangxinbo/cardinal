@@ -14,10 +14,10 @@ let socksPorts = []
 let spiderOpen = true
 let updateIPs = false
 
-if (argv.indexOf('upip')) {
+if (argv.indexOf('upip') > -1) {
     updateIPs = true
 }
-if (argv.indexOf('sc')) {
+if (argv.indexOf('sc') > -1) {
     spiderOpen = false
 }
 init()
@@ -25,7 +25,7 @@ init()
 function init(set) {
     if (spiderOpen) {
         spider.update(() => {                // 更新节点
-            socksPorts = msocks.createServer()
+            socksPorts = msocks.createServer() 
             optimal()
         })
     } else {
@@ -83,5 +83,6 @@ process.on('uncaughtException', (err) => {
 })
 //程序正常退出时，恢复系统代理配置
 process.on('SIGINT', () => {
+    console.log(123);
     pac.removePacUrl(() => { process.exit() })
 })
