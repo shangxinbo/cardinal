@@ -1,4 +1,5 @@
 # cardinal
+[![npm-version](https://img.shields.io/npm/v/cardinalis.svg?style=flat-square)](https://www.npmjs.com/package/cardinalis)
 
 A shadowsocks client by nodejs, include socks proxy and http proxy
 
@@ -9,7 +10,7 @@ A shadowsocks client by nodejs, include socks proxy and http proxy
 * [shadowsocks-windows](https://github.com/shadowsocks/shadowsocks-windows) can't auto config and can't meet me
 
 ## model
-![model pic](./model.png)
+![model pic](https://raw.githubusercontent.com/shangxinbo/cardinal/master/model.png)
 
 ## dependent
 * [node > v4](https://nodejs.org/en/)
@@ -39,11 +40,27 @@ A shadowsocks client by nodejs, include socks proxy and http proxy
 |salsa20     | [32, 8]   |
 |seed-cfb    | [16, 16]  |
 
-## start 
-TODO 
+## install  
 ```
-npm install shangxinbo/xShadowsocks
-node bin/app
+npm install -g cardinalis
+```
+## CLI
+Use cardinal to start in CLI
+### options
+* upip
+* sc
+### examples
+default start
+```
+$ cardinal
+``` 
+start with update GeoIp-CN(IPs in china)
+``` 
+$ cardinal upip
+```
+start by closing the auto spider.That use your own server.json(server config) 
+```
+$ cardinal sc
 ```
 
 ## config
