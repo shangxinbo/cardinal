@@ -12,6 +12,8 @@ describe('爬虫程序测试', () => {
         for(let item of source){
             expect(item).to.have.property('url')
             expect(item).to.have.property('deXml')
+            let mockbody = item.deXml('<html><head></head><body></body></html>')
+            expect(mockbody).to.not.be.undefined
         }
     })
 

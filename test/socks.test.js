@@ -39,14 +39,14 @@ describe('socks 模块测试', () => {
             var ports = msocks.createServer()
             expect(ports).to.be.an.instanceOf(Array)
             expect(ports).to.be.have.length.above(0)
-            /*let tmp = ports[0]
+            let tmp = ports[0]
             let req = http.get({
                 hostname: 'google.com',
                 port: 80,
                 agent: new socks.Agent({
                     proxy: {
                         ipaddress: config.host,
-                        port: socksPorts[i],
+                        port: config.proxyPortCeil,
                         type: 5
                     }
                 }, false, false)
@@ -55,7 +55,7 @@ describe('socks 模块测试', () => {
                     req.end()
                     done()
                 }
-            })*/
+            })
         })
     })
 

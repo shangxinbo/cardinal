@@ -14,6 +14,10 @@ describe('pac 模块测试', () => {
         })
         req.end()
     })
+    it('upIps', done => {
+        pac.updateIPs(20000)
+        done()
+    })
     it('add pac url', () => {
         pac.addPacUrl()
     })
