@@ -43,7 +43,7 @@ exports.createCipher = function (secret, method, data) {
     const rules = ciphers[method]
     if (rules && key) {
         const iv = crypto.randomBytes(rules[1])
-        const cipher = crypto.createCipheriv(method, key, iv)
+        let cipher = crypto.createCipheriv(method, key, iv)
         return {
             cipher,
             data: Buffer.concat([iv, cipher.update(data)])
