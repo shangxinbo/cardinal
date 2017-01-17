@@ -11,4 +11,16 @@ describe('http 模块测试', () => {
             })
         })
     })
+    describe('agent', () => {
+        it('http', () => {
+            magent.http(30000, () => {
+                done()
+            })
+        })
+        it('https', () => {
+            magent.https(30000, () => {
+                done()
+            })
+        })
+    })
 })
