@@ -1,12 +1,10 @@
-"use strict";
-
-const net = require('net');
-const ip = require('ip');
-const logger = require('../utils/logger');
-const createCipher = require('./encrypt').createCipher;
-const createDecipher = require('./encrypt').createDecipher;
-const SERVER_CONF = require('../config/server.json');
-const LOCAL_CONF = require('../config/local.json');
+const net = require('net')
+const ip = require('ip')
+const logger = require('../utils/logger')
+const createCipher = require('./encrypt').createCipher
+const createDecipher = require('./encrypt').createDecipher
+const SERVER_CONF = require('../config/server.json')
+const LOCAL_CONF = require('../config/local.json')
 
 /**
  * 和客户端协商版本及认证方式
@@ -34,75 +32,70 @@ const LOCAL_CONF = require('../config/local.json');
  * +----+----------+
  * @param {object} connection socks 连接
  * @param {buffer} data       tcp(socks)传送的数据
- * @return {boolean} true/false  是否继续通信
+ * @return {boolean}          是否继续通信
  **/
 function agreeMode(connection, data) {
 
-    const buf = new Buffer(2);
+    const buf = new Buffer(2)
 
     if (data.indexOf(0x00, 2) >= 0) { //不需要认证
-        buf.writeUInt16BE(0x0500);
-        connection.write(buf);
-        return true;
+        buf.writeUInt16BE(0x0500)
+        connection.write(buf)
+        return true
     } else {
-        buf.writeUInt16BE(0x05FF);    //不接受其他方法，客户端需要关闭链接
-        connection.write(buf);
-        connection.end();
-        return false;
+        buf.writeUInt16BE(0x05FF)    //不接受其他方法，客户端需要关闭链接
+        connection.write(buf)
+        connection.end()
+        return false
     }
 }
 
-
 /**
- * 和远端建立TCP链接
- * @param {connetion}  本地建立的socks连接
+ * @method 与远端建立TCP链接
+ * @param {connetion}  localSocksConnect  本地建立的socks连接
  * @param {object} config 
  * @returns
  */
 function makeTunnel(localSocksConnect, config) {
 
-    let decipher, decipheredData;
+    let decipher, decipheredData
 
-    let tunnel = net.connect({ port: config.port, host: config.host }, function () {
-        logger.status(`remote ${config.host}:${config.port} connected`);
-    });
+    let tunnel = net.connect({ port: config.port, host: config.host })
     tunnel.on('data', (remoteData) => {
         if (!decipher) {
-            let tmp = createDecipher(config.password, config.method.toLowerCase(), remoteData);
+            let tmp = createDecipher(config.password, config.method.toLowerCase(), remoteData)
             if (tmp) {
-                decipher = tmp.decipher;
-                decipheredData = tmp.data;
+                decipher = tmp.decipher
+                decipheredData = tmp.data
             } else {
-                tunnel.destroy();
-                localSocksConnect.end();
-                return;
+                tunnel.destroy()
+                localSocksConnect.end()
+                return
             }
         } else {
-            decipheredData = decipher.update(remoteData);
+            decipheredData = decipher.update(remoteData)
         }
-        flowData(tunnel, localSocksConnect, decipheredData);
-    }).on('drain', function () {
+        flowData(tunnel, localSocksConnect, decipheredData)
+    }).on('drain', () => {
         localSocksConnect.resume()
-    }).on('end', function () {
-        localSocksConnect.end();
-        logger.status(`remote ${config.host}:${config.port} server connection end`);
-    }).on('close', function (has_error) {
+    }).on('end', () => {
+        localSocksConnect.end()
+        logger.status(`${config.host}:${config.port} connection end`)
+    }).on('close', (has_error) => {
         if (has_error) {
-            logger.error('remote connection close error');
+            logger.error(`${config.host}:${config.port} close error`)
         }
-        localSocksConnect.destroy();
-    }).on('error', function (err) {
-        //传输错误，服务器禁止链接 connect ECONNREFUSED
-        console.log(err);  //TODO 关闭链接 debug
-        localSocksConnect.end();
-    });
-    return tunnel;
+        localSocksConnect.destroy()
+    }).on('error', (err) => {
+        logger.error(err)    //connect ECONNREFUSED
+    })
+    return tunnel
 }
 
 /**
- * @method 在tcp基础上建立会话层SOCKS连接
- * @param proxy  本地代理链接
- * @param config 配置
+ * @method 在tcp上建立会话层SOCKS连接
+ * @param {connect} proxy  本地代理链接
+ * @param {object} config  配置
  * 向应用层返回状态
  * +----+-----+-------+------+----------+----------+
  * |VER | CMD |  RSV  | ATYP | DST ADDR | DST PROT |
@@ -140,48 +133,47 @@ function makeTunnel(localSocksConnect, config) {
  * */
 function socksHandle(localSocksConnect, config, port) {
 
-    let stage = 0;  //通信阶段
-    let tunnel;
-    let tmp;
-    let cipher;
-    let timer = null;
+    let stage = 0  //0 协商认证模式，1 返回状态， 2，传输数据 
+    let tunnel
+    let tmp
+    let cipher
 
     localSocksConnect.on('data', (data) => {
         if (stage == 0) {
             if (agreeMode(localSocksConnect, data)) {
-                stage = 1;
+                stage = 1
             }
         } else if (stage == 1) {
-            let BND_ADDR = ip.toBuffer(config.host);
-            let BND_PROT = new Buffer(2);
-            BND_PROT.writeUInt16BE(port);
-            let resBuf = new Buffer([0x05, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, BND_ADDR, BND_PROT]);
-            localSocksConnect.write(resBuf);
-            tunnel = makeTunnel(localSocksConnect, config);
-            stage = 2;
+            let BND_ADDR = ip.toBuffer(config.host)
+            let BND_PROT = new Buffer(2)
+            BND_PROT.writeUInt16BE(port)
+            let resBuf = new Buffer([0x05, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, BND_ADDR, BND_PROT])
+            localSocksConnect.write(resBuf)
+            tunnel = makeTunnel(localSocksConnect, config)
+            stage = 2
             //向服务端吐数据
-            let encrypt = createCipher(config.password, config.method.toLowerCase(), data.slice(3)); // skip VER, CMD, RSV
-            cipher = encrypt.cipher;
-            tunnel.write(encrypt.data);
+            let encrypt = createCipher(config.password, config.method.toLowerCase(), data.slice(3)) // skip VER, CMD, RSV
+            cipher = encrypt.cipher
+            tunnel.write(encrypt.data)
         } else if (stage == 2) {
-            tmp = cipher.update(data);
-            flowData(localSocksConnect, tunnel, tmp);
+            tmp = cipher.update(data)
+            flowData(localSocksConnect, tunnel, tmp)
         }
     }).on('drain', () => {
-        tunnel.resume();
+        tunnel.resume()
     }).on('end', () => {
-        logger.status('SOCKS connection end');
+        logger.status('SOCKS connection end')
         if (tunnel) {
-            tunnel.end();
+            tunnel.end()
         }
     }).on('close', (has_error) => {
         if (has_error) {
-            logger.error('SOCKS connection close width error');
+            logger.error('SOCKS connection close width error')
         }
         if (tunnel) {
-            tunnel.destroy();
+            tunnel.destroy()
         }
-    });
+    })
 }
 
 /**
@@ -191,30 +183,28 @@ function socksHandle(localSocksConnect, config, port) {
  * @param data Buffer  数据
  * */
 function flowData(from, to, data) {
-    const res = to.write(data);
+    const res = to.write(data)
     if (!res) {
-        from.pause();  //内存边界
+        from.pause()  //内存边界
     }
-    return res;
+    return res
 }
 
 exports.createServer = function () {
-    let serverList = SERVER_CONF.list;
-    let socksServerArr = [];
-    let ceilPort = parseInt(LOCAL_CONF.proxyPortCeil);
-    let host = LOCAL_CONF.host;
+    let serverList = SERVER_CONF.list
+    let socksServerArr = []
+    let ceilPort = parseInt(LOCAL_CONF.proxyPortCeil)
+    let host = LOCAL_CONF.host
     for (let i = 0; i < serverList.length; i++) {
-        let config = serverList[i];
-        let port = ceilPort + i;
-        let server = net.createServer(c => socksHandle(c, config, port));
-        server.on('close', function () {
-            logger.error('TCP server close unexpacted');
-        }).on('connection', function () {
-            logger.doing('TCP server connected');
+        let config = serverList[i]
+        let port = ceilPort + i
+        let server = net.createServer(c => socksHandle(c, config, port))
+        server.on('close', () => {
+            logger.error('TCP server close unexpacted')
         }).listen({ host: host, port: port }, function () {
-            logger.status(`TCP listening on ${host}:${port}...`);
-        });
-        socksServerArr.push(port);
+            logger.status(`TCP listening on ${host}:${port}...`)
+        })
+        socksServerArr.push(port)
     }
-    return socksServerArr;
-};
+    return socksServerArr
+}

@@ -1,6 +1,4 @@
-"use strict";
-
-require('colors');
+require('colors')
 
 //TODO: 规范logger类型
 function request(req, type) {

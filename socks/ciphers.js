@@ -21,4 +21,4 @@ module.exports = {
     'rc2-cfb': [16, 8],
     'salsa20': [32, 8],
     'seed-cfb': [16, 16]
-};
+}
