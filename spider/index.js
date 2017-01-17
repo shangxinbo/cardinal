@@ -39,6 +39,8 @@ function getData(_url, callback) {
                 }).on('end', () => {
                     if (callback) callback(null, data)
                 })
+            } else {
+                if (callback) callback('response status not 200')
             }
         }).on('error', (err) => {
             if (callback) callback(err)
@@ -57,6 +59,8 @@ function getData(_url, callback) {
                 }).on('end', () => {
                     if (callback) callback(null, data)
                 })
+            } else {
+                if (callback) callback('response status not 200')
             }
         }).on('error', (err) => {
             if (callback) callback(err)

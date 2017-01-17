@@ -4,19 +4,15 @@ const config = require('../config/local.json')
 const pac = require('../pac')
 
 describe('pac 模块测试', () => {
-    it('create server', (done) => {
+    it('create server', done => {
         pac.createServer()
-        http.request({
-            host: config.pacPort,
+        var req = http.request({
+            host: config.host,
             port: config.pacPort
         }, () => {
             done()
         })
-    })
-    it('update ips in china', done => {
-        pac.updateIPs(30000, () => {
-            done()
-        })
+        req.end()
     })
     it('add pac url', () => {
         pac.addPacUrl()

@@ -8,8 +8,8 @@ const source = require('../spider/source')
 describe('爬虫程序测试', () => {
     
     it('源是否有问题',()=>{
-        expect(source).to.be.an('object')
-        for(var item in source){
+        expect(source).to.be.an('array')
+        for(let item of source){
             expect(item).to.have.property('url')
             expect(item).to.have.property('deXml')
         }

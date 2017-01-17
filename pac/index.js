@@ -51,12 +51,11 @@ function subNetMask(num) {
 }
 
 exports.createServer = function () {
-
     let proxyStr = getProxy()
     let ruleStr = getRules()
     let proxyFunc = fs.readFileSync(path.join(__dirname, '../config/pac.js'), { encoding: 'utf8' })
 
-    fs.writeFileSync('proxy.pac', `${proxyStr}\n${ruleStr}\n${proxyFunc}`)
+    fs.writeFileSync(path.join(__dirname, '../proxy.pac'), `${proxyStr}\n${ruleStr}\n${proxyFunc}`)
 
     return http.createServer((req, res) => {
         fs.readFile(path.join(__dirname, '../proxy.pac'), 'binary', (err, file) => {

@@ -12,15 +12,16 @@ describe('socks 模块测试', () => {
         it('列表是否正确输出', () => {
             expect(cipher).to.be.an('object')
             for (let item in cipher) {
-                expect(item).to.be.instanceOf(Array)
-                expect(item).to.be.length.within(2, 2)
-                expect(item[0], item[1]).to.be.instanceOf(Number);
+                expect(cipher[item]).to.be.an('array')
+                expect(cipher[item]).to.be.length.within(2, 2)
+                expect(cipher[item][0]).to.be.an('number');
             }
         })
     })
 
     describe('加密函数库是否正确', () => {
-        let atype = Object.keys(cipher)[Math.ceil(Math.random() * cipher.length)]
+        let type = Object.keys(cipher)
+        type = type[Math.ceil(Math.random() * type.length)]
         let getcipher = encrypt.createCipher('1234', type, 'data')
         it('加密', () => {
             expect(getcipher).to.have.property('cipher')
