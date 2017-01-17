@@ -4,3 +4,9 @@ node_js:
 branches:
   only:
   - 3.0
+env:  
+  global:
+    - CODECOV_TOKEN: 5c8c56e6-a61a-4f53-8347-5e84d0f751e0
+script:  
+  - istanbul cover node_modules/mocha/bin/_mocha
+  - cat ./coverage/coverage.json | node_modules/codecov.io/bin/codecov.io.js
