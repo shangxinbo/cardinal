@@ -3,7 +3,7 @@ node_js:
   - "6"
 branches:
   only:
-  - 3.0
+  - master
 env:  
   global:
     - CODECOV_TOKEN: 5c8c56e6-a61a-4f53-8347-5e84d0f751e0
