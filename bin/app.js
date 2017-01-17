@@ -24,8 +24,8 @@ init()
 
 function init(set) {
     if (spiderOpen) {
-        spider.update(() => {                // 更新节点
-            socksPorts = msocks.createServer() 
+        spider.update(() => {
+            socksPorts = msocks.createServer()
             optimal()
         })
     } else {
@@ -34,10 +34,10 @@ function init(set) {
     }
 }
 
-//择优选择线路
+//get best socks port 
 function optimal() {
-    let httpRunning = false                  // 防止多服务耗费资源
-    if (socksPorts.length <= 0) {             // 没有可用的socks,重新更新节点
+    let httpRunning = false             // to prevent mutiple http create
+    if (socksPorts.length <= 0) {
         init()
         return false
     }
@@ -72,16 +72,16 @@ function optimal() {
 function start(socks) {
     let pacServer = pac.createServer()
     let httpPorts = mhttp.createServer(socks, () => {
-        pacServer.close(() => optimal())         // 重新选择可用资源
+        pacServer.close(() => optimal())         //reset the best socks and create a new http server
     })
     pac.addPacUrl()
 }
 
+//Once process exit recovery the pac url in OS 
 process.on('uncaughtException', (err) => {
     pac.removePacUrl()
     logger.error('uncaughtException' + err)
 })
-//程序正常退出时，恢复系统代理配置
 process.on('SIGINT', () => {
     console.log(123);
     pac.removePacUrl(() => { process.exit() })
