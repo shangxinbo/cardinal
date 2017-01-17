@@ -1,5 +1,6 @@
 # cardinal
 [![npm-version](https://img.shields.io/npm/v/cardinalis.svg?style=flat-square)](https://www.npmjs.com/package/cardinalis)
+[![travis-ci build](https://travis-ci.org/shangxinbo/cardinal.svg)](https://travis-ci.org/shangxinbo/cardinal)
 
 A shadowsocks client by nodejs, include socks proxy and http proxy
 
