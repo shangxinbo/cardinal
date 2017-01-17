@@ -47,7 +47,6 @@ function getData(_url, callback) {
         })
         req.setTimeout(1500, () => {
             req.abort()
-            if (callback) callback('err')
         })
     } else {  // http
         let req = http.get(_url, (res) => {
@@ -66,8 +65,7 @@ function getData(_url, callback) {
             if (callback) callback(err)
         })
         req.setTimeout(1500, () => {
-            req.abort()
-            if (callback) callback('err')
+            req.abort()     //trigger a request error 
         })
     }
 }

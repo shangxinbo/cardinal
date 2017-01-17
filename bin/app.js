@@ -83,6 +83,5 @@ process.on('uncaughtException', (err) => {
     logger.error('uncaughtException' + err)
 })
 process.on('SIGINT', () => {
-    console.log(123);
     pac.removePacUrl(() => { process.exit() })
 })
