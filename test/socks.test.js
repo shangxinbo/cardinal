@@ -35,7 +35,7 @@ describe('socks 模块测试', () => {
     })
 
     describe('建立socks server是否成功', () => {
-        it('建立socks server是否成功', function () {
+        it('建立socks server是否成功', done=> {
             var ports = msocks.createServer()
             expect(ports).to.be.an.instanceOf(Array)
             expect(ports).to.be.have.length.above(0)
