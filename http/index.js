@@ -21,6 +21,7 @@ exports.createServer = function (socks, callback) {
             })
         }).on('clientError', (err, socks) => {  // client browser throw error 
             logger.error('clientError' + err)
+            if (callback) callback()
         })
         proxy.listen(config.httpPort, config.host, () => {
             logger.status(`HTTP listening on ${config.host}:${config.httpPort}...`)
