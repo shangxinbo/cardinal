@@ -1,8 +1,10 @@
 const expect = require('chai').expect
+const http = require('http')
+const https = require('https')
 const mhttp = require('../http/index')
 const magent = require('../http/agent')
 
-describe('http 模块测试', () => {
+describe('HTTP测试', () => {
 
     describe('http server', () => {
         it('create success', () => {
@@ -11,15 +13,20 @@ describe('http 模块测试', () => {
             })
         })
     })
-    describe('agent', () => {
-        it('http', () => {
-            magent.http(30000, () => {
-                done()
+
+    describe('Agent模块', () => {
+        it('http', done => {
+            http.get('http://www.baidu.com', res => {
+                magent.http(30000, () => {
+                    done()
+                })(res, res)
             })
         })
         it('https', () => {
-            magent.https(30000, () => {
-                done()
+            https.get('https://www.baidu.com', res => {
+                magent.https(30000, () => {
+                    done()
+                })(res, res)
             })
         })
     })
