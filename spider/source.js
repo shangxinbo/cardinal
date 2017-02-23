@@ -59,7 +59,7 @@ const items = [
         }
     },
     {
-        url: 'http://www.ishadowsocks.me/',
+        url: 'https://free.ishadow.host/',
         deXml: function (body) {
             try {
                 let $ = cheerio.load(body)
