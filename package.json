@@ -4,11 +4,11 @@
   "description": "A socks and http proxy by nodejs for you to over GWF",
   "main": "bin/app",
   "scripts": {
-    "start": "node bin/app",
+    "start": "node bin/app.js",
     "test": "mocha"
   },
   "bin": {
-    "cardinal": "./bin/app"
+    "cardinal": "./bin/app.js"
   },
   "keywords": [
     "shadowsocks",
