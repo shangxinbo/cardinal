@@ -1,14 +1,14 @@
 {
   "name": "cardinalis",
-  "version": "3.1.6",
+  "version": "3.1.9",
   "description": "A socks and http proxy by nodejs for you to over GWF",
-  "main": "bin/app",
+  "main": "bin/app.js",
   "scripts": {
     "start": "node bin/app.js",
     "test": "mocha"
   },
   "bin": {
-    "cardinal": "./bin/app.js"
+    "cardinal": "bin/app.js"
   },
   "keywords": [
     "shadowsocks",
@@ -33,5 +33,8 @@
     "codecov.io": "^0.1.6",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0"
+  },
+  "engines": {
+    "node": ">=4.0.0"
   }
 }
