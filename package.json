@@ -4,6 +4,7 @@
   "description": "A socks and http proxy by nodejs for you to over GWF",
   "main": "bin/app",
   "scripts": {
+    "start": "node bin/app",
     "test": "mocha"
   },
   "bin": {
@@ -24,6 +25,7 @@
     "chai": "^3.5.0",
     "cheerio": "^0.22.0",
     "colors": "^1.1.2",
+    "eslint": "^3.19.0",
     "ip": "^1.1.4",
     "socks": "^1.1.9"
   },
