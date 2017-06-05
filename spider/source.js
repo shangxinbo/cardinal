@@ -59,19 +59,19 @@ const items = [
         }
     },
     {
-        url: 'http://www.ishadowsocks.me/',
+        url: 'http://ss.ishadowx.com/',
         deXml: function (body) {
             try {
                 let $ = cheerio.load(body)
-                let list = $('#free .col-sm-4')
+                let list = $('.hover-text')
                 let arr = []
                 for (let i = 0; i < list.length; i++) {
-                    if (ciphers[$(list[i]).find('h4').eq('3').html().split(':')[1]]) {
+                    if (ciphers[$(list[i]).find('h4').eq('3').text().split(':')[1]]) {
                         arr.push({
-                            "host": $(list[i]).find('h4').eq('0').html().split(':')[1],
-                            "port": $(list[i]).find('h4').eq('1').html().split(':')[1],
-                            "password": $(list[i]).find('h4').eq('2').html().split(':')[1],
-                            "method": $(list[i]).find('h4').eq('3').html().split(':')[1],
+                            "host": $(list[i]).find('h4').eq('0').text().split(':')[1],
+                            "port": $(list[i]).find('h4').eq('1').text().split('：')[1],
+                            "password": $(list[i]).find('h4').eq('2').text().split(':')[1],
+                            "method": $(list[i]).find('h4').eq('3').text().split(':')[1],
                             "remarks": "iss",
                             "auth": false
                         })
@@ -84,14 +84,14 @@ const items = [
         }
     },
     {
-        url: 'https://freevpnss.cc/',
+        url: 'https://get.freevpnss.me/',
         deXml: function (body) {
             try {
                 let $ = cheerio.load(body)
                 let list = $('#shadowsocks').next('.row.text-center').find('.panel-body')
                 let arr = []
                 for (let i = 0; i < list.length; i++) {
-                    if (ciphers[$(list[i]).find('p').eq('3').html().replace(/&#x(.*);/g, '')]) {
+                    if (ciphers[$(list[i]).find('p').eq('3').html().replace(/&#x(.*);/g, '').toLowerCase()]) {
                         arr.push({
                             "host": $(list[i]).find('p').eq('0').html().replace(/&#x(.*);/g, ''),
                             "port": $(list[i]).find('p').eq('1').html().replace(/&#x(.*);/g, ''),

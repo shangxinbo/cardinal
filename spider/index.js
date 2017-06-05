@@ -1,3 +1,4 @@
+/*eslint no-loop-func: "off"*/
 const fs = require('fs')
 const path = require('path')
 const dns = require('dns')
@@ -14,17 +15,30 @@ const logger = require('../utils/logger')
  */
 function store(arr, callback) {
     let c = arr.length
-    for (let i = 0; i < arr.length; i++) {
-        dns.lookup(arr[i].host, (err, address, family) => {
-            c--
-            if (err) logger.error(err)
-            arr[i].host = address
-            if (c == 0) {
-                fs.writeFileSync(path.join(__dirname, '../config/server.json'), JSON.stringify({ "list": arr }))
-                callback()
-            }
-        })
+    if (c > 0) {
+        for (let i = 0; i < arr.length; i++) {
+            dns.lookup(arr[i].host, (err, address, family) => {
+                c--
+                if(address&&!err){
+                    arr[i].host = address
+                }else{
+                    arr.splice(i,1)
+                    logger.error(err)
+                }
+                
+                if (c == 0) {
+                    console.log(arr)
+                    global.SERVERLIST = arr
+                    //console.log(global)
+                    fs.writeFileSync(path.join(__dirname, '../config/server.json'), JSON.stringify({ "list": arr }))
+                    callback()
+                }
+            })
+        }
+    } else {
+        if (callback) callback()
     }
+
 }
 
 function getData(_url, callback) {
@@ -44,8 +58,10 @@ function getData(_url, callback) {
             }
         }).on('error', (err) => {
             if (callback) callback(err)
+        }).on('abort', () => {
+            if (callback) callback('请求超时')
         })
-        req.setTimeout(1500, () => {
+        req.setTimeout(4500, () => {
             req.abort()
         })
     } else {  // http
@@ -63,8 +79,11 @@ function getData(_url, callback) {
             }
         }).on('error', (err) => {
             if (callback) callback(err)
+        }).on('abort', () => {
+            //console.log(123)
+            if (callback) callback('请求超时')
         })
-        req.setTimeout(1500, () => {
+        req.setTimeout(4500, () => {
             req.abort()     //trigger a request error 
         })
     }
@@ -74,8 +93,8 @@ function getData(_url, callback) {
 exports.update = function (callback) {
     let dymicArr = []
     if (sources instanceof Array && sources.length > 0) {
-        let counter = sources.length                 //爬虫结果计数
-        for (let i = 0; i < sources.length; i++) {
+        let counter = sources.length
+        for (let i = 0; i < counter; i++) {
             getData(sources[i].url, (err, data) => {
                 counter--
                 if (!err) {
@@ -85,6 +104,7 @@ exports.update = function (callback) {
                     }
                 }
                 if (counter == 0) {
+                    //console.log(dymicArr)
                     store(dymicArr, callback)
                 }
             })
