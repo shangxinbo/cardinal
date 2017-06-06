@@ -63,12 +63,9 @@ $ cardinal
 ``` 
 start with update GeoIp-CN(IPs in china)
 ``` 
-$ cardinal upip
+$ cardinal ip
 ```
-start by closing the auto spider.That use your own server.json(server config) 
-```
-$ cardinal sc
-```
+
 ## configs
 ### normal
 * config/GeoIP-CN    ------   IPs in china 

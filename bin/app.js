@@ -15,7 +15,7 @@ const argv = process.argv
 let socksPorts = []
 let updateIPs = false
 
-if (argv.indexOf('upip') > -1) {
+if (argv.indexOf('ip') > -1) {
     updateIPs = true
 }
 
