@@ -1,5 +1,4 @@
 /*eslint no-loop-func: "off"*/
-const path = require('path')
 const dns = require('dns')
 const http = require('http')
 const https = require('https')
@@ -12,7 +11,7 @@ const logger = require('../utils/logger')
  * @param {Array} arr
  * @param {Function} callback 
  */
-function store(arr, callback) {
+function hostToIP(arr, callback) {
     let c = arr.length
     if (c > 0) {
         for (let i = 0; i < arr.length; i++) {
@@ -29,7 +28,7 @@ function store(arr, callback) {
             })
         }
     } else {
-        if (callback) callback('no server can use')
+        if (callback) callback('no server can be use')
     }
 }
 
@@ -53,7 +52,7 @@ function getData(_url, callback) {
     }).on('abort', () => {
         if (callback) callback('请求超时')
     })
-    req.setTimeout(4500, () => {
+    req.setTimeout(2500, () => {  
         req.abort()
     })
 }
@@ -73,11 +72,11 @@ exports.serverList = function (callback) {
                     }
                 }
                 if (counter == 0) {
-                    store(dymicArr, callback)
+                    hostToIP(dymicArr, callback)
                 }
             })
         }
     } else {
-        logger.error('the source of servers is null,please check spider/source.js')
+        logger.error('the source of servers is null')
     }
 }

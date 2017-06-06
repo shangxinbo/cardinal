@@ -16,38 +16,13 @@ const items = [
                 let list = $('.col-md-6.text-center')
                 let arr = []
                 for (let i = 0; i < list.length - 1; i++) {
-                    if (ciphers[$(list[i]).find('h4').eq('3').html().split(':')[1]]) {
+                    if (ciphers[$(list[i]).find('h4').eq('3').html().split(':')[1].toLowerCase()]) {
                         arr.push({
                             "host": $(list[i]).find('h4').eq('0').html().split(':')[1],
                             "port": $(list[i]).find('h4').eq('1').html().split(':')[1],
                             "password": $(list[i]).find('h4').eq('2').html().split(':')[1],
                             "method": $(list[i]).find('h4').eq('3').html().split(':')[1],
                             "remarks": "frss",
-                            "auth": false
-                        })
-                    }
-                }
-                return arr
-            } catch (e) {
-                return null
-            }
-        }
-    },
-    {
-        url: 'http://tempss.com/',
-        deXml: function (body) {
-            try {
-                let $ = cheerio.load(body)
-                let list = $('#tbody tr')
-                let arr = []
-                for (let i = 0; i < list.length; i++) {
-                    if (ciphers[$(list[i]).find('td').eq('2').html()]) {
-                        arr.push({
-                            "host": $(list[i]).find('td').eq('0').html(),
-                            "port": $(list[i]).find('td').eq('1').html(),
-                            "password": $(list[i]).find('td').eq('3').html(),
-                            "method": $(list[i]).find('td').eq('2').html(),
-                            "remarks": "tss",
                             "auth": false
                         })
                     }
@@ -66,13 +41,14 @@ const items = [
                 let list = $('.hover-text')
                 let arr = []
                 for (let i = 0; i < list.length; i++) {
+
                     if (ciphers[$(list[i]).find('h4').eq('3').text().split(':')[1]]) {
-                        if ($(list[i]).find('h4').eq('4').text().length <= 0) {
+                        if ($(list[i]).find('h4').eq('4').find('a').length > 0) {
                             arr.push({
-                                "host": $(list[i]).find('h4').eq('0').text().split(':')[1],
-                                "port": $(list[i]).find('h4').eq('1').text().split('：')[1],
-                                "password": $(list[i]).find('h4').eq('2').text().split(':')[1],
-                                "method": $(list[i]).find('h4').eq('3').text().split(':')[1],
+                                "host": $(list[i]).find('h4').eq('0').text().split(':')[1].trim(),
+                                "port": $(list[i]).find('h4').eq('1').text().split('：')[1].trim(),
+                                "password": $(list[i]).find('h4').eq('2').text().split(':')[1].trim(),
+                                "method": $(list[i]).find('h4').eq('3').text().split(':')[1].trim(),
                                 "remarks": "iss",
                                 "auth": false
                             })
