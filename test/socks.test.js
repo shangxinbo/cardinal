@@ -5,6 +5,7 @@ const config = require('../config/local.json')
 const msocks = require('../socks/index')
 const cipher = require('../socks/ciphers')
 const encrypt = require('../socks/encrypt')
+const spider = require('../spider')
 
 describe('socks 模块测试', () => {
 
@@ -36,25 +37,11 @@ describe('socks 模块测试', () => {
 
     describe('建立socks server是否成功', () => {
         it('建立socks server是否成功', done=> {
-            var ports = msocks.createServer()
-            expect(ports).to.be.an.instanceOf(Array)
-            expect(ports).to.be.have.length.above(0)
-            let tmp = ports[0]
-            let req = http.get({
-                hostname: 'google.com',
-                port: 80,
-                agent: new socks.Agent({
-                    proxy: {
-                        ipaddress: config.host,
-                        port: config.proxyPortCeil,
-                        type: 5
-                    }
-                }, false, false)
-            }, function (res) {
-                if (res.statusCode == 200 || res.statusCode == 302) {
-                    req.end()
-                    done()
-                }
+            spider.serverList((err,arr) => {
+                var ports = msocks.createServer(arr)
+                expect(ports).to.be.an.instanceOf(Array)
+                expect(ports).to.be.have.length.above(0)
+                done()
             })
         })
     })
