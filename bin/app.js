@@ -22,7 +22,7 @@ if (argv.indexOf('upip') > -1) {
 init()
 
 function init(set) {
-    spider.update((err,arr) => {
+    spider.getServers((err,arr) => {
         socksPorts = msocks.createServer(arr)
         optimal()
     })
