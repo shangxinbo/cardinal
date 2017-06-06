@@ -18,11 +18,9 @@ describe('爬虫程序测试', () => {
     })
 
     it('是否成功抓取节点数据', done => {
-        spider.update(function () {
-            let servers = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/server.json')).toString())
-            //console.log(global)
-            //assert.isObject(servers)
-            //expect(servers.list).to.be.have.length.above(0)
+        spider.getServers(function (err,arr) {
+            console.log(arr)
+            expect(arr).to.be.have.length.above(0)
             done()
         })
     })
