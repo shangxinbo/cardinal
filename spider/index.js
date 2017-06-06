@@ -1,5 +1,4 @@
 /*eslint no-loop-func: "off"*/
-const fs = require('fs')
 const path = require('path')
 const dns = require('dns')
 const http = require('http')
@@ -23,7 +22,6 @@ function store(arr, callback) {
                     arr[i].host = address
                 } else {
                     arr.splice(i, 1)
-                    logger.error(err)
                 }
                 if (c == 0) {
                     callback(null, arr)
@@ -33,7 +31,6 @@ function store(arr, callback) {
     } else {
         if (callback) callback('no server can use')
     }
-
 }
 
 function getData(_url, callback) {
@@ -62,7 +59,7 @@ function getData(_url, callback) {
 }
 
 // climbing server lists
-exports.getServers = function (callback) {
+exports.serverList = function (callback) {
     let dymicArr = []
     let counter = sources.length
     if (sources instanceof Array && counter > 0) {

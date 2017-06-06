@@ -18,8 +18,7 @@ describe('爬虫程序测试', () => {
     })
 
     it('是否成功抓取节点数据', done => {
-        spider.getServers(function (err,arr) {
-            console.log(arr)
+        spider.serverList(function (err,arr) {
             expect(arr).to.be.have.length.above(0)
             done()
         })
