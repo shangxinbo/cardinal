@@ -116,7 +116,7 @@ exports.addPacUrl = function () {
             pacUrl.toString('hex') +
             '0100000000000000000000000000000000000000000000000000000000000000 /f'
     } else {
-        cmd = 'networksetup -setautoproxyurl "Wi-Fi" "http://somedomain.com/proxy.pac"'
+        cmd = 'networksetup -setautoproxyurl "Wi-Fi" "'+ `http://${config.host}:${config.pacPort}/proxy.pac`+ '"'
     }
 
     exec(cmd, (err, stdout, stderr) => {
@@ -136,7 +136,7 @@ exports.removePacUrl = function (callback) {
             ' /v DefaultConnectionSettings /t REG_BINARY' +
             ' /d 46000000d1eb0000010000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000 /f'
     } else {
-        cmd = 'networksetup -setautoproxyurl "Wi-Fi" "http://somedomain.com/proxy.pac"'
+        cmd = 'networksetup -setautoproxyurl "Wi-Fi" ""'
     }
     exec(cmd, () => { if (callback) callback() })
 }
