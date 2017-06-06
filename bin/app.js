@@ -13,15 +13,12 @@ const spider = require('../spider')
 const argv = process.argv
 
 let socksPorts = []
-let spiderOpen = true
 let updateIPs = false
 
 if (argv.indexOf('upip') > -1) {
     updateIPs = true
 }
-if (argv.indexOf('sc') > -1) {
-    spiderOpen = false
-}
+
 init()
 
 function init(set) {

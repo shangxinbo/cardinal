@@ -82,8 +82,7 @@ function getData(_url, callback) {
         })
     }
 }
-
-//update server list config/server.json 
+ 
 exports.update = function (callback) {
     let dymicArr = []
     if (sources instanceof Array && sources.length > 0) {
