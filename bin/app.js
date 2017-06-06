@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/*eslint no-loop-func: "off"*/
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
@@ -24,15 +25,10 @@ if (argv.indexOf('sc') > -1) {
 init()
 
 function init(set) {
-    if (spiderOpen) {
-        spider.update(() => {
-            socksPorts = msocks.createServer()
-            optimal()
-        })
-    } else {
-        socksPorts = msocks.createServer()
+    spider.update((err,arr) => {
+        socksPorts = msocks.createServer(arr)
         optimal()
-    }
+    })
 }
 
 //get best socks port 

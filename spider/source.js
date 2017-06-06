@@ -67,14 +67,16 @@ const items = [
                 let arr = []
                 for (let i = 0; i < list.length; i++) {
                     if (ciphers[$(list[i]).find('h4').eq('3').text().split(':')[1]]) {
-                        arr.push({
-                            "host": $(list[i]).find('h4').eq('0').text().split(':')[1],
-                            "port": $(list[i]).find('h4').eq('1').text().split('：')[1],
-                            "password": $(list[i]).find('h4').eq('2').text().split(':')[1],
-                            "method": $(list[i]).find('h4').eq('3').text().split(':')[1],
-                            "remarks": "iss",
-                            "auth": false
-                        })
+                        if ($(list[i]).find('h4').eq('4').text().length <= 0) {
+                            arr.push({
+                                "host": $(list[i]).find('h4').eq('0').text().split(':')[1],
+                                "port": $(list[i]).find('h4').eq('1').text().split('：')[1],
+                                "password": $(list[i]).find('h4').eq('2').text().split(':')[1],
+                                "method": $(list[i]).find('h4').eq('3').text().split(':')[1],
+                                "remarks": "iss",
+                                "auth": false
+                            })
+                        }
                     }
                 }
                 return arr

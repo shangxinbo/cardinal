@@ -19,24 +19,19 @@ function store(arr, callback) {
         for (let i = 0; i < arr.length; i++) {
             dns.lookup(arr[i].host, (err, address, family) => {
                 c--
-                if(address&&!err){
+                if (address && !err) {
                     arr[i].host = address
-                }else{
-                    arr.splice(i,1)
+                } else {
+                    arr.splice(i, 1)
                     logger.error(err)
                 }
-                
                 if (c == 0) {
-                    console.log(arr)
-                    global.SERVERLIST = arr
-                    //console.log(global)
-                    fs.writeFileSync(path.join(__dirname, '../config/server.json'), JSON.stringify({ "list": arr }))
-                    callback()
+                    callback(null, arr)
                 }
             })
         }
     } else {
-        if (callback) callback()
+        if (callback) callback('no server can use')
     }
 
 }
@@ -80,7 +75,6 @@ function getData(_url, callback) {
         }).on('error', (err) => {
             if (callback) callback(err)
         }).on('abort', () => {
-            //console.log(123)
             if (callback) callback('请求超时')
         })
         req.setTimeout(4500, () => {
@@ -104,7 +98,6 @@ exports.update = function (callback) {
                     }
                 }
                 if (counter == 0) {
-                    //console.log(dymicArr)
                     store(dymicArr, callback)
                 }
             })

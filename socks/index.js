@@ -3,9 +3,7 @@ const ip = require('ip')
 const logger = require('../utils/logger')
 const createCipher = require('./encrypt').createCipher
 const createDecipher = require('./encrypt').createDecipher
-const SERVER_CONF = require('../config/server.json')
 const LOCAL_CONF = require('../config/local.json')
-
 /**
  * 和客户端协商版本及认证方式
  * client -> server
@@ -190,8 +188,8 @@ function flowData(from, to, data) {
     return res
 }
 
-exports.createServer = function () {
-    let serverList = SERVER_CONF.list
+exports.createServer = function (arr) {
+    let serverList = arr
     let socksServerArr = []
     let ceilPort = parseInt(LOCAL_CONF.proxyPortCeil)
     let host = LOCAL_CONF.host

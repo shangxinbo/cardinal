@@ -1,6 +1,6 @@
 {
   "name": "cardinalis",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "A socks and http proxy by nodejs for you to over GWF",
   "main": "bin/app.js",
   "scripts": {
