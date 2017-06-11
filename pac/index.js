@@ -115,6 +115,9 @@ exports.addPacUrl = function () {
             ' /v DefaultConnectionSettings /t REG_BINARY /d 46000000d2eb00000500000000000000000000001f000000' +
             pacUrl.toString('hex') +
             '0100000000000000000000000000000000000000000000000000000000000000 /f'
+    }else if(os.type()=='Linux'){
+        console.log(234)
+        cmd = `export http_proxy=http://${config.host}:${config.pacPort}/proxy.pac`
     } else {
         cmd = 'networksetup -setautoproxyurl "Wi-Fi" "'+ `http://${config.host}:${config.pacPort}/proxy.pac`+ '"'
     }
