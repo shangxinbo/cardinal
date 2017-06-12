@@ -128,7 +128,6 @@ exports.addPacUrl = function () {
         }
     })
 }
-this.addPacUrl()
 
 exports.removePacUrl = function (callback) {
     let cmd
