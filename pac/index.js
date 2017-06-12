@@ -116,12 +116,10 @@ exports.addPacUrl = function () {
             pacUrl.toString('hex') +
             '0100000000000000000000000000000000000000000000000000000000000000 /f'
     }else if(os.type()=='Linux'){
-        console.log(234)
-        cmd = `export http_proxy=http://${config.host}:${config.pacPort}/proxy.pac`
+        cmd = `gsettings set org.gnome.system.proxy autoconfig-url http://${config.host}:${config.pacPort}/proxy.pac`
     } else {
         cmd = 'networksetup -setautoproxyurl "Wi-Fi" "'+ `http://${config.host}:${config.pacPort}/proxy.pac`+ '"'
     }
-
     exec(cmd, (err, stdout, stderr) => {
         if (err) {
             logger.error(err)
@@ -129,8 +127,8 @@ exports.addPacUrl = function () {
             logger.status('PAC url set success in OS by reg command')
         }
     })
-
 }
+this.addPacUrl()
 
 exports.removePacUrl = function (callback) {
     let cmd
@@ -138,6 +136,8 @@ exports.removePacUrl = function (callback) {
         cmd = 'reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections"' +
             ' /v DefaultConnectionSettings /t REG_BINARY' +
             ' /d 46000000d1eb0000010000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000 /f'
+    } else if(os.type()=='Linux'){
+        cmd = 'gsettings set org.gnome.system.proxy autoconfig-url ""'
     } else {
         cmd = 'networksetup -setautoproxyurl "Wi-Fi" ""'
     }
