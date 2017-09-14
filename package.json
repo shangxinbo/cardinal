@@ -22,7 +22,7 @@
   "author": "shangxinbo",
   "license": "GPL-3.0",
   "dependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.1.2",
     "cheerio": "^0.22.0",
     "colors": "^1.1.2",
     "ip": "^1.1.4",
@@ -30,9 +30,9 @@
   },
   "devDependencies": {
     "codecov.io": "^0.1.6",
-    "eslint": "^3.19.0",
+    "eslint": "^4.6.1",
     "istanbul": "^0.4.5",
-    "mocha": "^3.2.0"
+    "mocha": "^3.5.3"
   },
   "engines": {
     "node": ">=4.0.0"
