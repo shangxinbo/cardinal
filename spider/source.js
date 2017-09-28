@@ -9,7 +9,7 @@ const ciphers = require('../socks/ciphers')
 
 const items = [
     {
-        url: 'https://freessr.xyz/',
+        url: 'https://freessr.win/',
         deXml: function (body) {
             try {
                 let $ = cheerio.load(body)
@@ -62,7 +62,7 @@ const items = [
         }
     },
     {
-        url: 'https://get.freevpnss.me/',
+        url: 'https://get.freevpnss.me/',  // 证书已失效
         deXml: function (body) {
             try {
                 let $ = cheerio.load(body)
